@@ -7,9 +7,9 @@ services:
     container_name: visuallab-postgres
     restart: always
     environment:
-      POSTGRES_DB: visuallab_db
+      POSTGRES_DB: edulab
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: 12345
     ports:
       - "5432:5432"
     volumes:
