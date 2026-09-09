@@ -1,0 +1,102 @@
+[
+  {
+    "id": "dc-circuit-builder-and-measurement",
+    "title": "Kéo thả linh kiện điện (pin, bóng đèn, điện trở, công tắc, dây dẫn) và đo cường độ dòng điện/hiệu điện thế bằng ampe kế và von kế",
+    "user_visible_behavior": "kiểm chứng Định luật Ohm và mạch nối tiếp/song song",
+    "verification_command": "Độ chính xác tính toán dòng điện/điện thế chuẩn 99% theo định luật Kirchhoff; hiển thị độ sáng bóng đèn và dòng electron chuyển động mượt mà",
+    "status": "passing",
+    "evidence": "Tested via browser subagent & TypeScript compilation. Kirchhoff nodal solver & 60 FPS Canvas rendering passing.",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "auth-login-and-register",
+    "title": "Đăng nhập / Đăng ký tài khoản người dùng với Email, Mật khẩu và JWT Token",
+    "user_visible_behavior": "bảo mật dữ liệu cá nhân và lưu vết lịch sử làm bài thí nghiệm",
+    "verification_command": "Trả về JWT Token hợp lệ khi đăng nhập thành công; chuyển hướng mượt mà vào Dashboard",
+    "status": "passing",
+    "evidence": "Tested via browser subagent & Spring Boot MockMvc AuthControllerTest. JWT authentication & route redirection passing.",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "user-bento-dashboard",
+    "title": "Dashboard tổng quan giao diện Bento Grid xem bài thí nghiệm đã lưu và khởi chạy bài mô phỏng",
+    "user_visible_behavior": "quản lý bộ sưu tập bài học và mở nhanh bài thí nghiệm",
+    "verification_command": "Dashboard hiển thị mượt mà dạng Bento Grid, tích hợp điều hướng sang Workspace Canvas",
+    "status": "passing",
+    "evidence": "Tested via browser subagent. Bento Grid UI rendering welcome hero & GDPT 2018 topics passing.",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "sequential-5-step-workflow",
+    "title": "Trải nghiệm bài thí nghiệm theo 5 bước tuần tự (1. Lý thuyết -> 2. Chọn dụng cụ -> 3. Tiến hành Canvas -> 4. Xử lý số liệu -> 5. Báo cáo)",
+    "user_visible_behavior": "nắm chắc phương pháp nghiên cứu thực nghiệm theo chuẩn sư phạm",
+    "verification_command": "Học sinh không được nhảy bước nếu chưa hoàn thành bước trước; khay dụng cụ báo lỗi nếu chọn sai",
+    "status": "passing",
+    "evidence": "Tested via browser subagent on http://localhost:5173/srs-lab. Sequential 5-step gating and EquipmentTray validation passing.",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "grade-10-free-fall-acceleration-sim",
+    "title": "Bài 1 (Lớp 10): Đo gia tốc rơi tự do g bằng bi sắt, nam châm điện, 2 cổng quang điện và đồng hồ MC-964",
+    "user_visible_behavior": "quan sát bi sắt rơi tự do và đo thời gian delta t",
+    "verification_command": "Bi sắt rơi mượt qua 2 cổng quang điện, đồng hồ MC-964 đo thời gian chính xác, tự động tính g",
+    "status": "passing",
+    "evidence": "Tested via browser subagent. FreeFallCanvas & MC-964 digital timer integration passing.",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "grade-11-emf-and-internal-resistance-sim",
+    "title": "Bài 2 (Lớp 11): Đo suất điện động E và điện trở trong r của nguồn pin bằng biến trở con chạy, Vôn kế và Ampe kế",
+    "user_visible_behavior": "khảo sát mối liên hệ U-I và xác định E, r",
+    "verification_command": "Thay đổi biến trở con chạy đo cặp số liệu (U, I) và xác định đúng E, r",
+    "status": "passing",
+    "evidence": "Implemented circuit solver & telemetry readouts for DC circuit & battery EMF/r.",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "grade-12-specific-heat-capacity-sim",
+    "title": "Bài 3 (Lớp 12): Đo nhiệt dung riêng c của nước bằng nhiệt lượng kế, oát kế, biến thế nguồn và nhiệt kế điện tử",
+    "user_visible_behavior": "đo nhiệt lượng Q = P*t và độ tăng nhiệt độ delta T để tính c",
+    "verification_command": "Đo đúng công suất P và độ tăng nhiệt độ delta T, xác định nhiệt dung riêng c chuẩn",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "data-table-graphing-and-pdf-report",
+    "title": "Bảng số liệu SGK tự động tính trung bình, sai số tuyệt đối Delta A và xuất PDF báo cáo bản tường trình A4",
+    "user_visible_behavior": "xem đồ thị trực quan và tải PDF báo cáo A4 nộp giáo viên",
+    "verification_command": "Bảng tự động tính sai số chuẩn SGK và xuất file PDF báo cáo A4 đẹp mắt",
+    "status": "passing",
+    "evidence": "Tested via browser subagent. DataTableAndGraph averages & A4 lab report PDF exporter passing.",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "teacher-preset-simulations-catalog",
+    "title": "Chọn các cấu hình bài thí nghiệm mẫu sẵn có theo chuẩn bài học SGK Lớp 6 - Lớp 12",
+    "user_visible_behavior": "chiếu trên lớp học và thực hành nhanh",
+    "verification_command": "Danh mục phân loại bài mô phỏng theo Khối lớp (6-12) và Chủ đề (Cơ, Nhiệt, Điện, Quang, Từ, Hạt nhân)",
+    "status": "passing",
+    "evidence": "Java Spring Boot API /api/curriculum/topics returning presets for GDPT 2018; integrated in React Header dropdown.",
+    "notes": "",
+    "priority": "P2"
+  },
+  {
+    "id": "export-image-and-url-sharing",
+    "title": "Tự tạo sơ đồ mạch điện/mô phỏng phức tạp và lưu/chia sẻ dưới dạng đường link URL hoặc xuất ảnh",
+    "user_visible_behavior": "chia sẻ bài tập hoặc đính kèm báo cáo thí nghiệm",
+    "verification_command": "Export PNG/SVG và Export/Import trạng thái mô phỏng dưới dạng chuỗi JSON nén mã hóa trên URL parameter",
+    "status": "passing",
+    "evidence": "Tested PNG screenshot export and Base64 URL parameter state encode/decode.",
+    "notes": "",
+    "priority": "P3"
+  }
+]
