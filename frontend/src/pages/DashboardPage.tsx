@@ -1,9 +1,117 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { EditProfileModal } from '../components/auth/EditProfileModal';
+import { PhETFilterBar } from '../components/dashboard/PhETFilterBar';
+import { SimCard, type SimItem } from '../components/dashboard/SimCard';
+import { SidebarNav } from '../components/dashboard/SidebarNav';
+import { PhetModalViewer } from '../components/dashboard/PhetModalViewer';
 
-interface Topic {
+// Built-in Simulations aligned with GDPT 2018
+const BUILTIN_SIMULATIONS: SimItem[] = [
+  {
+    id: 'sim-phet-pendulum-lab',
+    title: 'Thực Hành Con Lắc Đơn Đo Gia Tốc g (Linh Kiện Lắp Ghép)',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Cơ Học',
+    description: 'Lắp ghép linh kiện Cục tạ, Sợi dây, Thước đo góc & Đồng hồ hiện số: Kéo lệch góc small alpha, bấm thời gian 10T để đo gia tốc trọng trường g.',
+    icon: '⏳',
+    route: '/pendulum-phet-lab',
+    isPopular: true,
+  },
+  {
+    id: 'sim-phet-refraction-lab',
+    title: 'Thực Hành Khúc Xạ Ánh Sáng (Linh Kiện PhET Engine)',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Quang Học',
+    description: 'Sử dụng Đèn Laser, Thước Đo Góc & Khối Chiết Suất PhET cho bài lab SGK: Xoay tia tới i, đo góc khúc xạ r, xác định chiết suất n2 theo Định luật Snell.',
+    icon: '🔴',
+    route: '/refraction-phet-lab',
+    isPopular: true,
+  },
+  {
+    id: 'sim-vietnam-ohm-lab',
+    title: 'Bài Thực Hành SGK: Đo Điện Trở R (Định Luật Ohm)',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Điện Học',
+    description: 'Kết hợp bộ linh kiện PhET HTML5 & Khung 5 bước thực hành chuẩn GDPT 2018: Lắp mạch Vôn-Ampe, thu thập 3 lần đo U-I, tính R trung bình và sai số tuyệt đối.',
+    icon: '🧪',
+    route: '/vietnam-phet-lab',
+    isPopular: true,
+  },
+  {
+    id: 'sim-wave-interference-5step',
+    title: 'Thí Nghiệm Thực Hành Giao Thoa Sóng (5 Bước)',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Sóng Cơ Học',
+    description: 'Thí nghiệm thực hành 5 bước chuẩn GDPT 2018: Khảo sát nguồn f, đo khoảng cách a và D, xác định vân cực đại/cực tiểu, kéo thước đo khoảng vân i và tính bước sóng \u03BB.',
+    icon: '🌊',
+    route: '/wave-interference',
+    isPopular: true,
+  },
+  {
+    id: 'sim-dc-circuit',
+    title: 'Mạch Điện Đơn Giản & Định Luật Ohm',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Điện Học',
+    description: 'Kéo thả linh kiện Pin, Điện trở, Bóng đèn, Công tắc, Ampe kế, Vôn kế. Thuật toán Kirchhoff tính toán chính xác dòng điện và chuyển động hạt electron.',
+    icon: '⚡',
+    route: '/simulation',
+    simUrl: '/simulations/ohms-law_vi.html',
+    isPopular: true,
+  },
+  {
+    id: 'sim-free-fall',
+    title: 'Đo Gia Tốc Rơi Tự Do g',
+    gradeLevel: 'Lớp 10',
+    subjectArea: 'Cơ Học',
+    description: 'Thí nghiệm Bài 1 (Lớp 10): Bi sắt rơi qua 2 cổng quang điện, đồng hồ hiện số MC-964 đo thời gian chính xác và tự động tính gia tốc g.',
+    icon: '⏱️',
+    route: '/srs-lab',
+    isPopular: true,
+  },
+  {
+    id: 'sim-emf-internal-r',
+    title: 'Đo Suất Điện Động E & Điện Trở Trong r',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Điện Học',
+    description: 'Thí nghiệm Bài 2 (Lớp 11): Khảo sát đồ thị U-I của nguồn pin bằng biến trở con chạy, Vôn kế và Ampe kế.',
+    icon: '🔋',
+    route: '/simulation',
+    isPopular: false,
+  },
+  {
+    id: 'sim-specific-heat',
+    title: 'Đo Nhiệt Dung Riêng c Của Nước',
+    gradeLevel: 'Lớp 12',
+    subjectArea: 'Nhiệt Học',
+    description: 'Thí nghiệm Bài 3 (Lớp 12): Đo công suất nhiệt Q = P*t và độ tăng nhiệt độ delta T để xác định chuẩn nhiệt dung riêng c.',
+    icon: '🔥',
+    route: '/srs-lab',
+    isPopular: false,
+  },
+  {
+    id: 'sim-refraction',
+    title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Quang Học',
+    description: 'Chiếu chùm tia sáng laser qua các môi trường chiết suất n1, n2 khác nhau và xác định góc khúc xạ theo định luật Snell.',
+    icon: '🔍',
+    route: '/simulation',
+    isPopular: true,
+  },
+  {
+    id: 'sim-simple-pendulum',
+    title: 'Con Lắc Đơn & Dao Động Điều Hòa',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Cơ Học',
+    description: 'Khảo sát chu kỳ dao động T = 2pi*sqrt(l/g) của con lắc đơn theo chiều dài dây treo l và vị trí địa lý.',
+    icon: '⏳',
+    route: '/simulation',
+    isPopular: false,
+  },
+];
+
+interface ApiTopic {
   id: string;
   title: string;
   gradeLevel: string;
@@ -12,15 +120,20 @@ interface Topic {
 }
 
 export const DashboardPage: React.FC = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const [topics, setTopics] = useState<Topic[]>([]);
+  const { user } = useAuth();
+  const [apiTopics, setApiTopics] = useState<ApiTopic[]>([]);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [activeModalSim, setActiveModalSim] = useState<SimItem | null>(null);
+
+  // Filter States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGrade, setSelectedGrade] = useState('ALL');
+  const [selectedSubject, setSelectedSubject] = useState('ALL');
 
   useEffect(() => {
     fetch('http://localhost:8080/api/curriculum/topics')
       .then(res => res.json())
-      .then(data => setTopics(data))
+      .then(data => setApiTopics(data))
       .catch(err => console.error(err));
   }, []);
 
@@ -31,201 +144,149 @@ export const DashboardPage: React.FC = () => {
     }
   }, [user]);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  // Combine built-in simulations and API topics into unified list
+  const allSimulations = useMemo<SimItem[]>(() => {
+    const apiSims: SimItem[] = apiTopics.map((t, index) => ({
+      id: `api-topic-${t.id || index}`,
+      title: t.title,
+      gradeLevel: t.gradeLevel || 'THPT',
+      subjectArea: t.subjectArea || 'Điện Học',
+      description: t.description || 'Bài thí nghiệm mô phỏng tương tác theo chuẩn chương trình GDPT 2018.',
+      icon: t.subjectArea?.includes('Cơ') ? '⏱️' : t.subjectArea?.includes('Quang') ? '🔍' : t.subjectArea?.includes('Nhiệt') ? '🔥' : '⚡',
+      route: '/simulation',
+      isPopular: index % 2 === 0,
+    }));
+
+    const combined = [...BUILTIN_SIMULATIONS];
+    apiSims.forEach(sim => {
+      if (!combined.some(c => c.title.toLowerCase() === sim.title.toLowerCase())) {
+        combined.push(sim);
+      }
+    });
+    return combined;
+  }, [apiTopics]);
+
+  // Filter logic based on search, grade, and subject
+  const filteredSimulations = useMemo(() => {
+    return allSimulations.filter(sim => {
+      const matchesSearch =
+        !searchQuery ||
+        sim.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        sim.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        sim.gradeLevel.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesGrade =
+        selectedGrade === 'ALL' ||
+        sim.gradeLevel.toLowerCase().includes(selectedGrade.toLowerCase()) ||
+        (selectedGrade === 'THCS' && (sim.gradeLevel.includes('Lớp 6') || sim.gradeLevel.includes('Lớp 7') || sim.gradeLevel.includes('Lớp 8') || sim.gradeLevel.includes('Lớp 9')));
+
+      const matchesSubject =
+        selectedSubject === 'ALL' ||
+        sim.subjectArea.toLowerCase().includes(selectedSubject.toLowerCase());
+
+      return matchesSearch && matchesGrade && matchesSubject;
+    });
+  }, [allSimulations, searchQuery, selectedGrade, selectedSubject]);
+
+  const handleLaunchSim = (sim: SimItem) => {
+    if (sim.simUrl) {
+      setActiveModalSim(sim);
+    }
   };
 
   return (
-    <div className="min-h-screen w-screen bg-slate-950 text-slate-100 flex flex-col font-sans overflow-x-hidden">
-      {/* Header Bar */}
-      <header className="h-16 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-8 flex justify-between items-center sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-xl font-bold shadow-md">
-            ⚛️
-          </div>
+    <div className="min-h-screen w-screen bg-slate-950 text-slate-100 flex font-sans overflow-x-hidden">
+      {/* Left Sidebar Navigation Menu */}
+      <SidebarNav onEditProfile={() => setIsEditProfileOpen(true)} />
+
+      {/* Main Content Area */}
+      <main className="flex-1 max-w-7xl w-full p-6 md:p-8 flex flex-col gap-8 overflow-y-auto">
+        {/* PhET Filter Bar */}
+        <PhETFilterBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedGrade={selectedGrade}
+          onSelectGrade={setSelectedGrade}
+          selectedSubject={selectedSubject}
+          onSelectSubject={setSelectedSubject}
+        />
+
+        {/* PhET Grid Header */}
+        <div className="flex justify-between items-center">
           <div>
-            <h1 className="font-bold text-base tracking-tight text-white">EduLab Dashboard</h1>
-            <p className="text-xs text-slate-400">Không gian học tập & Mô phỏng thí nghiệm</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
-            <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
-              {user?.fullName ? user.fullName[0] : 'U'}
-            </div>
-            <div className="text-left">
-              <div className="flex items-center gap-1.5">
-                <p className="text-xs font-semibold text-slate-200">{user?.fullName || 'Người dùng'}</p>
-                <button
-                  onClick={() => setIsEditProfileOpen(true)}
-                  className="text-[10px] text-blue-400 hover:underline cursor-pointer"
-                >
-                  ✏️ Sửa
-                </button>
-              </div>
-              <p className="text-[10px] text-slate-400">
-                {user?.school || 'Chưa cập nhật trường học'} • <span className="text-cyan-400 font-semibold">{user?.role === 'ADMIN' ? '🛡️ Quản trị viên' : user?.role === 'TEACHER' ? 'Giáo viên' : 'Học sinh'}</span>
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={handleLogout}
-            className="px-3 py-1.5 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white text-xs font-semibold rounded-lg transition cursor-pointer"
-          >
-            Đăng Xuất
-          </button>
-        </div>
-      </header>
-
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-8 flex flex-col gap-8">
-        {/* Welcome Hero Banner */}
-        <div className="relative rounded-3xl bg-gradient-to-r from-blue-900/60 via-slate-900 to-cyan-900/40 border border-slate-800 p-8 overflow-hidden shadow-2xl">
-          <div className="relative z-10 max-w-2xl flex flex-col gap-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full w-fit border border-cyan-800/40">
-              Chào mừng {user?.fullName || 'bạn'} trở lại!
-            </span>
-            <h2 className="text-3xl font-extrabold text-white tracking-tight">
-              Khám Phá Thế Giới Vật Lý Tương Tác
-            </h2>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Trực quan hóa các khái niệm Định luật Ohm, Mạch điện DC, Dao động cơ và Khúc xạ ánh sáng bám sát chương trình SGK GDPT 2018.
+            <h3 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+              <span>Bộ Sưu Tập Bài Thí Nghiệm PhET</span>
+              <span className="text-xs font-semibold text-cyan-400 bg-cyan-950 px-2.5 py-0.5 rounded-full border border-cyan-800/40">
+                {filteredSimulations.length} Bài Mô Phỏng
+              </span>
+            </h3>
+            <p className="text-xs text-slate-400 mt-1">
+              Phân loại theo chuẩn chương trình GDPT 2018 • Tích hợp Canvas 2D & Động lực học
             </p>
-            <div className="flex gap-4 mt-2">
-              <button
-                onClick={() => navigate('/simulation')}
-                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold text-xs rounded-xl shadow-lg transition cursor-pointer"
-              >
-                ⚡ Khởi Chạy Workspace Mô Phỏng
-              </button>
-              <button
-                onClick={() => setIsEditProfileOpen(true)}
-                className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold rounded-xl transition cursor-pointer"
-              >
-                ✏️ Cập Nhật Tên & Trường Học
-              </button>
-            </div>
           </div>
+
+          {(selectedGrade !== 'ALL' || selectedSubject !== 'ALL' || searchQuery) && (
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedGrade('ALL');
+                setSelectedSubject('ALL');
+              }}
+              className="text-xs text-cyan-400 hover:underline font-semibold cursor-pointer"
+            >
+              🔄 Xóa Bộ Lọc
+            </button>
+          )}
         </div>
 
-        {/* Bento Grid Section */}
-        <div className="flex flex-col gap-4">
-          <h3 className="text-lg font-bold text-slate-200">
-            Chuyên Đề Thí Nghiệm GDPT 2018
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Bento Card 1: Điện học */}
-            <div className="md:col-span-2 bg-slate-900/70 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between gap-4 hover:border-blue-500/50 transition shadow-xl group">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider">
-                    Điện Học & Mạch Điện DC
-                  </span>
-                  <h4 className="text-xl font-bold text-white mt-1 group-hover:text-blue-400 transition">
-                    Mạch Điện Đơn Giản & Định Luật Ohm
-                  </h4>
-                  <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                    Kéo thả Pin 9V, Điện trở, Bóng đèn, Công tắc và đo dòng điện $I$, hiệu điện thế $U$ với Ampe kế và Von kế theo chuẩn định luật Kirchhoff.
-                  </p>
-                </div>
-                <div className="w-12 h-12 rounded-2xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-2xl font-bold">
-                  ⚡
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center pt-4 border-t border-slate-800/80">
-                <span className="text-xs text-slate-500 font-medium">Lớp 9 (THCS) & Lớp 11 (THPT)</span>
-                <button
-                  onClick={() => navigate('/simulation')}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition"
-                >
-                  Mở Thí Nghiệm →
-                </button>
-              </div>
-            </div>
-
-            {/* Bento Card 2: Cơ học */}
-            <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between gap-4 hover:border-amber-500/50 transition shadow-xl group">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="text-xs font-semibold text-amber-400 uppercase tracking-wider">
-                    Cơ Học & Dao Động
-                  </span>
-                  <h4 className="text-lg font-bold text-white mt-1 group-hover:text-amber-400 transition">
-                    Con Lắc Đơn & Con Lắc Lò Xo
-                  </h4>
-                  <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                    Điều chỉnh chiều dài $l$, khối lượng $m$, gia tốc $g$ và xem đồ thị $x-t$ thời gian thực.
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-amber-600/20 text-amber-400 flex items-center justify-center text-xl font-bold">
-                  ⏱️
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center pt-4 border-t border-slate-800/80">
-                <span className="text-xs text-slate-500 font-medium">Lớp 10 & 11</span>
-                <span className="text-xs font-semibold text-amber-400 bg-amber-950/60 px-2.5 py-1 rounded-md border border-amber-800/40">
-                  Xem Trước
-                </span>
-              </div>
-            </div>
-
-            {/* Bento Card 3: Quang học */}
-            <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between gap-4 hover:border-cyan-500/50 transition shadow-xl group">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="text-xs font-semibold text-cyan-400 uppercase tracking-wider">
-                    Quang Học
-                  </span>
-                  <h4 className="text-lg font-bold text-white mt-1 group-hover:text-cyan-400 transition">
-                    Khúc Xạ Ánh Sáng & Thấu Kính
-                  </h4>
-                  <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                    Chiếu tia laser qua thấu kính hội tụ, thấu kính phân kỳ và vẽ ảnh ảo/ảnh thật $A'B'$.
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-cyan-600/20 text-cyan-400 flex items-center justify-center text-xl font-bold">
-                  🔍
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center pt-4 border-t border-slate-800/80">
-                <span className="text-xs text-slate-500 font-medium">Lớp 9 & 11</span>
-                <span className="text-xs font-semibold text-cyan-400 bg-cyan-950/60 px-2.5 py-1 rounded-md border border-cyan-800/40">
-                  Xem Trước
-                </span>
-              </div>
-            </div>
-
-            {/* Bento Card 4: System Topics from REST API */}
-            <div className="md:col-span-2 bg-slate-900/70 border border-slate-800 rounded-2xl p-6 flex flex-col gap-4 shadow-xl">
-              <h4 className="text-sm font-bold text-slate-300 uppercase tracking-wider">
-                Danh Mục Chủ Đề Tải Từ Backend Spring Boot API
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {topics.map(t => (
-                  <div key={t.id} className="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col gap-1">
-                    <span className="text-xs font-bold text-blue-400">{t.subjectArea} • {t.gradeLevel}</span>
-                    <h5 className="font-semibold text-sm text-slate-100">{t.title}</h5>
-                    <p className="text-xs text-slate-400 leading-normal">{t.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+        {/* PhET Simulation Cards Grid */}
+        {filteredSimulations.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredSimulations.map(sim => (
+              <SimCard key={sim.id} sim={sim} onLaunch={sim.simUrl ? handleLaunchSim : undefined} />
+            ))}
           </div>
-        </div>
+        ) : (
+          <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-12 text-center flex flex-col items-center justify-center gap-3">
+            <div className="text-4xl">🔍</div>
+            <h4 className="text-lg font-bold text-slate-200">Không Tìm Thấy Bài Thí Nghiệm Phù Hợp</h4>
+            <p className="text-xs text-slate-400 max-w-md">
+              Không tìm thấy kết quả cho "{searchQuery}". Thử chọn khối lớp hoặc phân môn khác!
+            </p>
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedGrade('ALL');
+                setSelectedSubject('ALL');
+              }}
+              className="mt-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition cursor-pointer"
+            >
+              Xem Tất Cả Thí Nghiệm
+            </button>
+          </div>
+        )}
+
+        {/* Footer */}
+        <footer className="border-t border-slate-900 py-6 text-center text-xs text-slate-500 mt-auto">
+          © 2026 EduLab Physics Platform. Mô phỏng học liệu mở chuẩn PhET & GDPT 2018.
+        </footer>
       </main>
 
-      {/* Edit Profile Modal Integration */}
+      {/* Edit Profile Modal */}
       <EditProfileModal
         isOpen={isEditProfileOpen}
         onClose={() => setIsEditProfileOpen(false)}
       />
+
+      {/* PhET Simulation Modal Viewer */}
+      {activeModalSim && (
+        <PhetModalViewer
+          isOpen={!!activeModalSim}
+          onClose={() => setActiveModalSim(null)}
+          title={activeModalSim.title}
+          simUrl={activeModalSim.simUrl || ''}
+        />
+      )}
     </div>
   );
 };
