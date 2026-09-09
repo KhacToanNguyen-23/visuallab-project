@@ -1,0 +1,655 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" 
+xmlns:w="urn:schemas-microsoft-com:office:word" 
+xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: 'Times New Roman', serif; line-height: 1.5; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+  th, td { border: 1px solid black; padding: 8px; text-align: left; }
+  th { background-color: #f2f2f2; }
+</style>
+</head>
+<body>
+<h1>SRS — VisualLab MVP</h1>
+<h3>Nền tảng Thí nghiệm Ảo Môn Vật lí — Chuẩn Chương trình GDPT 2018 Việt Nam</h3>
+<p><strong>Phiên bản:</strong> 1.0 — MVP<br />
+<strong>Ngày:</strong> 08/09/2026</p>
+<hr />
+<h2>1. Tổng quan hệ thống</h2>
+<h3>1.1. Mục tiêu sản phẩm</h3>
+<p>VisualLab là nền tảng web mô phỏng thí nghiệm ảo môn Vật lí dành cho học sinh THPT Việt Nam (lớp 10, 11, 12), bám sát 100% chương trình Giáo dục Phổ thông 2018 (GDPT 2018) theo Thông tư 32/2018/TT-BGDĐT và danh mục thiết bị chuẩn theo Thông tư 39/2021/TT-BGDĐT.</p>
+<h3>1.2. Phạm vi MVP</h3>
+<ul>
+<li>Môn học: <strong>Vật lí</strong> (lớp 10, 11, 12)</li>
+<li>Số bài thực hành: <strong>Tối thiểu 3 bài</strong> (1 bài mỗi khối lớp)</li>
+<li>Bộ sách ưu tiên: <strong>Kết nối tri thức với cuộc sống</strong> (NXB Giáo dục)</li>
+<li>Ngôn ngữ: <strong>Tiếng Việt</strong></li>
+</ul>
+<h3>1.3. Đối tượng người dùng</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Vai trò</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Học sinh (Student)</strong></td>
+<td style="text-align: left;">Học sinh THPT lớp 10–12, thực hiện thí nghiệm ảo, nộp báo cáo</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Giáo viên (Teacher)</strong></td>
+<td style="text-align: left;">Giáo viên Vật lí THPT, quản lý lớp học, giao bài, chấm điểm</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Admin</strong></td>
+<td style="text-align: left;">Quản trị viên nền tảng, quản lý nội dung và người dùng</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>2. Yêu cầu chức năng</h2>
+<hr />
+<h3>MODULE 1: XÁC THỰC &amp; TÀI KHOẢN</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Chức năng</th>
+<th style="text-align: left;">Vai trò</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">AUTH-01</td>
+<td style="text-align: left;">Đăng ký tài khoản</td>
+<td style="text-align: left;">Tất cả</td>
+<td style="text-align: left;">Đăng ký bằng email + mật khẩu. Hệ thống yêu cầu xác nhận email trước khi kích hoạt.</td>
+</tr>
+<tr>
+<td style="text-align: left;">AUTH-02</td>
+<td style="text-align: left;">Đăng nhập</td>
+<td style="text-align: left;">Tất cả</td>
+<td style="text-align: left;">Đăng nhập bằng email/mật khẩu hoặc tài khoản Google.</td>
+</tr>
+<tr>
+<td style="text-align: left;">AUTH-03</td>
+<td style="text-align: left;">Phân quyền đăng ký</td>
+<td style="text-align: left;">Giáo viên</td>
+<td style="text-align: left;">Tài khoản giáo viên cần Admin duyệt thủ công trước khi sử dụng được tính năng quản lý lớp.</td>
+</tr>
+<tr>
+<td style="text-align: left;">AUTH-04</td>
+<td style="text-align: left;">Quên mật khẩu</td>
+<td style="text-align: left;">Tất cả</td>
+<td style="text-align: left;">Gửi link đặt lại mật khẩu qua email.</td>
+</tr>
+<tr>
+<td style="text-align: left;">AUTH-05</td>
+<td style="text-align: left;">Cập nhật hồ sơ</td>
+<td style="text-align: left;">Tất cả</td>
+<td style="text-align: left;">Cập nhật họ tên, trường học, lớp/môn giảng dạy.</td>
+</tr>
+<tr>
+<td style="text-align: left;">AUTH-06</td>
+<td style="text-align: left;">Truy cập không đăng nhập</td>
+<td style="text-align: left;">Khách</td>
+<td style="text-align: left;">Khách (Guest) có thể xem danh sách bài và làm thí nghiệm tự do nhưng không lưu được kết quả, không xem được bài được giao.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>MODULE 2: THƯ VIỆN BÀI THỰC HÀNH</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Chức năng</th>
+<th style="text-align: left;">Vai trò</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">LIB-01</td>
+<td style="text-align: left;">Xem danh sách bài</td>
+<td style="text-align: left;">Tất cả</td>
+<td style="text-align: left;">Hiển thị toàn bộ bài thực hành đã được kiểm duyệt (is_verified = true).</td>
+</tr>
+<tr>
+<td style="text-align: left;">LIB-02</td>
+<td style="text-align: left;">Lọc bài</td>
+<td style="text-align: left;">Tất cả</td>
+<td style="text-align: left;">Lọc theo: Khối lớp (10/11/12), Bộ sách, Chương học.</td>
+</tr>
+<tr>
+<td style="text-align: left;">LIB-03</td>
+<td style="text-align: left;">Tìm kiếm bài</td>
+<td style="text-align: left;">Tất cả</td>
+<td style="text-align: left;">Tìm kiếm theo tên bài, từ khóa.</td>
+</tr>
+<tr>
+<td style="text-align: left;">LIB-04</td>
+<td style="text-align: left;">Xem chi tiết bài</td>
+<td style="text-align: left;">Tất cả</td>
+<td style="text-align: left;">Hiển thị: Tên bài, mục tiêu (YCCĐ), danh sách dụng cụ, bộ sách áp dụng, thời gian thực hiện ước tính.</td>
+</tr>
+<tr>
+<td style="text-align: left;">LIB-05</td>
+<td style="text-align: left;">Trạng thái bài</td>
+<td style="text-align: left;">Học sinh</td>
+<td style="text-align: left;">Đánh dấu bài đã hoàn thành trong thư viện cá nhân (nếu đã đăng nhập).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>MODULE 3: MÔ PHỎNG THÍ NGHIỆM (SIMULATION ENGINE)</h3>
+<blockquote>
+<p><strong>Đây là module cốt lõi của toàn bộ nền tảng.</strong></p>
+</blockquote>
+<h4>3.1. Cấu trúc 1 bài thực hành</h4>
+<p>Mỗi bài thực hành được tổ chức theo <strong>5 bước tuần tự</strong>, học sinh phải hoàn thành bước trước mới được chuyển sang bước sau:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Bước</th>
+<th style="text-align: left;">Tên</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;"><strong>Mục tiêu &amp; Lý thuyết</strong></td>
+<td style="text-align: left;">Hiển thị mục tiêu bài, công thức liên quan, tóm tắt lý thuyết cần nhớ trước khi thực hành.</td>
+</tr>
+<tr>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;"><strong>Chuẩn bị dụng cụ</strong></td>
+<td style="text-align: left;">Học sinh chọn đúng dụng cụ cần thiết từ khay dụng cụ. Chọn sai → Hệ thống cảnh báo và giải thích.</td>
+</tr>
+<tr>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;"><strong>Tiến hành thí nghiệm</strong></td>
+<td style="text-align: left;">Học sinh tương tác với Canvas mô phỏng.</td>
+</tr>
+<tr>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;"><strong>Ghi &amp; Xử lý số liệu</strong></td>
+<td style="text-align: left;">Học sinh điền bảng số liệu, hệ thống hỗ trợ tính toán và vẽ đồ thị.</td>
+</tr>
+<tr>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;"><strong>Kết luận &amp; Nộp báo cáo</strong></td>
+<td style="text-align: left;">Học sinh viết kết luận, xuất PDF và nộp bài.</td>
+</tr>
+</tbody>
+</table>
+<h4>3.2. Yêu cầu chức năng Simulation Engine</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Chức năng</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">SIM-01</td>
+<td style="text-align: left;">Mô phỏng vật lí chính xác</td>
+<td style="text-align: left;">Kết quả tính toán dựa trên công thức vật lí chính xác theo SGK GDPT 2018. Không dùng xấp xỉ tùy tiện.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SIM-02</td>
+<td style="text-align: left;">Tương tác Canvas</td>
+<td style="text-align: left;">Học sinh thao tác trực tiếp: kéo thả dụng cụ, bấm công tắc, vặn biến trở, thay đổi thông số thí nghiệm.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SIM-03</td>
+<td style="text-align: left;">Sinh sai số thực tế</td>
+<td style="text-align: left;">Hệ thống tự động thêm sai số ngẫu nhiên vào kết quả đo mỗi lần thực hiện, mô phỏng điều kiện phòng thí nghiệm thực tế.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SIM-04</td>
+<td style="text-align: left;">Cảnh báo thao tác sai</td>
+<td style="text-align: left;">Phát hiện và thông báo khi học sinh thực hiện sai quy trình (ví dụ: chưa ngắt khóa K khi thay biến trở, đổ nước vào axit đặc, chọn sai thang đo).</td>
+</tr>
+<tr>
+<td style="text-align: left;">SIM-05</td>
+<td style="text-align: left;">Cảnh báo an toàn</td>
+<td style="text-align: left;">Hiển thị cảnh báo an toàn tương ứng với từng thao tác nguy hiểm trong thí nghiệm thực tế.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SIM-06</td>
+<td style="text-align: left;">Lặp lại lần đo</td>
+<td style="text-align: left;">Học sinh có thể thực hiện lại thao tác để lấy nhiều lần đo (tối thiểu 3 lần, tối đa 5 lần theo chuẩn SGK).</td>
+</tr>
+<tr>
+<td style="text-align: left;">SIM-07</td>
+<td style="text-align: left;">Hiển thị dụng cụ chuẩn</td>
+<td style="text-align: left;">Dụng cụ được vẽ đúng ngoại hình, tên gọi và thông số kỹ thuật theo Thông tư 39/2021/TT-BGDĐT.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SIM-08</td>
+<td style="text-align: left;">Chế độ Demo</td>
+<td style="text-align: left;">Giáo viên có thể dùng chế độ Demo: tự do thao tác Canvas không bị ràng buộc bởi các bước hướng dẫn, dùng để chiếu bảng giảng bài.</td>
+</tr>
+</tbody>
+</table>
+<h4>3.3. Yêu cầu Bảng số liệu &amp; Xử lý kết quả</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Chức năng</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">DATA-01</td>
+<td style="text-align: left;">Bảng số liệu chuẩn</td>
+<td style="text-align: left;">Bảng số liệu đúng mẫu SGK: tên cột, đơn vị, số hàng đo. Học sinh tự đọc giá trị từ dụng cụ và điền vào bảng, hệ thống không tự điền thay.</td>
+</tr>
+<tr>
+<td style="text-align: left;">DATA-02</td>
+<td style="text-align: left;">Kiểm tra đầu vào</td>
+<td style="text-align: left;">Cảnh báo nếu học sinh nhập giá trị bất hợp lý (ngoài dải cho phép của dụng cụ).</td>
+</tr>
+<tr>
+<td style="text-align: left;">DATA-03</td>
+<td style="text-align: left;">Tính giá trị trung bình</td>
+<td style="text-align: left;">Tự động tính $\bar{A}$ sau khi học sinh điền đủ số lần đo.</td>
+</tr>
+<tr>
+<td style="text-align: left;">DATA-04</td>
+<td style="text-align: left;">Tính sai số</td>
+<td style="text-align: left;">Tự động tính: Sai số tuyệt đối $\Delta A$, Sai số dụng cụ $\Delta_{dc}$, Sai số tỉ đối $\delta\%$. Áp dụng đúng quy tắc làm tròn số theo GDPT 2018.</td>
+</tr>
+<tr>
+<td style="text-align: left;">DATA-05</td>
+<td style="text-align: left;">Vẽ đồ thị tự động</td>
+<td style="text-align: left;">Vẽ đồ thị từ bảng số liệu học sinh nhập (ví dụ: đồ thị $s - t^2$, đồ thị $U - I$). Học sinh có thể quan sát đường xu hướng (trend line).</td>
+</tr>
+<tr>
+<td style="text-align: left;">DATA-06</td>
+<td style="text-align: left;">Kết quả cuối</td>
+<td style="text-align: left;">Hiển thị kết quả dạng chuẩn: $A = \bar{A} \pm \Delta A$ (đơn vị).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>MODULE 4: BÁO CÁO THỰC HÀNH</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Chức năng</th>
+<th style="text-align: left;">Vai trò</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">RPT-01</td>
+<td style="text-align: left;">Xuất PDF báo cáo</td>
+<td style="text-align: left;">Học sinh</td>
+<td style="text-align: left;">Tạo file PDF "Bản tường trình thực hành" đúng mẫu: tên bài, họ tên, lớp, trường, ngày làm, bảng số liệu, đồ thị, kết quả, kết luận.</td>
+</tr>
+<tr>
+<td style="text-align: left;">RPT-02</td>
+<td style="text-align: left;">Tải PDF về máy</td>
+<td style="text-align: left;">Học sinh</td>
+<td style="text-align: left;">Học sinh tải PDF về để in hoặc nộp trực tiếp cho giáo viên.</td>
+</tr>
+<tr>
+<td style="text-align: left;">RPT-03</td>
+<td style="text-align: left;">Lưu báo cáo trên cloud</td>
+<td style="text-align: left;">Học sinh</td>
+<td style="text-align: left;">Nếu đã đăng nhập, hệ thống lưu PDF vào hồ sơ cá nhân, xem lại được bất kỳ lúc nào.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>MODULE 5: QUẢN LÝ LỚP HỌC (Giáo viên)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Chức năng</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">CLASS-01</td>
+<td style="text-align: left;">Tạo lớp học</td>
+<td style="text-align: left;">Giáo viên tạo lớp, hệ thống sinh <strong>mã lớp</strong> (6 ký tự). Học sinh dùng mã này để tham gia.</td>
+</tr>
+<tr>
+<td style="text-align: left;">CLASS-02</td>
+<td style="text-align: left;">Xem danh sách lớp</td>
+<td style="text-align: left;">Giáo viên xem tất cả lớp đang quản lý.</td>
+</tr>
+<tr>
+<td style="text-align: left;">CLASS-03</td>
+<td style="text-align: left;">Xem danh sách học sinh trong lớp</td>
+<td style="text-align: left;">Xem họ tên, email, trạng thái bài nộp của từng học sinh.</td>
+</tr>
+<tr>
+<td style="text-align: left;">CLASS-04</td>
+<td style="text-align: left;">Xóa học sinh khỏi lớp</td>
+<td style="text-align: left;">Giáo viên xóa học sinh khỏi lớp. Dữ liệu bài đã nộp không bị xóa, học sinh vẫn xem được trong hồ sơ cá nhân.</td>
+</tr>
+<tr>
+<td style="text-align: left;">CLASS-05</td>
+<td style="text-align: left;">Tham gia lớp (học sinh)</td>
+<td style="text-align: left;">Học sinh nhập mã lớp để tham gia. 1 học sinh có thể tham gia nhiều lớp cùng lúc.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>MODULE 6: GIAO BÀI &amp; NỘP BÀI</h3>
+<h4>6.1. Phía Giáo viên</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Chức năng</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">ASSIGN-01</td>
+<td style="text-align: left;">Giao bài thực hành</td>
+<td style="text-align: left;">Giáo viên chọn bài từ thư viện, chọn lớp, đặt deadline, cấu hình cho phép nộp lại hay không. Chỉ bài đã được Admin kiểm duyệt mới xuất hiện trong danh sách.</td>
+</tr>
+<tr>
+<td style="text-align: left;">ASSIGN-02</td>
+<td style="text-align: left;">Chỉnh sửa Assignment</td>
+<td style="text-align: left;">Cho phép sửa deadline khi chưa có học sinh nộp. Nếu đã có học sinh nộp: chỉ cho phép gia hạn deadline, không được rút ngắn.</td>
+</tr>
+<tr>
+<td style="text-align: left;">ASSIGN-03</td>
+<td style="text-align: left;">Xóa Assignment</td>
+<td style="text-align: left;">Chỉ xóa được nếu chưa có học sinh nộp bài. Nếu đã có bài nộp → Chỉ ẩn (không xóa dữ liệu).</td>
+</tr>
+<tr>
+<td style="text-align: left;">ASSIGN-04</td>
+<td style="text-align: left;">Theo dõi tiến độ</td>
+<td style="text-align: left;">Xem realtime: bao nhiêu học sinh đã nộp / chưa nộp / nộp trễ.</td>
+</tr>
+</tbody>
+</table>
+<h4>6.2. Phía Học sinh</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Chức năng</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">SUBMIT-01</td>
+<td style="text-align: left;">Xem bài được giao</td>
+<td style="text-align: left;">Học sinh thấy danh sách bài được giao kèm trạng thái: Chưa làm / Đang làm / Đã nộp / Nộp trễ / Quá hạn.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SUBMIT-02</td>
+<td style="text-align: left;">Nộp bài</td>
+<td style="text-align: left;">Học sinh hoàn thành thí nghiệm và bấm "Nộp bài". Hệ thống lưu toàn bộ dữ liệu số liệu + PDF vào hệ thống.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SUBMIT-03</td>
+<td style="text-align: left;">Nộp trễ</td>
+<td style="text-align: left;">Học sinh vẫn có thể nộp sau deadline. Hệ thống tự động đánh dấu <strong>"Nộp trễ"</strong>. Giáo viên tự quyết định xử lý.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SUBMIT-04</td>
+<td style="text-align: left;">Nộp lại</td>
+<td style="text-align: left;">Nếu giáo viên cho phép, học sinh nộp lại trước deadline. Hệ thống lưu tất cả các lần nộp, gắn số thứ tự. Điểm chấm theo lần nộp cuối cùng.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SUBMIT-05</td>
+<td style="text-align: left;">Xem kết quả</td>
+<td style="text-align: left;">Sau khi giáo viên chấm, học sinh xem được điểm và nhận xét.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>MODULE 7: CHẤM ĐIỂM (Giáo viên)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Chức năng</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">GRADE-01</td>
+<td style="text-align: left;">Xem báo cáo học sinh</td>
+<td style="text-align: left;">Giáo viên xem PDF báo cáo từng học sinh và toàn bộ dữ liệu số liệu bài làm.</td>
+</tr>
+<tr>
+<td style="text-align: left;">GRADE-02</td>
+<td style="text-align: left;">Chấm điểm</td>
+<td style="text-align: left;">Nhập điểm (thang 10) và viết nhận xét cho từng bài nộp.</td>
+</tr>
+<tr>
+<td style="text-align: left;">GRADE-03</td>
+<td style="text-align: left;">Chấm theo tiêu chí</td>
+<td style="text-align: left;">Chấm điểm theo 3 phần: Quy trình thực hiện / Bảng số liệu &amp; Tính toán / Kết luận. Hệ thống tự cộng tổng.</td>
+</tr>
+<tr>
+<td style="text-align: left;">GRADE-04</td>
+<td style="text-align: left;">Xuất bảng điểm</td>
+<td style="text-align: left;">Xuất file Excel danh sách điểm toàn lớp theo từng bài Assignment.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>MODULE 8: QUẢN TRỊ NỀN TẢNG (Admin)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Chức năng</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">ADMIN-01</td>
+<td style="text-align: left;">Duyệt tài khoản giáo viên</td>
+<td style="text-align: left;">Xem danh sách tài khoản đăng ký vai trò giáo viên, duyệt hoặc từ chối.</td>
+</tr>
+<tr>
+<td style="text-align: left;">ADMIN-02</td>
+<td style="text-align: left;">Quản lý bài thực hành</td>
+<td style="text-align: left;">Thêm, sửa, ẩn/hiện bài thực hành. Gắn nhãn: Lớp, Bộ sách, Chương, YCCĐ tương ứng.</td>
+</tr>
+<tr>
+<td style="text-align: left;">ADMIN-03</td>
+<td style="text-align: left;">Kiểm duyệt nội dung</td>
+<td style="text-align: left;">Đánh dấu bài là <strong>"Đã kiểm duyệt"</strong> sau khi Hội đồng chuyên môn thẩm định. Chỉ bài đã kiểm duyệt mới hiển thị cho người dùng.</td>
+</tr>
+<tr>
+<td style="text-align: left;">ADMIN-04</td>
+<td style="text-align: left;">Quản lý phiên bản bài</td>
+<td style="text-align: left;">Mỗi bài có version và ngày cập nhật. Bài đã có submission không được sửa nội dung, phải tạo version mới.</td>
+</tr>
+<tr>
+<td style="text-align: left;">ADMIN-05</td>
+<td style="text-align: left;">Thống kê hệ thống</td>
+<td style="text-align: left;">Xem: Tổng lượt sử dụng, bài được dùng nhiều nhất, số trường/lớp đang dùng, tỉ lệ hoàn thành bài.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>3. Quy tắc nghiệp vụ (Business Rules)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Quy tắc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">BR-01</td>
+<td style="text-align: left;">Bài tự do (Free Access) và Bài được giao (Assignment) là <strong>2 ngữ cảnh hoàn toàn độc lập</strong>. Bài đã làm trong chế độ tự do không tính là đã nộp Assignment.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-02</td>
+<td style="text-align: left;">Kết quả bài thực hành trong chế độ tự do (Guest hoặc không có Assignment) <strong>không tính điểm</strong>, chỉ phục vụ mục đích học tập và luyện tập.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-03</td>
+<td style="text-align: left;">1 học sinh có thể tham gia <strong>nhiều lớp</strong> cùng lúc. Nếu nhiều giáo viên giao cùng 1 bài, mỗi Assignment là <strong>độc lập</strong>, học sinh phải nộp riêng từng Assignment.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-04</td>
+<td style="text-align: left;">Xóa học sinh khỏi lớp <strong>không xóa dữ liệu</strong> bài đã nộp. Học sinh vẫn xem được lịch sử bài làm trong hồ sơ cá nhân.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-05</td>
+<td style="text-align: left;">Assignment chỉ có thể <strong>xóa cứng</strong> khi chưa có học sinh nộp bài. Sau khi có submission, chỉ được <strong>ẩn (soft delete)</strong>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-06</td>
+<td style="text-align: left;">Khi nội dung bài được cập nhật (version mới), các submission cũ <strong>giữ nguyên</strong> và gắn với version cũ tại thời điểm nộp.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-07</td>
+<td style="text-align: left;">Chỉ bài có trạng thái <strong>"Đã kiểm duyệt"</strong> mới xuất hiện trong thư viện công khai và danh sách giao bài của giáo viên.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-08</td>
+<td style="text-align: left;">Học sinh nộp sau deadline hệ thống tự động gắn nhãn <strong>"Nộp trễ"</strong>. Hệ thống <strong>không chặn</strong> việc nộp trễ — giáo viên tự quyết định cách xử lý.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-09</td>
+<td style="text-align: left;">Nếu giáo viên cho phép nộp lại, hệ thống lưu <strong>tất cả các lần nộp</strong>. Điểm chấm mặc định theo <strong>lần nộp cuối cùng</strong>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-10</td>
+<td style="text-align: left;">Giáo viên chỉ được <strong>gia hạn</strong> deadline (không được rút ngắn) sau khi đã có học sinh nộp bài.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-11</td>
+<td style="text-align: left;">Tài khoản đăng ký vai trò <strong>Giáo viên</strong> phải được Admin duyệt thủ công trước khi có quyền tạo lớp và giao bài.</td>
+</tr>
+<tr>
+<td style="text-align: left;">BR-12</td>
+<td style="text-align: left;">Kết quả số liệu mô phỏng phải nằm trong <strong>dải giá trị vật lí hợp lệ</strong> của bài thực hành (ví dụ: $g$ phải nằm trong khoảng $9.70 - 9.90 \, m/s^2$).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>4. Yêu cầu phi chức năng</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mã</th>
+<th style="text-align: left;">Yêu cầu</th>
+<th style="text-align: left;">Mô tả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">NFR-01</td>
+<td style="text-align: left;"><strong>Tương thích thiết bị</strong></td>
+<td style="text-align: left;">Chạy được trên trình duyệt Chrome/Edge/Firefox phiên bản mới nhất. Tương thích màn hình máy tính và máy tính bảng. Không yêu cầu cài đặt thêm phần mềm.</td>
+</tr>
+<tr>
+<td style="text-align: left;">NFR-02</td>
+<td style="text-align: left;"><strong>Hiệu năng Canvas</strong></td>
+<td style="text-align: left;">Mô phỏng Canvas phải chạy tối thiểu 30fps trên máy tính có cấu hình thấp (RAM 4GB, CPU thế hệ 2015–2018) — phổ biến tại các trường học công lập Việt Nam.</td>
+</tr>
+<tr>
+<td style="text-align: left;">NFR-03</td>
+<td style="text-align: left;"><strong>Ngôn ngữ</strong></td>
+<td style="text-align: left;">Toàn bộ giao diện, nội dung bài thực hành, cảnh báo và báo cáo bằng <strong>tiếng Việt</strong>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">NFR-04</td>
+<td style="text-align: left;"><strong>Bảo mật dữ liệu</strong></td>
+<td style="text-align: left;">Tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân. Không lưu dữ liệu học sinh chưa đủ 18 tuổi ra máy chủ nước ngoài khi chưa có sự đồng ý.</td>
+</tr>
+<tr>
+<td style="text-align: left;">NFR-05</td>
+<td style="text-align: left;"><strong>Tính sẵn sàng</strong></td>
+<td style="text-align: left;">Uptime tối thiểu 95% trong giờ học (7h–22h, Thứ 2–Thứ 7).</td>
+</tr>
+<tr>
+<td style="text-align: left;">NFR-06</td>
+<td style="text-align: left;"><strong>Xuất PDF</strong></td>
+<td style="text-align: left;">PDF báo cáo phải in được đúng trên khổ giấy A4, không bị cắt nội dung.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>5. Danh sách bài thực hành MVP (3 bài ưu tiên)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">STT</th>
+<th style="text-align: left;">Tên bài</th>
+<th style="text-align: left;">Lớp</th>
+<th style="text-align: left;">Bộ sách</th>
+<th style="text-align: left;">Dụng cụ chính</th>
+<th style="text-align: left;">YCCĐ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;"><strong>Đo gia tốc rơi tự do</strong></td>
+<td style="text-align: left;">10</td>
+<td style="text-align: left;">Kết nối tri thức</td>
+<td style="text-align: left;">Nam châm điện, 2 cổng quang điện, đồng hồ MC-964, bi sắt, giá đỡ</td>
+<td style="text-align: left;">VL10.DH.TH.01</td>
+</tr>
+<tr>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;"><strong>Đo suất điện động và điện trở trong của nguồn điện</strong></td>
+<td style="text-align: left;">11</td>
+<td style="text-align: left;">Kết nối tri thức</td>
+<td style="text-align: left;">Pin, biến trở con chạy, vôn kế, ampe kế, khóa K, dây nối</td>
+<td style="text-align: left;">VL11.DC.TH.01</td>
+</tr>
+<tr>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;"><strong>Đo nhiệt dung riêng của nước</strong></td>
+<td style="text-align: left;">12</td>
+<td style="text-align: left;">Kết nối tri thức</td>
+<td style="text-align: left;">Nhiệt lượng kế, biến thế nguồn, oát kế, nhiệt kế điện tử, cốc thủy tinh</td>
+<td style="text-align: left;">VL12.ND.TH.01</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>6. Ngoài phạm vi MVP (Out of Scope)</h2>
+<p>Các tính năng sau <strong>không nằm trong MVP</strong>, sẽ xem xét ở phiên bản sau:</p>
+<ul>
+<li>Bài thực hành cho môn Hóa học, Sinh học</li>
+<li>Hỗ trợ bộ sách Cánh Diều và Chân trời sáng tạo</li>
+<li>Chế độ mô phỏng 3D</li>
+<li>Tích hợp LMS (Google Classroom, Microsoft Teams)</li>
+<li>Ứng dụng mobile (iOS/Android)</li>
+<li>Hệ thống thông báo (Notification) realtime</li>
+<li>Bảng xếp hạng (Leaderboard) gamification</li>
+<li>Tính năng bình luận / Q&amp;A trong bài thực hành</li>
+<li>Đa ngôn ngữ (tiếng Anh)</li>
+</ul>
+</body>
+</html>
