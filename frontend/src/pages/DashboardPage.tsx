@@ -4,9 +4,50 @@ import { EditProfileModal } from '../components/auth/EditProfileModal';
 import { PhETFilterBar } from '../components/dashboard/PhETFilterBar';
 import { SimCard, type SimItem } from '../components/dashboard/SimCard';
 import { SidebarNav } from '../components/dashboard/SidebarNav';
+import { PhetModalViewer } from '../components/dashboard/PhetModalViewer';
 
 // Built-in Simulations aligned with GDPT 2018
 const BUILTIN_SIMULATIONS: SimItem[] = [
+  {
+    id: 'sim-phet-pendulum-lab',
+    title: 'Thực Hành Con Lắc Đơn Đo Gia Tốc g (Linh Kiện Lắp Ghép)',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Cơ Học',
+    description: 'Lắp ghép linh kiện Cục tạ, Sợi dây, Thước đo góc & Đồng hồ hiện số: Kéo lệch góc small alpha, bấm thời gian 10T để đo gia tốc trọng trường g.',
+    icon: '⏳',
+    route: '/pendulum-phet-lab',
+    isPopular: true,
+  },
+  {
+    id: 'sim-phet-refraction-lab',
+    title: 'Thực Hành Khúc Xạ Ánh Sáng (Linh Kiện PhET Engine)',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Quang Học',
+    description: 'Sử dụng Đèn Laser, Thước Đo Góc & Khối Chiết Suất PhET cho bài lab SGK: Xoay tia tới i, đo góc khúc xạ r, xác định chiết suất n2 theo Định luật Snell.',
+    icon: '🔴',
+    route: '/refraction-phet-lab',
+    isPopular: true,
+  },
+  {
+    id: 'sim-vietnam-ohm-lab',
+    title: 'Bài Thực Hành SGK: Đo Điện Trở R (Định Luật Ohm)',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Điện Học',
+    description: 'Kết hợp bộ linh kiện PhET HTML5 & Khung 5 bước thực hành chuẩn GDPT 2018: Lắp mạch Vôn-Ampe, thu thập 3 lần đo U-I, tính R trung bình và sai số tuyệt đối.',
+    icon: '🧪',
+    route: '/vietnam-phet-lab',
+    isPopular: true,
+  },
+  {
+    id: 'sim-wave-interference-5step',
+    title: 'Thí Nghiệm Thực Hành Giao Thoa Sóng (5 Bước)',
+    gradeLevel: 'Lớp 11',
+    subjectArea: 'Sóng Cơ Học',
+    description: 'Thí nghiệm thực hành 5 bước chuẩn GDPT 2018: Khảo sát nguồn f, đo khoảng cách a và D, xác định vân cực đại/cực tiểu, kéo thước đo khoảng vân i và tính bước sóng \u03BB.',
+    icon: '🌊',
+    route: '/wave-interference',
+    isPopular: true,
+  },
   {
     id: 'sim-dc-circuit',
     title: 'Mạch Điện Đơn Giản & Định Luật Ohm',
@@ -15,6 +56,7 @@ const BUILTIN_SIMULATIONS: SimItem[] = [
     description: 'Kéo thả linh kiện Pin, Điện trở, Bóng đèn, Công tắc, Ampe kế, Vôn kế. Thuật toán Kirchhoff tính toán chính xác dòng điện và chuyển động hạt electron.',
     icon: '⚡',
     route: '/simulation',
+    simUrl: '/simulations/ohms-law_vi.html',
     isPopular: true,
   },
   {
@@ -81,6 +123,7 @@ export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
   const [apiTopics, setApiTopics] = useState<ApiTopic[]>([]);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [activeModalSim, setActiveModalSim] = useState<SimItem | null>(null);
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
@@ -145,6 +188,12 @@ export const DashboardPage: React.FC = () => {
     });
   }, [allSimulations, searchQuery, selectedGrade, selectedSubject]);
 
+  const handleLaunchSim = (sim: SimItem) => {
+    if (sim.simUrl) {
+      setActiveModalSim(sim);
+    }
+  };
+
   return (
     <div className="min-h-screen w-screen bg-slate-950 text-slate-100 flex font-sans overflow-x-hidden">
       {/* Left Sidebar Navigation Menu */}
@@ -194,7 +243,7 @@ export const DashboardPage: React.FC = () => {
         {filteredSimulations.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSimulations.map(sim => (
-              <SimCard key={sim.id} sim={sim} />
+              <SimCard key={sim.id} sim={sim} onLaunch={sim.simUrl ? handleLaunchSim : undefined} />
             ))}
           </div>
         ) : (
@@ -228,6 +277,16 @@ export const DashboardPage: React.FC = () => {
         isOpen={isEditProfileOpen}
         onClose={() => setIsEditProfileOpen(false)}
       />
+
+      {/* PhET Simulation Modal Viewer */}
+      {activeModalSim && (
+        <PhetModalViewer
+          isOpen={!!activeModalSim}
+          onClose={() => setActiveModalSim(null)}
+          title={activeModalSim.title}
+          simUrl={activeModalSim.simUrl || ''}
+        />
+      )}
     </div>
   );
 };

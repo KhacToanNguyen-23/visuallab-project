@@ -9,14 +9,16 @@ export interface SimItem {
   description: string;
   icon: string;
   route: string;
+  simUrl?: string;
   isPopular?: boolean;
 }
 
 interface SimCardProps {
   sim: SimItem;
+  onLaunch?: (sim: SimItem) => void;
 }
 
-export const SimCard: React.FC<SimCardProps> = ({ sim }) => {
+export const SimCard: React.FC<SimCardProps> = ({ sim, onLaunch }) => {
   const navigate = useNavigate();
 
   return (
@@ -67,7 +69,13 @@ export const SimCard: React.FC<SimCardProps> = ({ sim }) => {
           </span>
 
           <button
-            onClick={() => navigate(sim.route)}
+            onClick={() => {
+              if (onLaunch) {
+                onLaunch(sim);
+              } else {
+                navigate(sim.route);
+              }
+            }}
             className="group/btn relative inline-flex items-center justify-center pl-5 pr-2 py-2 rounded-full bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 hover:opacity-95 text-white text-xs font-extrabold shadow-lg shadow-cyan-500/20 transition-all duration-300 active:scale-95 cursor-pointer"
           >
             <span className="mr-2">Khởi Chạy</span>

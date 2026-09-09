@@ -8,6 +8,10 @@ import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { SRSWorkflowPage } from './pages/SRSWorkflowPage';
+import { WaveInterferenceLab } from './components/simulation/WaveInterferenceLab';
+import { PhetVietnamLabWrapper } from './components/simulation/PhetVietnamLabWrapper';
+import { PhetRefractionLab } from './components/simulation/PhetRefractionLab';
+import { PhetPendulumLab } from './components/simulation/PhetPendulumLab';
 import App from './App';
 import './index.css';
 
@@ -32,6 +36,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             />
             <Route path="/simulation" element={<App />} />
             <Route path="/srs-lab" element={<SRSWorkflowPage />} />
+            <Route path="/wave-interference" element={<WaveInterferenceLab />} />
+            <Route path="/vietnam-phet-lab" element={<PhetVietnamLabWrapper />} />
+            <Route path="/refraction-phet-lab" element={<PhetRefractionLab />} />
+            <Route path="/pendulum-phet-lab" element={<PhetPendulumLab />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AuthProvider>
