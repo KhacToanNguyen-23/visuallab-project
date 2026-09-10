@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateClassDrawer, type ClassFormData } from '../../components/teacher/CreateClassDrawer';
+import { classService } from '../../services/classService';
+import { useAuth } from '../../context/AuthContext';
 
 export interface ClassItem {
   id: string;
@@ -12,36 +14,61 @@ export interface ClassItem {
   createdAt: string;
 }
 
-const INITIAL_CLASSES: ClassItem[] = [
-  { id: 'tc-1', name: 'Vật lý 12 - Lớp 12A1 Chuyên Lý', code: 'X7K9P2', students: 42, assignments: 3, gradeLevel: 'Vật lý 12', createdAt: '01/09/2026' },
-  { id: 'tc-2', name: 'Vật lý 11 - Lớp 11A3', code: 'M3N8P9', students: 38, assignments: 2, gradeLevel: 'Vật lý 11', createdAt: '02/09/2026' },
-];
-
 export const TeacherClassesPage: React.FC = () => {
   const navigate = useNavigate();
-  const [classes, setClasses] = useState<ClassItem[]>(INITIAL_CLASSES);
+  const { user } = useAuth();
+  const [classes, setClasses] = useState<ClassItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      classService.getTeacherClasses(user.id).then(data => {
+        // Map backend Classroom format to UI ClassItem
+        const formatted = data.map(c => ({
+          id: c.id,
+          name: c.name,
+          code: c.code,
+          students: 0, // Backend doesn't return count yet
+          assignments: 0, // Backend doesn't return count yet
+          gradeLevel: c.description || 'Chung',
+          createdAt: c.createdAt || new Date().toISOString()
+        }));
+        setClasses(formatted);
+      }).catch(err => console.error("Failed to load classes:", err));
+    }
+  }, [user]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const handleCreateClass = (formData: ClassFormData) => {
-    const randomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const newClass: ClassItem = {
-      id: 'tc-' + Date.now(),
-      name: formData.name,
-      code: randomCode,
-      students: 0,
-      assignments: 0,
-      gradeLevel: formData.gradeLevel,
-      createdAt: new Date().toLocaleDateString('vi-VN'),
-    };
-    setClasses(prev => [newClass, ...prev]);
-    showToast(`Đã tạo lớp thành công! Mã tham gia: ${randomCode}`);
+  const handleCreateClass = async (formData: ClassFormData) => {
+    try {
+      const newClass = await classService.createClass(
+        formData.name,
+        formData.gradeLevel,
+        user?.id || 't1',
+        user?.fullName || 'Teacher'
+      );
+      const formatted: ClassItem = {
+        id: newClass.id,
+        name: newClass.name,
+        code: newClass.code,
+        students: 0,
+        assignments: 0,
+        gradeLevel: newClass.description || 'Chung',
+        createdAt: newClass.createdAt || new Date().toISOString()
+      };
+      setClasses(prev => [formatted, ...prev]);
+      showToast(`Đã tạo lớp thành công! Mã tham gia: ${newClass.code}`);
+      setIsDrawerOpen(false);
+    } catch (err) {
+      console.error(err);
+      showToast('Lỗi tạo lớp học!');
+    }
   };
 
   const handleCopyInviteLink = (code: string) => {
