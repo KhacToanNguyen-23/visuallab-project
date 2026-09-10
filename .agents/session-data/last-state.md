@@ -1,1 +1,1 @@
-{"event": "Stop", "conversationId": "2517d809-cb86-4a23-bbeb-14e27522b26e", "cwd": "D:\\6_OJT\\EduLab", "transcript_path": "C:/Users/Quoc Thai/.gemini/antigravity-ide/brain/2517d809-cb86-4a23-bbeb-14e27522b26e/.system_generated/logs/transcript_full.jsonl", "saved_at": 1788946769}
+{"event": "Stop", "conversationId": "3f884602-b73d-4bfa-95eb-a99c4460fa9b", "cwd": "D:\\Project\\FptProject\\visuallab-project", "transcript_path": "C:/Users/khact/.gemini/antigravity/brain/3f884602-b73d-4bfa-95eb-a99c4460fa9b/.system_generated/logs/transcript_full.jsonl", "saved_at": 1788975053}

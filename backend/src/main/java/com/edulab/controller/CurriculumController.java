@@ -29,4 +29,9 @@ public class CurriculumController {
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/tree")
+    public List<ExperimentTopic> getCurriculumTree() {
+        return curriculumService.getAllTopics();
+    }
 }

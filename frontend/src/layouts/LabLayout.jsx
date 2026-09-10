@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 export default function LabLayout() {
   return (
-    <div className="h-screen w-screen bg-app-bg text-slate-900 font-sans overflow-hidden">
+    <div className="h-screen w-screen overflow-hidden flex flex-col transition-colors duration-200" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
       <Outlet />
     </div>
   );

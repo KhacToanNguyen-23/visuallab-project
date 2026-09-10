@@ -7,83 +7,67 @@ export interface SimItem {
   gradeLevel: string;
   subjectArea: string;
   description: string;
-  icon: string;
+  icon?: string;
   route: string;
-  simUrl?: string;
   isPopular?: boolean;
 }
 
 interface SimCardProps {
   sim: SimItem;
-  onLaunch?: (sim: SimItem) => void;
 }
 
-export const SimCard: React.FC<SimCardProps> = ({ sim, onLaunch }) => {
+export const SimCard: React.FC<SimCardProps> = ({ sim }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="p-1 rounded-[2rem] bg-white/[0.03] border border-white/10 ring-1 ring-black/40 shadow-2xl transition-all duration-500 hover:border-cyan-500/40 hover:scale-[1.02] group relative overflow-hidden">
-      {/* Background Radial Glow */}
-      <div className="absolute top-0 right-0 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/20 transition duration-700" />
-
-      <div className="bg-[#0A0E17]/90 p-6 rounded-[calc(2rem-0.25rem)] flex flex-col justify-between gap-5 h-full relative z-10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
-        <div>
-          {/* Eyebrow Micro Badges */}
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-2">
-              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-cyan-300 bg-cyan-950/80 border border-cyan-500/30 px-3 py-1 rounded-full shadow-sm">
-                {sim.subjectArea}
-              </span>
-              <span className="text-[9px] font-semibold text-slate-300 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full">
-                {sim.gradeLevel}
-              </span>
-            </div>
-
-            {sim.isPopular && (
-              <span className="text-[9px] font-bold text-amber-300 bg-amber-950/60 border border-amber-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                🔥 Phổ Biến
-              </span>
-            )}
+    <div 
+      className="border rounded-lg p-5 flex flex-col justify-between transition-all duration-200 hover:shadow-md h-full"
+      style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)', color: 'var(--text-main)' }}
+    >
+      <div>
+        {/* Eyebrow Micro Badges */}
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded border" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)', color: 'var(--accent-primary)' }}>
+              {sim.subjectArea}
+            </span>
+            <span className="text-[10px] font-medium opacity-75 px-2 py-0.5 rounded border" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
+              {sim.gradeLevel}
+            </span>
           </div>
 
-          {/* Title & Icon Header */}
-          <div className="flex justify-between items-start gap-3">
-            <h4 className="text-lg font-extrabold text-white group-hover:text-cyan-300 transition-colors duration-300 leading-snug tracking-tight">
-              {sim.title}
-            </h4>
-            <div className="w-12 h-12 rounded-[1.25rem] bg-[#05070C] border border-white/10 flex items-center justify-center text-2xl flex-shrink-0 shadow-inner group-hover:scale-110 group-hover:border-cyan-500/40 transition duration-500">
-              {sim.icon}
-            </div>
-          </div>
-
-          {/* Description */}
-          <p className="text-xs text-slate-400 mt-3 leading-relaxed line-clamp-3 font-normal">
-            {sim.description}
-          </p>
+          {sim.isPopular && (
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded border" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)', color: 'var(--text-muted)' }}>
+              [Nổi bật]
+            </span>
+          )}
         </div>
 
-        {/* Nested CTA & Button-in-Button Architecture */}
-        <div className="flex items-center justify-between pt-4 border-t border-white/10 mt-3">
-          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">
-            Canvas 2D Engine
-          </span>
+        {/* Title */}
+        <h4 className="text-base font-bold leading-snug tracking-tight mb-2" style={{ color: 'var(--text-main)' }}>
+          {sim.title}
+        </h4>
 
-          <button
-            onClick={() => {
-              if (onLaunch) {
-                onLaunch(sim);
-              } else {
-                navigate(sim.route);
-              }
-            }}
-            className="group/btn relative inline-flex items-center justify-center pl-5 pr-2 py-2 rounded-full bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 hover:opacity-95 text-white text-xs font-extrabold shadow-lg shadow-cyan-500/20 transition-all duration-300 active:scale-95 cursor-pointer"
-          >
-            <span className="mr-2">Khởi Chạy</span>
-            <div className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-xs shadow-inner group-hover/btn:translate-x-0.5 transition duration-300">
-              ▶
-            </div>
-          </button>
-        </div>
+        {/* Description */}
+        <p className="text-xs opacity-75 leading-relaxed line-clamp-3" style={{ color: 'var(--text-muted)' }}>
+          {sim.description}
+        </p>
+      </div>
+
+      {/* CTA Footer */}
+      <div className="flex items-center justify-between pt-4 border-t mt-4" style={{ borderColor: 'var(--border-color)' }}>
+        <span className="text-[10px] font-medium uppercase tracking-wider opacity-60" style={{ color: 'var(--text-muted)' }}>
+          Mô phỏng 2D
+        </span>
+
+        <button
+          onClick={() => navigate(sim.route)}
+          className="px-3.5 py-1.5 text-xs font-bold text-white rounded transition-opacity hover:opacity-90 flex items-center gap-1 cursor-pointer"
+          style={{ backgroundColor: 'var(--accent-primary)' }}
+        >
+          <span>Khởi Chạy</span>
+          <span>→</span>
+        </button>
       </div>
     </div>
   );
