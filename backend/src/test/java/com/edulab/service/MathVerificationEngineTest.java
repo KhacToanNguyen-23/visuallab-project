@@ -1,5 +1,6 @@
 package com.edulab.service;
 
+import com.edulab.service.impl.MathVerificationEngineImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,7 @@ public class MathVerificationEngineTest {
 
     @BeforeEach
     public void setUp() {
-        mathEngine = new MathVerificationEngine();
+        mathEngine = new MathVerificationEngineImpl();
     }
 
     @Test
