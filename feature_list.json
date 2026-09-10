@@ -158,5 +158,25 @@
     "evidence": "StudentSidebar, TeacherSidebar, StudentClassesPage, TeacherClassesPage, and main.tsx updated cleanly",
     "notes": "",
     "priority": "P1"
+  },
+  {
+    "id": "phet-spring-lab-hooke-law",
+    "title": "Interactive PhET Spring Mass Lab & Hooke's Law simulation",
+    "user_visible_behavior": "Interactive Spring Mass simulation with 6 pedagogy tabs, 60 FPS Canvas render, persistent parameter controls, data table and real-time graphs",
+    "verification_command": "PhetSpringLab renders smoothly at 60 FPS, updates period T dynamically according to m and k, and displays measurement table",
+    "status": "passing",
+    "evidence": "Created spring-engine.ts & PhetSpringLab.tsx with 60 FPS canvas loop & measurement table",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "phet-emf-internal-r-lab",
+    "title": "Interactive PhET DC Power Supply & EMF/Internal Resistance lab",
+    "user_visible_behavior": "DC Circuit lab with Voltmeter, Ammeter, variable rheostat slider, U(I) graph, and 6 pedagogy tabs",
+    "verification_command": "PhetEmfLab calculates I and U according to E, r, and R, rendering real-time needle meters and linear graph",
+    "status": "passing",
+    "evidence": "Created emf-engine.ts & PhetEmfLab.tsx with DC solver, knife switch & U(I) linear plot",
+    "notes": "",
+    "priority": "P1"
   }
 ]

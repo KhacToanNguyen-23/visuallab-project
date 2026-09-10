@@ -1,21 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { classService } from '../../services/classService';
+import { assignmentService } from '../../services/assignmentService';
+import { useAuth } from '../../context/AuthContext';
+
+const LAB_OPTIONS = [
+  { id: 'sim-simple-pendulum', title: '[CƠ HỌC] Con Lắc Đơn & Dao Động Điều Hòa', type: 'PENDULUM' },
+  { id: 'sim-spring-hooke', title: '[CƠ HỌC] Con Lắc Lò Xo & Định Luật Hooke', type: 'SPRING' },
+  { id: 'sim-dc-circuit', title: '[ĐIỆN HỌC] Mạch Điện Đơn Giản & Định Luật Ohm', type: 'ELECTRICITY_OHM' },
+  { id: 'sim-emf-internal-r', title: '[ĐIỆN HỌC] Đo Suất Điện Động E & Điện Trở Trong r', type: 'ELECTRICITY_EMF' },
+  { id: 'sim-free-fall', title: '[CƠ HỌC] Đo Gia Tốc Rơi Tự Do g', type: 'MECHANICS_FREE_FALL' },
+  { id: 'sim-specific-heat', title: '[SÓNG - NHIỆT] Đo Nhiệt Dung Riêng c Của Nước', type: 'HEAT_SPECIFIC_HEAT' },
+  { id: 'sim-refraction', title: '[QUANG HỌC] Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ', type: 'OPTICS_REFRACTION' },
+];
 
 export const TeacherAssignPage: React.FC = () => {
   const navigate = useNavigate();
-  const [selectedClass, setSelectedClass] = useState('tc-1');
-  const [selectedLab, setSelectedLab] = useState('sim-dc-circuit');
+  const { user } = useAuth();
+  const [classes, setClasses] = useState<Array<{ id: string; name: string; code: string; studentCount: number }>>([]);
+  const [loadingClasses, setLoadingClasses] = useState(true);
+
+  const [selectedClass, setSelectedClass] = useState('');
+  const [selectedLab, setSelectedLab] = useState(LAB_OPTIONS[0].id);
   const [dueDate, setDueDate] = useState('2026-09-20');
   const [instructions, setInstructions] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user?.id) {
+      setLoadingClasses(true);
+      classService
+        .getTeacherClasses(user.id)
+        .then(async data => {
+          const formatted = await Promise.all(
+            data.map(async c => {
+              const roster = await classService.getClassRoster(c.id);
+              return {
+                id: c.id,
+                name: c.name,
+                code: c.code,
+                studentCount: roster ? roster.length : 0,
+              };
+            })
+          );
+          setClasses(formatted);
+          if (formatted.length > 0) {
+            setSelectedClass(formatted[0].id);
+          }
+        })
+        .catch(err => console.error('Lỗi khi tải danh sách lớp học:', err))
+        .finally(() => setLoadingClasses(false));
+    }
+  }, [user]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setToastMessage('Đã giao bài thực hành thành công cho lớp học!');
-    setTimeout(() => {
-      setToastMessage(null);
-      navigate('/teacher/grading');
-    }, 2000);
+    if (!selectedClass) {
+      setToastMessage('Vui lòng chọn lớp học để giao bài!');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const selectedLabItem = LAB_OPTIONS.find(l => l.id === selectedLab) || LAB_OPTIONS[0];
+
+      await assignmentService.createAssignment({
+        classId: selectedClass,
+        title: selectedLabItem.title,
+        description: instructions || 'Tiến hành thí nghiệm mô phỏng và ghi nhận số liệu báo cáo.',
+        labType: selectedLabItem.type,
+        paramBoundsJson: JSON.stringify({ lengthMin: 0.5, lengthMax: 2.0, angleMin: 5, angleMax: 30 }),
+        targetFormula: 'T = 2 * PI * sqrt(L / g)',
+        tolerancePercent: 3.0,
+        teacherId: user?.id || 't1',
+      });
+
+      setToastMessage('Đã giao bài thực hành thành công cho lớp học!');
+      setTimeout(() => {
+        setToastMessage(null);
+        navigate('/teacher/grading');
+      }, 1500);
+    } catch (err: any) {
+      console.error(err);
+      setToastMessage(err.message || 'Lỗi khi giao bài thực hành');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -51,15 +122,25 @@ export const TeacherAssignPage: React.FC = () => {
           <select
             value={selectedClass}
             onChange={e => setSelectedClass(e.target.value)}
-            className="w-full p-2.5 rounded-lg border font-semibold focus:outline-none cursor-pointer"
+            disabled={loadingClasses || classes.length === 0}
+            className="w-full p-2.5 rounded-lg border font-semibold focus:outline-none cursor-pointer disabled:opacity-50"
             style={{
               backgroundColor: 'var(--bg-main)',
               borderColor: 'var(--border-color)',
               color: 'var(--text-main)',
             }}
           >
-            <option value="tc-1">Vật lý 12 - Lớp 12A1 Chuyên Lý (42 học sinh)</option>
-            <option value="tc-2">Vật lý 11 - Lớp 11A3 (38 học sinh)</option>
+            {loadingClasses ? (
+              <option value="">Đang tải danh sách lớp học...</option>
+            ) : classes.length > 0 ? (
+              classes.map(c => (
+                <option key={c.id} value={c.id}>
+                  {c.name} - [{c.code}] ({c.studentCount} học sinh)
+                </option>
+              ))
+            ) : (
+              <option value="">Chưa có lớp học nào (Hãy tạo lớp học mới trước)</option>
+            )}
           </select>
         </div>
 
@@ -75,12 +156,11 @@ export const TeacherAssignPage: React.FC = () => {
               color: 'var(--text-main)',
             }}
           >
-            <option value="sim-dc-circuit">[ĐIỆN HỌC] Mạch Điện Đơn Giản & Định Luật Ohm</option>
-            <option value="sim-emf-internal-r">[ĐIỆN HỌC] Đo Suất Điện Động E & Điện Trở Trong r</option>
-            <option value="sim-free-fall">[CƠ HỌC] Đo Gia Tốc Rơi Tự Do g</option>
-            <option value="sim-simple-pendulum">[CƠ HỌC] Con Lắc Đơn & Dao Động Điều Hòa</option>
-            <option value="sim-specific-heat">[SÓNG - NHIỆT] Đo Nhiệt Dung Riêng c Của Nước</option>
-            <option value="sim-refraction">[QUANG HỌC] Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ</option>
+            {LAB_OPTIONS.map(lab => (
+              <option key={lab.id} value={lab.id}>
+                {lab.title}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -129,13 +209,15 @@ export const TeacherAssignPage: React.FC = () => {
           </button>
           <button
             type="submit"
-            className="px-5 py-2 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90 cursor-pointer shadow-sm"
+            disabled={submitting || !selectedClass}
+            className="px-5 py-2 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90 cursor-pointer shadow-sm disabled:opacity-50"
             style={{ backgroundColor: 'var(--accent-primary)' }}
           >
-            Giao Bài Tập Cho Lớp
+            {submitting ? 'Đang Giao Bài...' : 'Giao Bài Tập Cho Lớp'}
           </button>
         </div>
       </form>
     </div>
   );
 };
+

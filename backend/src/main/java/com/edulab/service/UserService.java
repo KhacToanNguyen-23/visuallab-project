@@ -11,4 +11,5 @@ public interface UserService {
     AuthResponse login(AuthRequest request);
     AuthResponse loginWithGoogle(AuthRequest request);
     Optional<User> getUserByToken(String token);
+    User updateProfile(String userId, String fullName, String school);
 }

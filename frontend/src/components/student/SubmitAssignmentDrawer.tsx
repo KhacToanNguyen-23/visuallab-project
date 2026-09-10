@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import type { Assignment } from '../../types/assignment';
 
 export interface StudentAssignmentItem {
   id: string;
@@ -10,6 +10,7 @@ export interface StudentAssignmentItem {
   status: 'NOT_STARTED' | 'IN_PROGRESS' | 'SUBMITTED';
   route: string;
   instructions?: string;
+  rawAssignment?: Assignment;
 }
 
 interface SubmitAssignmentDrawerProps {
@@ -17,6 +18,7 @@ interface SubmitAssignmentDrawerProps {
   onClose: () => void;
   assignment: StudentAssignmentItem | null;
   onSubmitReport: (id: string) => void;
+  onStartAssignment?: (rawAssignment: Assignment) => void;
 }
 
 export const SubmitAssignmentDrawer: React.FC<SubmitAssignmentDrawerProps> = ({
@@ -24,15 +26,17 @@ export const SubmitAssignmentDrawer: React.FC<SubmitAssignmentDrawerProps> = ({
   onClose,
   assignment,
   onSubmitReport,
+  onStartAssignment,
 }) => {
-  const navigate = useNavigate();
   const [reportNote, setReportNote] = useState('');
 
   if (!isOpen || !assignment) return null;
 
   const handleLaunchLab = () => {
     onClose();
-    navigate(assignment.route);
+    if (assignment.rawAssignment && onStartAssignment) {
+      onStartAssignment(assignment.rawAssignment);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {

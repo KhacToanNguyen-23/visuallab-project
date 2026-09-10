@@ -1,39 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { SubmitAssignmentDrawer, type StudentAssignmentItem } from '../../components/student/SubmitAssignmentDrawer';
+import { StudentLabAssignmentView } from '../../components/assignment/StudentLabAssignmentView';
 import { classService } from '../../services/classService';
 import { assignmentService } from '../../services/assignmentService';
 import { useAuth } from '../../context/AuthContext';
+import type { Assignment } from '../../types/assignment';
 
 export const StudentAssignmentsPage: React.FC = () => {
   const { user } = useAuth();
   const [assignments, setAssignments] = useState<StudentAssignmentItem[]>([]);
   const [selectedAssignment, setSelectedAssignment] = useState<StudentAssignmentItem | null>(null);
+  const [activeAssignment, setActiveAssignment] = useState<Assignment | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchAssignments = () => {
     if (!user?.id) return;
-    classService.getStudentEnrollments(user.id).then(async enrollments => {
-      const allAssignments: StudentAssignmentItem[] = [];
-      for (const enrollment of enrollments) {
-        const classAssignments = await assignmentService.getAssignmentsByClass(enrollment.classId);
-        for (const a of classAssignments) {
-          allAssignments.push({
-            id: a.id,
-            labTitle: a.title,
-            className: enrollment.className || 'Lớp học',
-            teacherName: enrollment.teacherName || 'Giáo viên',
-            dueDate: '',
-            status: 'NOT_STARTED',
-            route: '/simulation',
-            instructions: a.description || '',
+    classService
+      .getStudentEnrollments(user.id)
+      .then(async enrollments => {
+        const allAsgs: StudentAssignmentItem[] = [];
+        for (const enr of enrollments) {
+          const [asgs, clsDetails] = await Promise.all([
+            assignmentService.getAssignmentsByClass(enr.classId),
+            classService.getClassDetails(enr.classId),
+          ]);
+
+          const teacherName = clsDetails?.teacherName || enr.teacherName || 'Giáo viên';
+          const className = clsDetails?.name || enr.className || `Lớp ${enr.classId}`;
+
+          asgs.forEach(a => {
+            allAsgs.push({
+              id: a.id,
+              labTitle: a.title,
+              className: className,
+              teacherName: teacherName,
+              dueDate: 'Sắp tới',
+              status: 'NOT_STARTED',
+              route: '/simulation',
+              instructions: a.description || 'Hoàn thành bài thí nghiệm theo đúng thông số được giao.',
+              rawAssignment: a,
+            });
           });
         }
-      }
-      setAssignments(allAssignments);
-    }).catch(err => console.error('Failed to load assignments:', err));
-  }, [user]);
+        setAssignments(allAsgs);
+      })
+      .catch(err => console.error(err));
+  };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, [user?.id]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -45,12 +63,28 @@ export const StudentAssignmentsPage: React.FC = () => {
     setIsDrawerOpen(true);
   };
 
+  const handleStartAssignment = (rawAssignment: Assignment) => {
+    setActiveAssignment(rawAssignment);
+  };
+
   const handleSubmitReport = (id: string) => {
-    setAssignments(prev =>
-      prev.map(asg => (asg.id === id ? { ...asg, status: 'SUBMITTED' } : asg))
-    );
+    setAssignments(prev => prev.map(asg => (asg.id === id ? { ...asg, status: 'SUBMITTED' } : asg)));
     showToast('Đã gửi báo cáo thực hành thành công cho Giáo viên!');
   };
+
+  if (activeAssignment) {
+    return (
+      <StudentLabAssignmentView
+        assignment={activeAssignment}
+        studentId={user?.id || 's1'}
+        studentName={user?.fullName || 'Học sinh'}
+        onBack={() => {
+          setActiveAssignment(null);
+          fetchAssignments();
+        }}
+      />
+    );
+  }
 
   const filteredAssignments = assignments.filter(asg =>
     !searchQuery ||
@@ -191,6 +225,7 @@ export const StudentAssignmentsPage: React.FC = () => {
         onClose={() => setIsDrawerOpen(false)}
         assignment={selectedAssignment}
         onSubmitReport={handleSubmitReport}
+        onStartAssignment={handleStartAssignment}
       />
     </div>
   );

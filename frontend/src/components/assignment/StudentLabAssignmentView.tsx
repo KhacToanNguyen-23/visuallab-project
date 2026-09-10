@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { assignmentService } from '../../services/assignmentService';
 import type { Assignment, StudentAssignmentInstance, AssignmentSubmission } from '../../types/assignment';
 import { PhetPendulumLab } from '../simulation/PhetPendulumLab';
+import { PhetRefractionLab } from '../simulation/PhetRefractionLab';
+import { PhetSpringLab } from '../simulation/PhetSpringLab';
+import { PhetEmfLab } from '../simulation/PhetEmfLab';
+import { WaveInterferenceLab } from '../simulation/WaveInterferenceLab';
+import { FreeFallCanvas } from '../simulations/FreeFallCanvas';
 import { GradeResultView } from './GradeResultView';
 
 interface StudentLabAssignmentViewProps {
@@ -91,6 +96,41 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
     }
   };
 
+  const renderLabSimulation = () => {
+    const t = ((assignment.labType || '') + ' ' + (assignment.title || '')).toUpperCase();
+    if (t.includes('SPRING') || t.includes('HOOK') || t.includes('LÒ XO')) {
+      return <PhetSpringLab />;
+    }
+    if (t.includes('EMF') || t.includes('SUẤT ĐIỆN ĐỘNG') || t.includes('ĐIỆN TRỞ TRONG')) {
+      return <PhetEmfLab />;
+    }
+    if (t.includes('REFRACTION') || t.includes('KHÚC XẠ') || t.includes('THẤU KÍNH')) {
+      return <PhetRefractionLab />;
+    }
+    if (t.includes('WAVE') || t.includes('SÓNG') || t.includes('NHIỆT DUNG')) {
+      return <WaveInterferenceLab />;
+    }
+    if (t.includes('FREE_FALL') || t.includes('RƠI TỰ DO')) {
+      return (
+        <div className="w-full h-full min-h-[450px]">
+          <FreeFallCanvas onRecordMeasurement={() => {}} />
+        </div>
+      );
+    }
+    if (t.includes('ELECTRICITY') || t.includes('OHM') || t.includes('MẠCH ĐIỆN')) {
+      return (
+        <iframe
+          src="/simulations/ohms-law_vi.html"
+          title="PhET Ohm's Law Apparatus"
+          className="w-full h-full min-h-[450px] border-0 rounded-xl"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      );
+    }
+    return <PhetPendulumLab />;
+  };
+
   if (loading) {
     return <div className="p-10 text-center text-slate-400">Đang tải thông số đề bài cá nhân hóa...</div>;
   }
@@ -132,7 +172,7 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
           </div>
 
           <div className="flex-1 bg-slate-950 rounded-xl overflow-hidden min-h-[450px]">
-            <PhetPendulumLab />
+            {renderLabSimulation()}
           </div>
         </div>
 

@@ -87,14 +87,11 @@ public class ClassroomServiceImpl implements ClassroomService {
 
         for (ClassEnrollment enr : enrollments) {
             if (!uniqueMap.containsKey(enr.getClassId())) {
-                if (enr.getClassName() == null || enr.getClassName().trim().isEmpty()) {
-                    classroomRepository.findById(enr.getClassId()).ifPresent(cls -> {
-                        enr.setClassName(cls.getName());
-                        enr.setClassCode(cls.getCode());
-                        enr.setTeacherName(cls.getTeacherName());
-                        enrollmentRepository.save(enr);
-                    });
-                }
+                classroomRepository.findById(enr.getClassId()).ifPresent(cls -> {
+                    enr.setClassName(cls.getName());
+                    enr.setClassCode(cls.getCode());
+                    enr.setTeacherName(cls.getTeacherName());
+                });
                 uniqueMap.put(enr.getClassId(), enr);
             } else {
                 try {

@@ -15,6 +15,7 @@ interface AuthContextType {
   login: (email: string, pass: string) => Promise<boolean>;
   register: (email: string, pass: string, fullName: string, role: string, school: string) => Promise<boolean>;
   loginWithGoogle: (email: string, fullName: string, role: string, googleToken?: string) => Promise<boolean>;
+  updateProfile: (fullName: string, school: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -28,6 +29,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return saved ? JSON.parse(saved) : null;
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (token) {
+      fetch('http://localhost:8080/api/auth/me', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(res => (res.ok ? res.json() : null))
+        .then(data => {
+          if (data) {
+            setUser(data);
+            localStorage.setItem('edulab_user', JSON.stringify(data));
+          }
+        })
+        .catch(err => console.error('Lỗi khi cập nhật phiên người dùng:', err));
+    }
+  }, [token]);
 
   const login = async (email: string, pass: string): Promise<boolean> => {
     setIsLoading(true);
@@ -114,6 +131,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateProfile = async (fullName: string, school: string): Promise<boolean> => {
+    if (!user?.id && !user?.email) return false;
+    try {
+      const res = await fetch('http://localhost:8080/api/auth/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          userId: user?.id,
+          email: user?.email,
+          fullName,
+          school,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || 'Cập nhật hồ sơ thất bại trên Server');
+      }
+      const updatedUser = await res.json();
+      setUser(updatedUser);
+      localStorage.setItem('edulab_user', JSON.stringify(updatedUser));
+      return true;
+    } catch (err) {
+      console.error('Lỗi khi cập nhật profile:', err);
+      throw err;
+    }
+  };
+
   const logout = () => {
     setToken(null);
     setUser(null);
@@ -122,7 +169,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, loginWithGoogle, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, token, login, register, loginWithGoogle, updateProfile, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

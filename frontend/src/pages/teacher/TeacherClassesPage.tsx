@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateClassDrawer, type ClassFormData } from '../../components/teacher/CreateClassDrawer';
 import { classService } from '../../services/classService';
+import { assignmentService } from '../../services/assignmentService';
 import { useAuth } from '../../context/AuthContext';
 
 export interface ClassItem {
@@ -24,17 +25,22 @@ export const TeacherClassesPage: React.FC = () => {
 
   useEffect(() => {
     if (user?.id) {
-      classService.getTeacherClasses(user.id).then(data => {
-        // Map backend Classroom format to UI ClassItem
-        const formatted = data.map(c => ({
-          id: c.id,
-          name: c.name,
-          code: c.code,
-          students: 0, // Backend doesn't return count yet
-          assignments: 0, // Backend doesn't return count yet
-          gradeLevel: c.description || 'Chung',
-          createdAt: c.createdAt || new Date().toISOString()
-        }));
+      classService.getTeacherClasses(user.id).then(async data => {
+        const formatted = await Promise.all(
+          data.map(async c => {
+            const roster = await classService.getClassRoster(c.id);
+            const asgs = await assignmentService.getAssignmentsByClass(c.id);
+            return {
+              id: c.id,
+              name: c.name,
+              code: c.code,
+              students: roster ? roster.length : 0,
+              assignments: asgs ? asgs.length : 0,
+              gradeLevel: c.description || 'Chung',
+              createdAt: c.createdAt || new Date().toISOString()
+            };
+          })
+        );
         setClasses(formatted);
       }).catch(err => console.error("Failed to load classes:", err));
     }
@@ -84,6 +90,7 @@ export const TeacherClassesPage: React.FC = () => {
   );
 
   const totalStudents = classes.reduce((sum, c) => sum + c.students, 0);
+  const totalAssignments = classes.reduce((sum, c) => sum + c.assignments, 0);
 
   return (
     <div className="space-y-6">
@@ -125,12 +132,12 @@ export const TeacherClassesPage: React.FC = () => {
           <div className="text-2xl font-black mt-2 text-cyan-500">{totalStudents} Em</div>
         </div>
         <div className="border rounded-xl p-4 shadow-xs flex flex-col justify-between" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
-          <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Bài Tập Đang Mở</span>
-          <div className="text-2xl font-black mt-2 text-emerald-500">— Bài</div>
+          <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Bài Tập Đã Giao</span>
+          <div className="text-2xl font-black mt-2 text-emerald-500">{totalAssignments} Bài</div>
         </div>
         <div className="border rounded-xl p-4 shadow-xs flex flex-col justify-between" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
           <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Bài Chờ Chấm</span>
-          <div className="text-2xl font-black mt-2 text-amber-500">— Nộp</div>
+          <div className="text-2xl font-black mt-2 text-amber-500">0 Nộp</div>
         </div>
       </div>
 

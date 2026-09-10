@@ -19,6 +19,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
   // Student State
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const [joinedClasses, setJoinedClasses] = useState<any[]>([]);
+  const [studentAssignments, setStudentAssignments] = useState<any[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Teacher State
@@ -53,22 +54,34 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       const studentId = user?.id || 'u-2';
       classService.getStudentEnrollments(studentId).then(async data => {
         if (data && data.length > 0) {
-          const joinedWithCounts = await Promise.all(
-            data.map(async e => {
-              const asgs = await assignmentService.getAssignmentsByClass(e.classId);
-              return {
-                id: e.id,
-                classId: e.classId,
-                name: e.className || `Lớp ${e.classId}`,
-                code: e.classCode || 'ENROLLED',
-                teacher: e.teacherName || 'Giáo viên',
-                count: asgs ? asgs.length : 0
-              };
-            })
-          );
+          const joinedWithCounts: any[] = [];
+          const allAsgs: any[] = [];
+          for (const e of data) {
+            const asgs = await assignmentService.getAssignmentsByClass(e.classId);
+            joinedWithCounts.push({
+              id: e.id,
+              classId: e.classId,
+              name: e.className || `Lớp ${e.classId}`,
+              code: e.classCode || 'ENROLLED',
+              teacher: e.teacherName || 'Giáo viên',
+              count: asgs ? asgs.length : 0
+            });
+            if (asgs) {
+              asgs.forEach(a => {
+                allAsgs.push({
+                  id: a.id,
+                  title: a.title,
+                  className: e.className || `Lớp ${e.classId}`,
+                  route: '/simulation'
+                });
+              });
+            }
+          }
           setJoinedClasses(joinedWithCounts);
+          setStudentAssignments(allAsgs);
         } else {
           setJoinedClasses([]);
+          setStudentAssignments([]);
         }
       });
     }
@@ -1083,33 +1096,25 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
           </h4>
 
           <div className="space-y-3">
-            <div className="p-3 border rounded-lg flex justify-between items-center" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
-              <div>
-                <h5 className="font-bold text-xs">Bài 1: Khảo sát Con lắc lò xo</h5>
-                <span className="text-[10px] text-amber-600 font-semibold">Deadline: 23:59 Hôm nay</span>
-              </div>
-              <button 
-                onClick={() => navigate('/simulation')}
-                className="px-3 py-1.5 text-xs font-bold text-white rounded transition-opacity hover:opacity-90 cursor-pointer"
-                style={{ backgroundColor: 'var(--accent-primary)' }}
-              >
-                Làm Bài
-              </button>
-            </div>
-
-            <div className="p-3 border rounded-lg flex justify-between items-center opacity-80" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
-              <div>
-                <h5 className="font-bold text-xs">Bài 2: Đo Suất điện động E</h5>
-                <span className="text-[10px] text-emerald-600 font-semibold">Đã nộp • Điểm: 9.5</span>
-              </div>
-              <button 
-                onClick={() => navigate('/simulation')}
-                className="px-3 py-1 text-[11px] font-semibold rounded border cursor-pointer"
-                style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-panel)' }}
-              >
-                Xem lại
-              </button>
-            </div>
+            {studentAssignments.length > 0 ? (
+              studentAssignments.map(asg => (
+                <div key={asg.id} className="p-3 border rounded-lg flex justify-between items-center" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
+                  <div>
+                    <h5 className="font-bold text-xs">{asg.title}</h5>
+                    <span className="text-[10px] opacity-75 font-semibold" style={{ color: 'var(--text-muted)' }}>{asg.className}</span>
+                  </div>
+                  <button 
+                    onClick={() => navigate(asg.route)}
+                    className="px-3 py-1.5 text-xs font-bold text-white rounded transition-opacity hover:opacity-90 cursor-pointer"
+                    style={{ backgroundColor: 'var(--accent-primary)' }}
+                  >
+                    Làm Bài
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p className="text-xs opacity-60 p-2 text-center">Chưa có bài tập nào được giao.</p>
+            )}
           </div>
         </div>
       </div>
