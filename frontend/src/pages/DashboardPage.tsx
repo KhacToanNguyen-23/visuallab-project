@@ -85,6 +85,16 @@ export const DashboardPage: React.FC = () => {
   const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
 
   useEffect(() => {
+    if (user?.role === 'ADMIN') {
+      navigate('/admin');
+    } else if (user?.role === 'TEACHER') {
+      navigate('/teacher/classes');
+    } else if (user?.role === 'STUDENT' || user) {
+      navigate('/student/classes');
+    }
+  }, [user, navigate]);
+
+  useEffect(() => {
     fetch('http://localhost:8080/api/curriculum/topics')
       .then(res => res.json())
       .then(data => setApiTopics(data))
