@@ -8,6 +8,8 @@ import com.edulab.repository.UserRepository;
 import com.edulab.service.GoogleAuthService;
 import com.edulab.service.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.edulab.repository.ClassEnrollmentRepository;
+import com.edulab.repository.ClassroomRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,11 +21,21 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final GoogleAuthService googleAuthService;
+    private final ClassroomRepository classroomRepository;
+    private final ClassEnrollmentRepository enrollmentRepository;
 
-    public UserServiceImpl(UserRepository userRepository, JwtTokenProvider jwtTokenProvider, GoogleAuthService googleAuthService) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            JwtTokenProvider jwtTokenProvider,
+            GoogleAuthService googleAuthService,
+            ClassroomRepository classroomRepository,
+            ClassEnrollmentRepository enrollmentRepository
+    ) {
         this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.googleAuthService = googleAuthService;
+        this.classroomRepository = classroomRepository;
+        this.enrollmentRepository = enrollmentRepository;
     }
 
     @Override
@@ -93,10 +105,14 @@ public class UserServiceImpl implements UserService {
         User user;
         if (userOpt.isPresent()) {
             user = userOpt.get();
-            // Update role/fullName/school if updated in onboarding
+            // Preserve existing user's custom fullName and school if already present in database
             if (request.role() != null) user.setRole(request.role());
-            if (request.school() != null && !request.school().isBlank()) user.setSchool(request.school());
-            if (fullName != null && !fullName.isBlank()) user.setFullName(fullName);
+            if ((user.getSchool() == null || user.getSchool().isBlank() || user.getSchool().startsWith("Chưa cập nhật")) && request.school() != null && !request.school().isBlank()) {
+                user.setSchool(request.school());
+            }
+            if ((user.getFullName() == null || user.getFullName().isBlank()) && fullName != null && !fullName.isBlank()) {
+                user.setFullName(fullName);
+            }
             userRepository.save(user);
         } else {
             // Auto-create new account via Google Login
@@ -123,5 +139,44 @@ public class UserServiceImpl implements UserService {
         }
         String email = jwtTokenProvider.getEmailFromToken(token);
         return userRepository.findByEmail(email.toLowerCase());
+    }
+
+    @Override
+    public User updateProfile(String userId, String fullName, String school) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            userOpt = userRepository.findByEmail(userId.toLowerCase());
+        }
+        if (userOpt.isEmpty()) {
+            throw new IllegalArgumentException("Người dùng không tồn tại!");
+        }
+
+        User user = userOpt.get();
+        if (fullName != null && !fullName.isBlank()) {
+            user.setFullName(fullName.trim());
+        }
+        if (school != null && !school.isBlank()) {
+            user.setSchool(school.trim());
+        }
+
+        User savedUser = userRepository.save(user);
+
+        if ("TEACHER".equalsIgnoreCase(savedUser.getRole()) && classroomRepository != null) {
+            var classes = classroomRepository.findByTeacherId(savedUser.getId());
+            for (var c : classes) {
+                c.setTeacherName(savedUser.getFullName());
+                classroomRepository.save(c);
+
+                if (enrollmentRepository != null) {
+                    var roster = enrollmentRepository.findByClassId(c.getId());
+                    for (var enr : roster) {
+                        enr.setTeacherName(savedUser.getFullName());
+                        enrollmentRepository.save(enr);
+                    }
+                }
+            }
+        }
+
+        return savedUser;
     }
 }

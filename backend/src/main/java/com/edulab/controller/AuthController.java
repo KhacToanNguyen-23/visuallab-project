@@ -60,4 +60,24 @@ public class AuthController {
                 .map(user -> ResponseEntity.ok((Object) user))
                 .orElseGet(() -> ResponseEntity.status(401).body(Map.of("message", "Phiên làm việc đã hết hạn!")));
     }
+
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestBody Map<String, String> body) {
+        String userId = body.get("userId");
+        String email = body.get("email");
+        String fullName = body.get("fullName");
+        String school = body.get("school");
+
+        String targetId = (userId != null && !userId.isBlank()) ? userId : email;
+        if (targetId == null || targetId.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Mã người dùng hoặc email không hợp lệ!"));
+        }
+
+        try {
+            var updatedUser = userService.updateProfile(targetId, fullName, school);
+            return ResponseEntity.ok(updatedUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
 }

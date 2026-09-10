@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { JoinClassDrawer } from '../../components/student/JoinClassDrawer';
 import { classService } from '../../services/classService';
+import { assignmentService } from '../../services/assignmentService';
 import { useAuth } from '../../context/AuthContext';
 
 export interface EnrolledClassItem {
@@ -17,6 +18,7 @@ export const StudentClassesPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [classes, setClasses] = useState<EnrolledClassItem[]>([]);
+  const [totalAssignmentsCount, setTotalAssignmentsCount] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -25,15 +27,27 @@ export const StudentClassesPage: React.FC = () => {
     if (!user?.id) return;
     try {
       const data = await classService.getStudentEnrollments(user.id);
-      const formatted: EnrolledClassItem[] = data.map(e => ({
-        id: e.id,
-        name: e.className || `Lớp học (${e.classCode || e.classId})`,
-        code: e.classCode || 'ENROLLED',
-        teacherName: e.teacherName || 'Giáo viên',
-        studentsCount: 0,
-        joinedDate: e.enrolledAt ? new Date(e.enrolledAt).toLocaleDateString('vi-VN') : 'Đã tham gia'
-      }));
+      let asgSum = 0;
+      const formatted: EnrolledClassItem[] = await Promise.all(
+        data.map(async e => {
+          const [roster, asgs, clsDetails] = await Promise.all([
+            classService.getClassRoster(e.classId),
+            assignmentService.getAssignmentsByClass(e.classId),
+            classService.getClassDetails(e.classId),
+          ]);
+          asgSum += asgs ? asgs.length : 0;
+          return {
+            id: e.id,
+            name: clsDetails?.name || e.className || `Lớp học (${e.classCode || e.classId})`,
+            code: clsDetails?.code || e.classCode || 'ENROLLED',
+            teacherName: clsDetails?.teacherName || e.teacherName || 'Giáo viên',
+            studentsCount: roster ? roster.length : 1,
+            joinedDate: e.enrolledAt ? new Date(e.enrolledAt).toLocaleDateString('vi-VN') : 'Đã tham gia'
+          };
+        })
+      );
       setClasses(formatted);
+      setTotalAssignmentsCount(asgSum);
     } catch (err) {
       console.error(err);
     }
@@ -96,16 +110,16 @@ export const StudentClassesPage: React.FC = () => {
           <div className="text-2xl font-black mt-2" style={{ color: 'var(--accent-primary)' }}>{classes.length} Lớp</div>
         </div>
         <div className="border rounded-xl p-4 shadow-xs flex flex-col justify-between" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
-          <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Bài Tập Cần Nộp</span>
-          <div className="text-2xl font-black mt-2 text-amber-500">2 Bài</div>
+          <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Bài Tập Được Giao</span>
+          <div className="text-2xl font-black mt-2 text-amber-500">{totalAssignmentsCount} Bài</div>
         </div>
         <div className="border rounded-xl p-4 shadow-xs flex flex-col justify-between" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
-          <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Bài Đã Hoàn Thành</span>
-          <div className="text-2xl font-black mt-2 text-emerald-500">4 Bài</div>
+          <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Bài Đã Nộp</span>
+          <div className="text-2xl font-black mt-2 text-emerald-500">0 Bài</div>
         </div>
         <div className="border rounded-xl p-4 shadow-xs flex flex-col justify-between" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
           <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Điểm TB Thực Hành</span>
-          <div className="text-2xl font-black mt-2 text-cyan-500">9.2 / 10</div>
+          <div className="text-2xl font-black mt-2 text-cyan-500">— / 10</div>
         </div>
       </div>
 

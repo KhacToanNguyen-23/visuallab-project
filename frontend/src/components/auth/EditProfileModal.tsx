@@ -7,30 +7,33 @@ interface EditProfileModalProps {
 }
 
 export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) => {
-  const { user } = useAuth();
+  const { user, updateProfile } = useAuth();
   const [fullName, setFullName] = useState(user?.fullName || '');
   const [school, setSchool] = useState(user?.school || '');
   const [isSaved, setIsSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Update local user state
-    const currentUser = JSON.parse(localStorage.getItem('edulab_user') || '{}');
-    const updatedUser = {
-      ...currentUser,
-      fullName: fullName.trim() || currentUser.fullName,
-      school: school.trim() || currentUser.school,
-    };
-    localStorage.setItem('edulab_user', JSON.stringify(updatedUser));
-    
-    setIsSaved(true);
-    setTimeout(() => {
-      setIsSaved(false);
-      onClose();
-      window.location.reload(); // Quick refresh to update UI state across context
-    }, 1000);
+    setSaving(true);
+    setErrorMsg(null);
+
+    try {
+      await updateProfile(fullName.trim(), school.trim());
+      setIsSaved(true);
+      setTimeout(() => {
+        setIsSaved(false);
+        onClose();
+      }, 1000);
+    } catch (err: any) {
+      console.error(err);
+      setErrorMsg(err.message || 'Cập nhật thất bại. Vui lòng kiểm tra lại kết nối!');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -53,6 +56,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onCl
             ✕
           </button>
         </div>
+
+        {errorMsg && (
+          <div className="bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs p-3 rounded-xl text-center font-semibold">
+            ⚠️ {errorMsg}
+          </div>
+        )}
 
         {isSaved ? (
           <div className="bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs p-4 rounded-xl text-center font-semibold animate-pulse">
@@ -93,9 +102,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onCl
               </button>
               <button
                 type="submit"
-                className="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold text-xs rounded-xl shadow-lg transition cursor-pointer"
+                disabled={saving}
+                className="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold text-xs rounded-xl shadow-lg transition cursor-pointer disabled:opacity-50"
               >
-                Lưu Thay Đổi
+                {saving ? 'Đang lưu...' : 'Lưu Thay Đổi'}
               </button>
             </div>
           </form>
