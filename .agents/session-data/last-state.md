@@ -1,1 +1,0 @@
-{"event": "Stop", "conversationId": "3f884602-b73d-4bfa-95eb-a99c4460fa9b", "cwd": "D:\\Project\\FptProject\\visuallab-project", "transcript_path": "C:/Users/khact/.gemini/antigravity/brain/3f884602-b73d-4bfa-95eb-a99c4460fa9b/.system_generated/logs/transcript_full.jsonl", "saved_at": 1788975053}
