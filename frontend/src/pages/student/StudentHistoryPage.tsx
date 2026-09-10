@@ -9,35 +9,8 @@ export interface StudentHistoryItem {
   teacherFeedback: string;
 }
 
-const INITIAL_HISTORY: StudentHistoryItem[] = [
-  {
-    id: 'hist-1',
-    labTitle: 'Mạch Điện Đơn Giản & Định Luật Ohm',
-    className: 'Lớp 12-A1 Chuyên Lý',
-    submittedDate: '09/09/2026 14:30',
-    score: '9.5 / 10',
-    teacherFeedback: 'Lắp mạch chuẩn, tính sai số R cực kỳ chính xác!',
-  },
-  {
-    id: 'hist-2',
-    labTitle: 'Con Lắc Đơn & Dao Động Điều Hòa',
-    className: 'Lớp 12-A1 Chuyên Lý',
-    submittedDate: '05/09/2026 10:15',
-    score: '9.0 / 10',
-    teacherFeedback: 'Đồ thị T2-L vẽ đẹp, đo chu kỳ chính xác.',
-  },
-  {
-    id: 'hist-3',
-    labTitle: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ',
-    className: 'Lớp 11-A3',
-    submittedDate: '01/09/2026 16:40',
-    score: '9.2 / 10',
-    teacherFeedback: 'Xác định góc khúc xạ n1, n2 rất tốt.',
-  },
-];
-
 export const StudentHistoryPage: React.FC = () => {
-  const [history] = useState<StudentHistoryItem[]>(INITIAL_HISTORY);
+  const [history] = useState<StudentHistoryItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredHistory = history.filter(item =>

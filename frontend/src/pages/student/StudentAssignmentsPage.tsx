@@ -1,35 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SubmitAssignmentDrawer, type StudentAssignmentItem } from '../../components/student/SubmitAssignmentDrawer';
-
-const INITIAL_ASSIGNMENTS: StudentAssignmentItem[] = [
-  {
-    id: 'asg-1',
-    labTitle: 'Mạch Điện Đơn Giản & Định Luật Ohm',
-    className: 'Lớp 12-A1 Chuyên Lý',
-    teacherName: 'Thầy Nguyễn Văn Thành',
-    dueDate: '20/09/2026',
-    status: 'NOT_STARTED',
-    route: '/simulation',
-    instructions: 'Khảo sát điện trở R từ 10 đến 50 Ohm, vẽ đồ thị U-I và tính giá trị R trung bình.',
-  },
-  {
-    id: 'asg-2',
-    labTitle: 'Đo Gia Tốc Rơi Tự Do g',
-    className: 'Lớp 12-A1 Chuyên Lý',
-    teacherName: 'Thầy Nguyễn Văn Thành',
-    dueDate: '25/09/2026',
-    status: 'IN_PROGRESS',
-    route: '/srs-lab',
-    instructions: 'Đo thời gian t qua 2 cổng quang điện MC-964 và tính gia tốc g.',
-  },
-];
+import { classService } from '../../services/classService';
+import { assignmentService } from '../../services/assignmentService';
+import { useAuth } from '../../context/AuthContext';
 
 export const StudentAssignmentsPage: React.FC = () => {
-  const [assignments, setAssignments] = useState<StudentAssignmentItem[]>(INITIAL_ASSIGNMENTS);
+  const { user } = useAuth();
+  const [assignments, setAssignments] = useState<StudentAssignmentItem[]>([]);
   const [selectedAssignment, setSelectedAssignment] = useState<StudentAssignmentItem | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    classService.getStudentEnrollments(user.id).then(async enrollments => {
+      const allAsgs: StudentAssignmentItem[] = [];
+      for (const enr of enrollments) {
+        const asgs = await assignmentService.getAssignmentsByClass(enr.classId);
+        asgs.forEach(a => {
+          allAsgs.push({
+            id: a.id,
+            labTitle: a.title,
+            className: enr.className || `Lớp ${enr.classId}`,
+            teacherName: enr.teacherName || 'Giáo viên',
+            dueDate: 'Sắp tới',
+            status: 'NOT_STARTED',
+            route: '/simulation',
+            instructions: a.description || 'Hoàn thành bài thí nghiệm theo đúng thông số được giao.',
+          });
+        });
+      }
+      setAssignments(allAsgs);
+    }).catch(err => console.error(err));
+  }, [user?.id]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);

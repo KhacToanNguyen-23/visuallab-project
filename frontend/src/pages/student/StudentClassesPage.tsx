@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { JoinClassDrawer } from '../../components/student/JoinClassDrawer';
+import { classService } from '../../services/classService';
+import { useAuth } from '../../context/AuthContext';
 
 export interface EnrolledClassItem {
   id: string;
@@ -11,39 +13,43 @@ export interface EnrolledClassItem {
   joinedDate: string;
 }
 
-const INITIAL_ENROLLED_CLASSES: EnrolledClassItem[] = [
-  {
-    id: 'c1',
-    name: 'Lớp 12-A1 Chuyên Lý',
-    code: 'PHY12-A1',
-    teacherName: 'Thầy Nguyễn Văn Thành',
-    studentsCount: 42,
-    joinedDate: '01/09/2026',
-  },
-];
-
 export const StudentClassesPage: React.FC = () => {
   const navigate = useNavigate();
-  const [classes, setClasses] = useState<EnrolledClassItem[]>(INITIAL_ENROLLED_CLASSES);
+  const { user } = useAuth();
+  const [classes, setClasses] = useState<EnrolledClassItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const fetchClasses = async () => {
+    if (!user?.id) return;
+    try {
+      const data = await classService.getStudentEnrollments(user.id);
+      const formatted: EnrolledClassItem[] = data.map(e => ({
+        id: e.id,
+        name: e.className || `Lớp học (${e.classCode || e.classId})`,
+        code: e.classCode || 'ENROLLED',
+        teacherName: e.teacherName || 'Giáo viên',
+        studentsCount: 0,
+        joinedDate: e.enrolledAt ? new Date(e.enrolledAt).toLocaleDateString('vi-VN') : 'Đã tham gia'
+      }));
+      setClasses(formatted);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchClasses();
+  }, [user?.id]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const handleJoinSuccess = (code: string) => {
-    const newClass: EnrolledClassItem = {
-      id: 'c-' + Date.now(),
-      name: `Vật lý - Lớp Mới (${code})`,
-      code,
-      teacherName: 'Giáo viên phụ trách',
-      studentsCount: 35,
-      joinedDate: new Date().toLocaleDateString('vi-VN'),
-    };
-    setClasses(prev => [newClass, ...prev]);
+  const handleJoinSuccess = async (code: string) => {
+    await fetchClasses();
     showToast(`Đã tham gia lớp thành công với mã ${code}!`);
   };
 
