@@ -664,63 +664,6 @@ export const PhetPendulumLab: React.FC = () => {
                   Khi lực cản &gt; 0, cơ năng giảm dần làm biên độ dao động tắt dần theo thời gian.
                 </span>
               </div>
-
-              {/* Physical Parameters Controls Moved to Right Panel Card */}
-              <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col gap-4.5 mt-2">
-                <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-wider border-b border-slate-800 pb-2">
-                  ⚙️ Thông Số Thí Nghiệm
-                </h4>
-
-                {/* Slider 1: Length */}
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-slate-300 font-semibold">Chiều dài dây L:</span>
-                    <span className="text-cyan-400 font-bold font-mono">{lengthA.toFixed(1)} m</span>
-                  </div>
-                  <input
-                    type="range"
-                    min={0.2}
-                    max={2.0}
-                    step={0.1}
-                    value={lengthA}
-                    onChange={e => setLengthA(Number(e.target.value))}
-                    className="w-full accent-cyan-500 cursor-pointer"
-                  />
-                </div>
-
-                {/* Slider 2: Mass */}
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-slate-300 font-semibold">Khối lượng tạ m:</span>
-                    <span className="text-cyan-400 font-bold font-mono">{massA.toFixed(1)} kg</span>
-                  </div>
-                  <input
-                    type="range"
-                    min={0.1}
-                    max={5.0}
-                    step={0.1}
-                    value={massA}
-                    onChange={e => setMassA(Number(e.target.value))}
-                    className="w-full accent-cyan-500 cursor-pointer"
-                  />
-                </div>
-
-                {/* Selector 3: Environment Gravity Preset */}
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-xs text-slate-300 font-semibold">Môi Trường Trọng Trường g:</span>
-                  <select
-                    value={gravityPreset}
-                    onChange={e => setGravityPreset(Number(e.target.value))}
-                    className="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-emerald-400 font-bold focus:outline-none cursor-pointer"
-                  >
-                    {GRAVITY_PRESETS.map(g => (
-                      <option key={g.label} value={g.value}>
-                        {g.label} ({g.value} m/s²)
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
             </div>
           )}
 
@@ -964,6 +907,63 @@ export const PhetPendulumLab: React.FC = () => {
               )}
             </div>
           )}
+
+          {/* Persistent Experiment Parameters Control Panel (Visible in ALL Tabs) */}
+          <div className="p-5 rounded-3xl bg-[#0A0E17] border border-cyan-500/30 shadow-xl flex flex-col gap-4">
+            <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-wider border-b border-slate-800 pb-2 flex items-center gap-2">
+              <span>⚙️ Thông Số Thí Nghiệm</span>
+            </h4>
+
+            {/* Slider 1: Length */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex justify-between text-xs">
+                <span className="text-slate-300 font-semibold">Chiều dài dây L:</span>
+                <span className="text-cyan-400 font-bold font-mono">{lengthA.toFixed(1)} m</span>
+              </div>
+              <input
+                type="range"
+                min={0.2}
+                max={2.0}
+                step={0.1}
+                value={lengthA}
+                onChange={e => setLengthA(Number(e.target.value))}
+                className="w-full accent-cyan-500 cursor-pointer"
+              />
+            </div>
+
+            {/* Slider 2: Mass */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex justify-between text-xs">
+                <span className="text-slate-300 font-semibold">Khối lượng tạ m:</span>
+                <span className="text-cyan-400 font-bold font-mono">{massA.toFixed(1)} kg</span>
+              </div>
+              <input
+                type="range"
+                min={0.1}
+                max={5.0}
+                step={0.1}
+                value={massA}
+                onChange={e => setMassA(Number(e.target.value))}
+                className="w-full accent-cyan-500 cursor-pointer"
+              />
+            </div>
+
+            {/* Selector 3: Environment Gravity Preset */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs text-slate-300 font-semibold">Môi Trường Trọng Trường g:</span>
+              <select
+                value={gravityPreset}
+                onChange={e => setGravityPreset(Number(e.target.value))}
+                className="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-emerald-400 font-bold focus:outline-none cursor-pointer"
+              >
+                {GRAVITY_PRESETS.map(g => (
+                  <option key={g.label} value={g.value}>
+                    {g.label} ({g.value} m/s²)
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </div>
