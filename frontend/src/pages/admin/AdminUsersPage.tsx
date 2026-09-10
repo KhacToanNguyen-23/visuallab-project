@@ -12,53 +12,7 @@ export interface UserItem {
   createdAt: string;
 }
 
-const INITIAL_USERS: UserItem[] = [
-  {
-    id: 'u-1',
-    name: 'Nguyễn Văn Thành',
-    email: 'teacher@edulab.vn',
-    role: 'TEACHER',
-    school: 'THPT Chuyên Hà Nội - Amsterdam',
-    status: 'ACTIVE',
-    createdAt: '01/09/2026',
-  },
-  {
-    id: 'u-2',
-    name: 'Trần Minh Quân',
-    email: 'student@edulab.vn',
-    role: 'STUDENT',
-    school: 'THPT Chuyên Hà Nội - Amsterdam',
-    status: 'ACTIVE',
-    createdAt: '02/09/2026',
-  },
-  {
-    id: 'u-3',
-    name: 'Phạm Hồng Dung',
-    email: 'dung.ph@edulab.vn',
-    role: 'TEACHER',
-    school: 'THPT Lê Hồng Phong',
-    status: 'ACTIVE',
-    createdAt: '03/09/2026',
-  },
-  {
-    id: 'u-4',
-    name: 'Lê Hoàng Nam',
-    email: 'nam.lh@edulab.vn',
-    role: 'STUDENT',
-    school: 'THPT Chuyên Hà Nội - Amsterdam',
-    status: 'SUSPENDED',
-    createdAt: '05/09/2026',
-  },
-  {
-    id: 'u-5',
-    name: 'Bùi Hoàng Việt',
-    email: 'admin@edulab.vn',
-    role: 'ADMIN',
-    school: 'VisualLab Core Team',
-    status: 'ACTIVE',
-    createdAt: '01/08/2026',
-  },
-];
+const INITIAL_USERS: UserItem[] = [];
 
 export const AdminUsersPage: React.FC = () => {
   const [users, setUsers] = useState<UserItem[]>(INITIAL_USERS);

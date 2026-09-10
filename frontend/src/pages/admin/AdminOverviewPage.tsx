@@ -4,12 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export const AdminOverviewPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const recentLogs = [
-    { id: '1', time: '13:25:04', user: 'System Admin', action: 'Tạo tài khoản Giáo viên mới: Nguyễn Văn Thành', module: 'USER_MGMT' },
-    { id: '2', time: '12:40:19', user: 'Nguyễn Văn Thành', action: 'Giao bài lab Mạch Điện cho Lớp 12A1', module: 'CLASS_ASSIGN' },
-    { id: '3', time: '11:10:44', user: 'Trần Minh Quân', action: 'Hoàn thành bài thí nghiệm Con lắc đơn', module: 'LAB_ENGINE' },
-    { id: '4', time: '10:05:12', user: 'System Admin', action: 'Cập nhật trạng thái lab Đo gia tốc g -> Hiển thị', module: 'LAB_CATALOG' },
-  ];
+  const recentLogs: { id: string; time: string; user: string; action: string; module: string }[] = [];
 
   return (
     <div className="space-y-6">
@@ -81,11 +76,10 @@ export const AdminOverviewPage: React.FC = () => {
             <span>Tổng Lượt Chạy Lab</span>
           </div>
           <div className="text-3xl font-black tracking-tight" style={{ color: 'var(--accent-primary)' }}>
-            12,840
+            —
           </div>
           <div className="flex items-center gap-1.5 text-[11px]">
-            <span className="text-emerald-500 font-bold">↑ +14%</span>
-            <span className="opacity-60" style={{ color: 'var(--text-muted)' }}>so với tuần trước</span>
+            <span className="opacity-60" style={{ color: 'var(--text-muted)' }}>Chưa có dữ liệu</span>
           </div>
         </div>
 
@@ -100,7 +94,7 @@ export const AdminOverviewPage: React.FC = () => {
             <span>Tài Khoản Học Sinh</span>
           </div>
           <div className="text-3xl font-black tracking-tight text-emerald-500">
-            1,420
+            —
           </div>
           <div className="flex items-center gap-1.5 text-[11px]">
             <span className="opacity-60" style={{ color: 'var(--text-muted)' }}>Đã xác minh qua Google OAuth</span>
@@ -118,7 +112,7 @@ export const AdminOverviewPage: React.FC = () => {
             <span>Giáo Viên Kích Hoạt</span>
           </div>
           <div className="text-3xl font-black tracking-tight text-purple-500">
-            86
+            —
           </div>
           <div className="flex items-center gap-1.5 text-[11px]">
             <span className="opacity-60" style={{ color: 'var(--text-muted)' }}>Từ 45 trường THPT trên toàn quốc</span>
@@ -136,7 +130,7 @@ export const AdminOverviewPage: React.FC = () => {
             <span>Lớp Học Đang Mở</span>
           </div>
           <div className="text-3xl font-black tracking-tight text-amber-500">
-            112
+            —
           </div>
           <div className="flex items-center gap-1.5 text-[11px]">
             <span className="opacity-60" style={{ color: 'var(--text-muted)' }}>Đang giao bài thực hành</span>

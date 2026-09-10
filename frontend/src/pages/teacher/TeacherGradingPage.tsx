@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
 import { GradeSubmissionDrawer, type SubmissionData } from '../../components/teacher/GradeSubmissionDrawer';
 
-const INITIAL_SUBMISSIONS: SubmissionData[] = [
-  { id: 'sub-1', studentName: 'Trần Minh Quân', className: 'Vật lý 12 - Lớp 12A1', labTitle: 'Mạch Điện Đơn Giản & Định Luật Ohm', time: '09/09/2026 14:30', status: 'COMPLETED', score: '9.5 / 10', feedback: 'Lắp mạch chuẩn, tính sai số R cực kỳ chính xác!' },
-  { id: 'sub-2', studentName: 'Lê Hoàng Nam', className: 'Vật lý 12 - Lớp 12A1', labTitle: 'Đo Gia Tốc Rơi Tự Do g', time: '09/09/2026 16:15', status: 'IN_PROGRESS', score: 'Đang làm...', feedback: '' },
-  { id: 'sub-3', studentName: 'Nguyễn Mai Anh', className: 'Vật lý 11 - Lớp 11A3', labTitle: 'Mạch Điện Đơn Giản & Định Luật Ohm', time: '—', status: 'NOT_STARTED', score: 'Chưa làm', feedback: '' },
-  { id: 'sub-4', studentName: 'Phạm Đức Anh', className: 'Vật lý 12 - Lớp 12A1', labTitle: 'Con Lắc Đơn & Dao Động Điều Hòa', time: '10/09/2026 08:20', status: 'COMPLETED', score: '8.8 / 10', feedback: 'Báo cáo đầy đủ đồ thị T2-L.' },
-];
-
 export const TeacherGradingPage: React.FC = () => {
-  const [submissions, setSubmissions] = useState<SubmissionData[]>(INITIAL_SUBMISSIONS);
+  const [submissions, setSubmissions] = useState<SubmissionData[]>([]);
   const [selectedSubmission, setSelectedSubmission] = useState<SubmissionData | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

@@ -9,14 +9,7 @@ export interface AuditLogItem {
   module: string;
 }
 
-const INITIAL_AUDIT_LOGS: AuditLogItem[] = [
-  { id: '1', timestamp: '10/09/2026 13:25:04', user: 'System Admin', role: 'ADMIN', action: 'Tạo & Cấp tài khoản Giáo viên: Nguyễn Văn Thành', module: 'USER_MGMT' },
-  { id: '2', timestamp: '10/09/2026 12:40:19', user: 'Nguyễn Văn Thành', role: 'TEACHER', action: 'Giao bài lab Mạch Điện cho Lớp 12A1', module: 'CLASS_ASSIGN' },
-  { id: '3', timestamp: '10/09/2026 11:10:44', user: 'Trần Minh Quân', role: 'STUDENT', action: 'Hoàn thành bài thí nghiệm Con lắc đơn', module: 'LAB_ENGINE' },
-  { id: '4', timestamp: '10/09/2026 10:05:12', user: 'System Admin', role: 'ADMIN', action: 'Cập nhật trạng thái bài lab Đo gia tốc g -> Hiển thị', module: 'LAB_CATALOG' },
-  { id: '5', timestamp: '09/09/2026 21:15:30', user: 'Phạm Hồng Dung', role: 'TEACHER', action: 'Tạo lớp mới: Vật lý 11A3', module: 'CLASS_MGMT' },
-  { id: '6', timestamp: '09/09/2026 19:42:01', user: 'Lê Hoàng Nam', role: 'STUDENT', action: 'Tham gia lớp Vật lý 12A1 qua mã mời', module: 'CLASS_JOIN' },
-];
+const INITIAL_AUDIT_LOGS: AuditLogItem[] = [];
 
 export const AdminAuditPage: React.FC = () => {
   const [logs] = useState<AuditLogItem[]>(INITIAL_AUDIT_LOGS);

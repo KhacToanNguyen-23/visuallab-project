@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { JoinClassDrawer } from '../../components/student/JoinClassDrawer';
+import { classService } from '../../services/classService';
+import { useAuth } from '../../context/AuthContext';
 
 export interface EnrolledClassItem {
   id: string;
@@ -11,40 +13,57 @@ export interface EnrolledClassItem {
   joinedDate: string;
 }
 
-const INITIAL_ENROLLED_CLASSES: EnrolledClassItem[] = [
-  {
-    id: 'c1',
-    name: 'Lớp 12-A1 Chuyên Lý',
-    code: 'PHY12-A1',
-    teacherName: 'Thầy Nguyễn Văn Thành',
-    studentsCount: 42,
-    joinedDate: '01/09/2026',
-  },
-];
-
 export const StudentClassesPage: React.FC = () => {
   const navigate = useNavigate();
-  const [classes, setClasses] = useState<EnrolledClassItem[]>(INITIAL_ENROLLED_CLASSES);
+  const { user } = useAuth();
+  const [classes, setClasses] = useState<EnrolledClassItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      classService.getStudentEnrollments(user.id).then(data => {
+        const formatted = data.map(e => ({
+          id: e.id,
+          name: e.className || 'Lớp học',
+          code: e.classCode || '',
+          teacherName: e.teacherName || 'Giáo viên',
+          studentsCount: 0,
+          joinedDate: e.enrolledAt || '',
+        }));
+        setClasses(formatted);
+      }).catch(err => console.error('Failed to load enrollments:', err));
+    }
+  }, [user]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const handleJoinSuccess = (code: string) => {
-    const newClass: EnrolledClassItem = {
-      id: 'c-' + Date.now(),
-      name: `Vật lý - Lớp Mới (${code})`,
-      code,
-      teacherName: 'Giáo viên phụ trách',
-      studentsCount: 35,
-      joinedDate: new Date().toLocaleDateString('vi-VN'),
-    };
-    setClasses(prev => [newClass, ...prev]);
-    showToast(`Đã tham gia lớp thành công với mã ${code}!`);
+  const handleJoinSuccess = async (code: string) => {
+    try {
+      const enrollment = await classService.joinClass(
+        code, user?.id || '', user?.fullName || '', user?.email || ''
+      );
+      const newClass: EnrolledClassItem = {
+        id: enrollment.id,
+        name: enrollment.className || `Lớp mới (${code})`,
+        code: enrollment.classCode || code,
+        teacherName: enrollment.teacherName || 'Giáo viên',
+        studentsCount: 0,
+        joinedDate: enrollment.enrolledAt || new Date().toISOString(),
+      };
+      setClasses(prev => [newClass, ...prev]);
+      showToast(`Đã tham gia lớp thành công với mã ${code}!`);
+    } catch (err: any) {
+      if (err.isDuplicate) {
+        showToast('Bạn đã tham gia lớp này rồi!');
+      } else {
+        showToast(err.message || 'Không thể tham gia lớp!');
+      }
+    }
   };
 
   const filteredClasses = classes.filter(cls =>

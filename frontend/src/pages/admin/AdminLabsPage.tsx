@@ -11,14 +11,7 @@ export interface LabItem {
   runCount: number;
 }
 
-const INITIAL_LABS: LabItem[] = [
-  { id: 'lab-1', title: 'Mạch Điện Đơn Giản & Định Luật Ohm', domain: 'Điện Học', gradeLevel: 'Lớp 11-12', route: '/simulation', isVisible: true, runCount: 5420 },
-  { id: 'lab-2', title: 'Đo Gia Tốc Rơi Tự Do g', domain: 'Cơ Học', gradeLevel: 'Lớp 10', route: '/srs-lab', isVisible: true, runCount: 3210 },
-  { id: 'lab-3', title: 'Đo Suất Điện Động E & Điện Trở Trong r', domain: 'Điện Học', gradeLevel: 'Lớp 11', route: '/simulation', isVisible: true, runCount: 1890 },
-  { id: 'lab-4', title: 'Đo Nhiệt Dung Riêng c Của Nước', domain: 'Sóng & Nhiệt', gradeLevel: 'Lớp 12', route: '/srs-lab', isVisible: true, runCount: 1450 },
-  { id: 'lab-5', title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ', domain: 'Quang Học', gradeLevel: 'Lớp 11', route: '/simulation', isVisible: true, runCount: 980 },
-  { id: 'lab-6', title: 'Con Lắc Đơn & Dao Động Điều Hòa', domain: 'Cơ Học', gradeLevel: 'Lớp 12', route: '/simulation', isVisible: false, runCount: 0 },
-];
+const INITIAL_LABS: LabItem[] = [];
 
 export const AdminLabsPage: React.FC = () => {
   const navigate = useNavigate();

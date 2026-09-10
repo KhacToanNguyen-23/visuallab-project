@@ -126,11 +126,11 @@ export const TeacherClassesPage: React.FC = () => {
         </div>
         <div className="border rounded-xl p-4 shadow-xs flex flex-col justify-between" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
           <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Bài Tập Đang Mở</span>
-          <div className="text-2xl font-black mt-2 text-emerald-500">5 Bài</div>
+          <div className="text-2xl font-black mt-2 text-emerald-500">— Bài</div>
         </div>
         <div className="border rounded-xl p-4 shadow-xs flex flex-col justify-between" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
           <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Bài Chờ Chấm</span>
-          <div className="text-2xl font-black mt-2 text-amber-500">8 Nộp</div>
+          <div className="text-2xl font-black mt-2 text-amber-500">— Nộp</div>
         </div>
       </div>
 
