@@ -124,7 +124,7 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'MECH',
         domainBadge: '[CƠ HỌC]',
         labs: [
-          { id: 'sim-simple-pendulum', title: 'Con Lắc Đơn & Dao Động Điều Hòa', description: 'Khảo sát chu kỳ T = 2pi*sqrt(l/g) của con lắc đơn.', engineType: 'PARAMETER_STUDIO', route: '/simulation' },
+          { id: 'sim-simple-pendulum', title: 'Con Lắc Đơn & Dao Động Điều Hòa', description: 'Khảo sát chu kỳ T = 2π√(l/g) của con lắc đơn.', engineType: 'PARAMETER_STUDIO', route: '/pendulum-lab' },
           { id: 'sim-spring-pendulum', title: 'Con Lắc Lò Xo Nằm Ngang & Thẳng Đứng', description: 'Khảo sát tần số góc omega = sqrt(k/m) và bảo toàn cơ năng.', engineType: 'DRAG_DROP', route: '/simulation' }
         ]
       },
