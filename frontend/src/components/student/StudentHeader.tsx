@@ -73,18 +73,6 @@ export const StudentHeader: React.FC<StudentHeaderProps> = ({
 
       {/* Right: Theme Toggle & Profile Menu */}
       <div className="flex items-center gap-2.5">
-        {/* Public Labs Catalog link */}
-        <button
-          onClick={() => navigate('/')}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
-          style={{
-            borderColor: 'var(--border-color)',
-            backgroundColor: 'var(--bg-main)',
-            color: 'var(--text-main)',
-          }}
-        >
-          Thư Viện Mô Phỏng Công Khai →
-        </button>
 
         {/* Theme Switcher */}
         <button

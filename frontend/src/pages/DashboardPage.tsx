@@ -7,68 +7,7 @@ import { RoleWorkspacePanel } from '../components/dashboard/RoleWorkspacePanel';
 import { PhETFilterBar } from '../components/dashboard/PhETFilterBar';
 import { SimCard, type SimItem } from '../components/dashboard/SimCard';
 
-const BUILTIN_SIMULATIONS: SimItem[] = [
-  {
-    id: 'sim-simple-pendulum',
-    title: 'Con Lắc Đơn & Dao Động Điều Hòa',
-    gradeLevel: 'THPT - Lớp 11',
-    subjectArea: 'Cơ Học',
-    description: 'Khảo sát chu kỳ dao động T = 2π√(l/g) của con lắc đơn theo chiều dài dây treo l, khối lượng m, gia tốc trọng trường g và lực cản.',
-    thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80',
-    route: '/pendulum-lab',
-    isPopular: true,
-  },
-  {
-    id: 'sim-dc-circuit',
-    title: 'Mạch Điện Đơn Giản & Định Luật Ohm',
-    gradeLevel: 'THPT - Lớp 11',
-    subjectArea: 'Điện Học',
-    description: 'Kéo thả linh kiện Pin, Điện trở, Bóng đèn, Công tắc, Ampe kế, Vôn kế. Thuật toán Kirchhoff tính toán chính xác dòng điện.',
-    thumbnail: 'https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&w=600&q=80',
-    route: '/simulation',
-    isPopular: true,
-  },
-  {
-    id: 'sim-free-fall',
-    title: 'Đo Gia Tốc Rơi Tự Do g',
-    gradeLevel: 'THPT - Lớp 10',
-    subjectArea: 'Cơ Học',
-    description: 'Bi sắt rơi qua 2 cổng quang điện, đồng hồ hiện số MC-964 đo thời gian chính xác và tự động tính gia tốc g.',
-    thumbnail: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80',
-    route: '/srs-lab',
-    isPopular: true,
-  },
-  {
-    id: 'sim-emf-internal-r',
-    title: 'Đo Suất Điện Động E & Điện Trở Trong r',
-    gradeLevel: 'THPT - Lớp 11',
-    subjectArea: 'Điện Học',
-    description: 'Khảo sát đồ thị U-I của nguồn pin bằng biến trở con chạy, Vôn kế và Ampe kế.',
-    thumbnail: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80',
-    route: '/simulation',
-    isPopular: false,
-  },
-  {
-    id: 'sim-specific-heat',
-    title: 'Đo Nhiệt Dung Riêng c Của Nước',
-    gradeLevel: 'THPT - Lớp 12',
-    subjectArea: 'Nhiệt Học',
-    description: 'Đo công suất nhiệt Q = P*t và độ tăng nhiệt độ delta T để xác định chuẩn nhiệt dung riêng c.',
-    thumbnail: 'https://images.unsplash.com/photo-1584483766114-2cea6facdf57?auto=format&fit=crop&w=600&q=80',
-    route: '/srs-lab',
-    isPopular: false,
-  },
-  {
-    id: 'sim-refraction',
-    title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ',
-    gradeLevel: 'THPT - Lớp 11',
-    subjectArea: 'Quang Học',
-    description: 'Chiếu chùm tia sáng laser qua các môi trường chiết suất n1, n2 khác nhau và xác định góc khúc xạ.',
-    thumbnail: 'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=600&q=80',
-    route: '/simulation',
-    isPopular: true,
-  },
-];
+const BUILTIN_SIMULATIONS: SimItem[] = [];
 
 interface ApiTopic {
   id: string;

@@ -1,66 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/auth/AuthModal';
+import { labService, type PublicLabItem } from '../services/labService';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('login');
+  const [labs, setLabs] = useState<PublicLabItem[]>([]);
+
+  useEffect(() => {
+    labService.getFeaturedLabs().then(setLabs);
+  }, []);
 
   const openAuthModal = (tab: 'login' | 'register') => {
     setAuthModalTab(tab);
     setIsAuthModalOpen(true);
   };
-
-  const labs = [
-    {
-      id: '1',
-      title: 'Bài 1: Khảo sát Con lắc lò xo',
-      subject: 'Vật lý 12',
-      chapter: 'Chương 1: Dao động cơ',
-      description: 'Mô phỏng mối quan hệ giữa khối lượng m, độ cứng k và chu kỳ T với đồ thị li độ x-t.',
-      tags: ['Cơ học', 'Mô phỏng 2D', 'Tương tác'],
-      renderThumbnail: () => (
-        <svg width="90" height="80" viewBox="0 0 100 90" className="stroke-blue-600 fill-none stroke-2">
-          <line x1="10" y1="10" x2="90" y2="10" stroke="#94a3b8" strokeWidth="4" />
-          <path d="M50 10 L50 20 L60 25 L40 35 L60 45 L40 55 L50 60 L50 70" />
-          <rect x="38" y="70" width="24" height="18" rx="3" fill="#2563eb" stroke="#3b82f6" />
-        </svg>
-      )
-    },
-    {
-      id: '2',
-      title: 'Bài 2: Đo Gia tốc rơi tự do',
-      subject: 'Vật lý 10',
-      chapter: 'Chương 2: Động lực học',
-      description: 'Bi sắt rơi qua cổng quang điện, đồng hồ MC-964 ghi nhận chính xác thời gian t.',
-      tags: ['Cơ học', 'Cổng quang điện', 'Số liệu'],
-      renderThumbnail: () => (
-        <svg width="90" height="80" viewBox="0 0 100 90" className="stroke-emerald-600 fill-none stroke-2">
-          <line x1="50" y1="10" x2="50" y2="80" stroke="#94a3b8" strokeDasharray="3,3" />
-          <circle cx="50" cy="30" r="8" fill="#059669" stroke="#10b981" />
-          <rect x="25" y="55" width="50" height="16" rx="2" fill="#0f172a" stroke="#10b981" />
-          <text x="50" y="66" textAnchor="middle" fill="#10b981" fontSize="9" fontFamily="monospace">MC-964</text>
-        </svg>
-      )
-    },
-    {
-      id: '3',
-      title: 'Bài 3: Mạch điện RLC nối tiếp',
-      subject: 'Vật lý 12',
-      chapter: 'Chương 3: Dòng điện xoay chiều',
-      description: 'Mô phỏng hiện tượng cộng hưởng điện và đồ thị tần số dòng điện xoay chiều.',
-      tags: ['Điện từ', 'Đồ thị', 'Cộng hưởng'],
-      renderThumbnail: () => (
-        <svg width="100" height="80" viewBox="0 0 110 90" className="stroke-cyan-600 fill-none stroke-2">
-          <path d="M10 45 Q 25 15, 40 45 T 70 45 T 100 45" stroke="#0891b2" strokeWidth="2.5" />
-          <line x1="5" y1="45" x2="105" y2="45" stroke="#94a3b8" strokeDasharray="2,2" />
-        </svg>
-      )
-    }
-  ];
 
   return (
     <div className="min-h-screen flex flex-col font-sans transition-colors duration-200" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
@@ -116,20 +76,37 @@ export const LandingPage: React.FC = () => {
               )}
             </button>
 
-            <button
-              onClick={() => openAuthModal('login')}
-              className="px-4 py-2 text-xs font-semibold rounded-lg border transition-colors cursor-pointer"
-              style={{ borderColor: 'var(--border-color)', color: 'var(--text-main)', backgroundColor: 'var(--bg-main)' }}
-            >
-              Đăng Nhập
-            </button>
-            <button
-              onClick={() => openAuthModal('register')}
-              className="px-4 py-2 text-xs font-semibold rounded-lg text-white transition-opacity hover:opacity-90 shadow-xs cursor-pointer"
-              style={{ backgroundColor: 'var(--accent-primary)' }}
-            >
-              Đăng Ký Học Sinh
-            </button>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  className="px-4 py-2 text-xs font-semibold rounded-lg text-white transition-opacity hover:opacity-90 shadow-xs cursor-pointer"
+                  style={{ backgroundColor: 'var(--accent-primary)' }}
+                >
+                  Vào Dashboard
+                </button>
+                <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-xs uppercase cursor-pointer" title={user.fullName}>
+                  {user.fullName.charAt(0)}
+                </div>
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={() => openAuthModal('login')}
+                  className="px-4 py-2 text-xs font-semibold rounded-lg border transition-colors cursor-pointer"
+                  style={{ borderColor: 'var(--border-color)', color: 'var(--text-main)', backgroundColor: 'var(--bg-main)' }}
+                >
+                  Đăng Nhập
+                </button>
+                <button
+                  onClick={() => openAuthModal('register')}
+                  className="px-4 py-2 text-xs font-semibold rounded-lg text-white transition-opacity hover:opacity-90 shadow-xs cursor-pointer"
+                  style={{ backgroundColor: 'var(--accent-primary)' }}
+                >
+                  Đăng Ký Học Sinh
+                </button>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -236,70 +213,89 @@ export const LandingPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-extrabold tracking-tight" style={{ color: 'var(--text-main)' }}>
-                Danh mục Bài Thí nghiệm Trực quan
+                Danh mục Bài Thí nghiệm Nổi bật
               </h2>
               <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
                 Mô phỏng 2D/3D trực quan phẳng cho học sinh THPT
               </p>
             </div>
-            <span className="text-xs px-3 py-1 rounded-full font-semibold border" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)', color: 'var(--text-muted)' }}>
-              {labs.length} Bài Thực Hành
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {labs.map((lab) => (
-              <div 
-                key={lab.id} 
-                className="border rounded-xl overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md transition-all"
-                style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}
+            <div className="flex items-center gap-3">
+              <span className="text-xs px-3 py-1 rounded-full font-semibold border" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)', color: 'var(--text-muted)' }}>
+                {labs.length} Bài Thực Hành
+              </span>
+              <button 
+                onClick={() => navigate('/thu-vien')}
+                className="text-xs font-bold hover:underline transition-all cursor-pointer"
+                style={{ color: 'var(--accent-primary)' }}
               >
-                {/* SVG Visual Thumbnail Header */}
-                <div className="p-4 border-b h-36 flex items-center justify-center relative" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
-                  {lab.renderThumbnail()}
-                  <span className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded border" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)', color: 'var(--accent-primary)' }}>
-                    {lab.subject}
-                  </span>
-                </div>
-
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                  <div>
-                    <div className="text-[11px] font-semibold mb-1" style={{ color: 'var(--text-muted)' }}>
-                      {lab.chapter}
-                    </div>
-                    <h3 className="text-base font-bold mb-1.5" style={{ color: 'var(--text-main)' }}>
-                      {lab.title}
-                    </h3>
-                    <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                      {lab.description}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5 mt-3">
-                      {lab.tags.map((tag, idx) => (
-                        <span 
-                          key={idx} 
-                          className="text-[10px] px-2 py-0.5 rounded font-medium border"
-                          style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)', color: 'var(--text-muted)' }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="pt-3 border-t flex items-center justify-between" style={{ borderColor: 'var(--border-color)' }}>
-                    <span className="text-xs font-semibold text-emerald-500">Sẵn sàng</span>
-                    <Link 
-                      to="/simulation"
-                      className="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-white transition-opacity hover:opacity-90 shadow-xs"
-                      style={{ backgroundColor: 'var(--accent-primary)' }}
-                    >
-                      Thực hành
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
+                Khám phá toàn bộ thư viện →
+              </button>
+            </div>
           </div>
+
+          {labs.length === 0 ? (
+            <div className="py-12 border border-dashed rounded-xl flex flex-col items-center justify-center text-center opacity-70" style={{ borderColor: 'var(--border-color)' }}>
+              <span className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>Đang cập nhật dữ liệu thư viện từ hệ thống...</span>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {labs.map((lab) => (
+                <div 
+                  key={lab.id} 
+                  className="border rounded-xl overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md transition-all"
+                  style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}
+                >
+                  {/* Visual Thumbnail Header */}
+                  <div className="p-4 border-b h-36 flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
+                    {lab.thumbnail ? (
+                      <img src={lab.thumbnail} alt={lab.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="text-xs opacity-50 font-bold" style={{ color: 'var(--text-muted)' }}>VisualLab Model</div>
+                    )}
+                    <span className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded border shadow-sm" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)', color: 'var(--accent-primary)' }}>
+                      {lab.subject}
+                    </span>
+                  </div>
+
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    <div>
+                      <div className="text-[11px] font-semibold mb-1" style={{ color: 'var(--text-muted)' }}>
+                        {lab.chapter}
+                      </div>
+                      <h3 className="text-base font-bold mb-1.5" style={{ color: 'var(--text-main)' }}>
+                        {lab.title}
+                      </h3>
+                      <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                        {lab.description}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5 mt-3">
+                        {lab.tags?.map((tag, idx) => (
+                          <span 
+                            key={idx} 
+                            className="text-[10px] px-2 py-0.5 rounded font-medium border"
+                            style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)', color: 'var(--text-muted)' }}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t flex items-center justify-between" style={{ borderColor: 'var(--border-color)' }}>
+                      <span className="text-xs font-semibold text-emerald-500">Sẵn sàng</span>
+                      <button 
+                        onClick={() => user ? navigate(lab.route || '/simulation') : openAuthModal('login')}
+                        className="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-white transition-opacity hover:opacity-90 shadow-xs cursor-pointer"
+                        style={{ backgroundColor: 'var(--accent-primary)' }}
+                      >
+                        Thực hành
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       </main>
 
