@@ -1,52 +1,82 @@
 [
   {
-    id: "g10-curriculum-tree",
-    title: "Cây Mục Lục GDPT 2018 Vật Lý Lớp 10",
-    user_visible_behavior: "so that Students, Teachers, and Admins can view and filter Grade 10 physics experiments by curriculum chapters",
-    verification_command: "Accepted when Grade 10 filter displays Grade 10 chapters and labs",
-    status: "completed",
-    evidence: "Verified via domainsConfig.ts GDPT2018_CURRICULUM_TREE and PhETFilterBar.tsx Grade selection",
-    notes: "",
-    priority: "P1"
+    "id": "teacher-create-class",
+    "title": "Teacher creates Class & generates Class Code",
+    "user_visible_behavior": "so that students can easily join the class using a 6-character code",
+    "verification_command": "Teacher creates class in UI and receives a 6-character code",
+    "status": "passing",
+    "evidence": "ClassroomService generates unique 6-character code, JPA persists to DB, REST endpoint tested",
+    "notes": "",
+    "priority": "P1"
   },
   {
-    id: "g11-curriculum-tree",
-    title: "Cây Mục Lục GDPT 2018 Vật Lý Lớp 11",
-    user_visible_behavior: "so that Students, Teachers, and Admins can view and filter Grade 11 physics experiments by curriculum chapters",
-    verification_command: "Accepted when Grade 11 filter displays Grade 11 chapters and labs",
-    status: "completed",
-    evidence: "Verified via domainsConfig.ts GDPT2018_CURRICULUM_TREE and PhETFilterBar.tsx Grade selection",
-    notes: "",
-    priority: "P1"
+    "id": "student-join-class",
+    "title": "Student joins Class via Class Code",
+    "user_visible_behavior": "so that student can see assignments given by their teacher",
+    "verification_command": "Student enters valid code and is listed in teacher's class roster",
+    "status": "passing",
+    "evidence": "ClassEnrollment saved, duplicate join prevented, student enrolled class list verified",
+    "notes": "",
+    "priority": "P1"
   },
   {
-    id: "g12-curriculum-tree",
-    title: "Cây Mục Lục GDPT 2018 Vật Lý Lớp 12",
-    user_visible_behavior: "so that Students, Teachers, and Admins can view and filter Grade 12 physics experiments by curriculum chapters",
-    verification_command: "Accepted when Grade 12 filter displays Grade 12 chapters and labs",
-    status: "completed",
-    evidence: "Verified via domainsConfig.ts GDPT2018_CURRICULUM_TREE and PhETFilterBar.tsx Grade selection",
-    notes: "",
-    priority: "P1"
+    "id": "teacher-create-parametric-assignment",
+    "title": "Teacher creates Assignment with Parametric Bounds",
+    "user_visible_behavior": "so that each student gets a personalized lab problem variant",
+    "verification_command": "Assignment saved and students view personalized parameter values",
+    "status": "passing",
+    "evidence": "Assignment entity saved, StudentAssignmentInstance generates reproducible random parameters per student",
+    "notes": "",
+    "priority": "P1"
   },
   {
-    id: "drag-drop-workbench-engine",
-    title: "Drag & Drop Workbench Simulation Engine",
-    user_visible_behavior: "so that Users can drag and drop electrical/mechanical components and calculate real-time current and voltage",
-    verification_command: "Accepted when component palette allows adding/removing items and calculating circuit status",
-    status: "completed",
-    evidence: "Verified via DragDropWorkbenchEngine.tsx component rendering and interactive controls",
-    notes: "",
-    priority: "P1"
+    "id": "student-submit-lab-answers",
+    "title": "Student performs Lab experiment and submits answers",
+    "user_visible_behavior": "so that student work can be graded by AI & Math engine",
+    "verification_command": "Student submits answers and receives real-time grade feedback",
+    "status": "passing",
+    "evidence": "StudentLabAssignmentView renders PhET lab + submission form + instant grade result modal",
+    "notes": "",
+    "priority": "P1"
   },
   {
-    id: "parameter-concept-studio-engine",
-    title: "Parameter Concept Studio Simulation Engine",
-    user_visible_behavior: "so that Users can adjust wavelength, frequency, and amplitude sliders and see real-time 60fps canvas wave spectrum",
-    verification_command: "Accepted when parameter sliders update wave visualization on canvas in real-time",
-    status: "completed",
-    evidence: "Verified via ParameterConceptStudioEngine.tsx 60fps canvas renderer",
-    notes: "",
-    priority: "P1"
+    "id": "hybrid-auto-grading",
+    "title": "System grades submissions using Math Engine + Groq AI",
+    "user_visible_behavior": "so that grades are accurate, fair, and accompanied by AI feedback",
+    "verification_command": "Submission scored automatically with math breakdown and Groq AI review",
+    "status": "passing",
+    "evidence": "JUnit MathVerificationEngineTest passed with 0 failures, GroqAIService Llama-3 JSON parser verified",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "teacher-view-gradebook",
+    "title": "Teacher views Class Gradebook and Roster Results",
+    "user_visible_behavior": "so that teacher can monitor student progress and AI feedback",
+    "verification_command": "Teacher dashboard displays student roster with score inspection drawer",
+    "status": "passing",
+    "evidence": "ClassRosterView renders student table, scores (Math, AI, Total), and detailed Groq AI feedback drawer",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "toast-duplicate-join-warning",
+    "title": "Toast notification on Class Join and Duplicate Join warning",
+    "user_visible_behavior": "so that student gets instant toast feedback and duplicate joins are blocked with explicit warning",
+    "verification_command": "Joining shows green toast, re-joining shows warning toast 'Bạn đã tham gia lớp học này từ trước!'",
+    "status": "active",
+    "evidence": "",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "class-card-click-navigation",
+    "title": "Clicking Class card opens Class Assignments list",
+    "user_visible_behavior": "so that student can click a class card and transition directly into lab assignments",
+    "verification_command": "Clicking enrolled class card navigates to /student-assignments?classId=...",
+    "status": "active",
+    "evidence": "",
+    "notes": "",
+    "priority": "P1"
   }
 ]

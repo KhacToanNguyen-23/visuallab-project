@@ -176,35 +176,57 @@ export const PhetPendulumLab: React.FC = () => {
   ) => {
     const { state, params } = engine;
 
-    // 1. Support Beam & Pivot Pin
+    // 1. Support Beam & Metallic Pivot Pin (PhET Style)
     ctx.fillStyle = '#1e293b';
-    ctx.fillRect(pivotX - 100, pivotY - 16, 200, 14);
+    ctx.fillRect(pivotX - 120, pivotY - 18, 240, 16);
     ctx.strokeStyle = '#475569';
     ctx.lineWidth = 2;
-    ctx.strokeRect(pivotX - 100, pivotY - 16, 200, 14);
+    ctx.strokeRect(pivotX - 120, pivotY - 18, 240, 16);
 
     ctx.beginPath();
-    ctx.arc(pivotX, pivotY, 6, 0, Math.PI * 2);
+    ctx.arc(pivotX, pivotY, 7, 0, Math.PI * 2);
     ctx.fillStyle = colorHex;
     ctx.fill();
-
-    // 2. Protractor Scale Overlay
-    ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.arc(pivotX, pivotY, 110, (Math.PI / 180) * 45, (Math.PI / 180) * 135);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
     ctx.stroke();
+
+    // 2. Enhanced Protractor Scale Overlay with Degree Marks (PhET Style Device)
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(pivotX, pivotY, 130, (Math.PI / 180) * 35, (Math.PI / 180) * 145);
+    ctx.stroke();
+
+    // Degree Ticks
+    for (let deg = -60; deg <= 60; deg += 10) {
+      const rad = (Math.PI / 180) * (90 + deg);
+      const innerR = deg % 30 === 0 ? 118 : 123;
+      const outerR = 130;
+      const x1 = pivotX + innerR * Math.cos(rad);
+      const y1 = pivotY + innerR * Math.sin(rad);
+      const x2 = pivotX + outerR * Math.cos(rad);
+      const y2 = pivotY + outerR * Math.sin(rad);
+
+      ctx.strokeStyle = deg === 0 ? colorHex : 'rgba(148, 163, 184, 0.45)';
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
 
     // Trajectory Path Rendering
     if (showTrajectory && trajectoryPoints.length > 1) {
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
       ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
       ctx.beginPath();
       trajectoryPoints.forEach((pt, i) => {
         if (i === 0) ctx.moveTo(pt.x, pt.y);
         else ctx.lineTo(pt.x, pt.y);
       });
       ctx.stroke();
+      ctx.setLineDash([]);
     }
 
     // Convert Physical SI Position to Canvas Pixel Coords
@@ -213,20 +235,32 @@ export const PhetPendulumLab: React.FC = () => {
     const bobY = pivotY + pixelLength * Math.cos(state.theta);
 
     // 3. Hanging String (Rope)
-    ctx.strokeStyle = '#e2e8f0';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
     ctx.moveTo(pivotX, pivotY);
     ctx.lineTo(bobX, bobY);
     ctx.stroke();
 
-    // 4. Mass Bob
-    const bobRadius = 14 + params.mass * 5;
+    // 4. Mass Bob (PhET 3D Sphere Radial Gradient Effect)
+    const bobRadius = 14 + params.mass * 8;
+    const bobGrad = ctx.createRadialGradient(
+      bobX - bobRadius * 0.3,
+      bobY - bobRadius * 0.3,
+      bobRadius * 0.1,
+      bobX,
+      bobY,
+      bobRadius
+    );
+    bobGrad.addColorStop(0, '#ffffff');
+    bobGrad.addColorStop(0.3, colorHex);
+    bobGrad.addColorStop(1, '#0f172a');
+
     ctx.shadowBlur = isDraggingBob ? 25 : 12;
     ctx.shadowColor = colorHex;
     ctx.beginPath();
     ctx.arc(bobX, bobY, bobRadius, 0, Math.PI * 2);
-    ctx.fillStyle = colorHex;
+    ctx.fillStyle = bobGrad;
     ctx.fill();
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 2;
@@ -246,7 +280,7 @@ export const PhetPendulumLab: React.FC = () => {
 
     const degrees = Math.round((state.theta * 180) / Math.PI);
     ctx.fillStyle = colorHex;
-    ctx.fillText(`\u03B8 = ${degrees}°`, bobX - 15, bobY + bobRadius + 16);
+    ctx.fillText(`\u03B8 = ${degrees}°`, bobX - 15, bobY + bobRadius + 18);
 
     // 5. Force Vectors Visualization Overlays (mg, T, Fnet)
     if (showForces) {
@@ -411,7 +445,7 @@ export const PhetPendulumLab: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-[#05070C] text-slate-100 p-4 md:p-6 flex flex-col items-center font-sans overflow-x-hidden">
+    <div className="min-h-screen w-screen bg-[#05070C] text-slate-100 p-4 md:p-6 pb-32 flex flex-col items-center font-sans overflow-x-hidden">
       {/* Navigation & Header Bar */}
       <div className="w-full max-w-[1600px] flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
         <div className="flex items-center gap-4">
@@ -432,58 +466,6 @@ export const PhetPendulumLab: React.FC = () => {
               Môi trường tương tác khám phá trực tiếp, hiển thị Vector lực, Động năng - Thế năng & Đồ thị
             </p>
           </div>
-        </div>
-
-        {/* Tab Navigation Modes */}
-        <div className="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800">
-          <button
-            onClick={() => setActiveTab('explore')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-              activeTab === 'explore' ? 'bg-cyan-500 text-black shadow-md' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            🔬 Khám Phá
-          </button>
-          <button
-            onClick={() => setActiveTab('compare')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-              activeTab === 'compare' ? 'bg-amber-500 text-black shadow-md' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            ⚖️ So Sánh 2 Con Lắc
-          </button>
-          <button
-            onClick={() => setActiveTab('predict')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-              activeTab === 'predict' ? 'bg-purple-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            🧠 Dự Đoán
-          </button>
-          <button
-            onClick={() => setActiveTab('measure')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-              activeTab === 'measure' ? 'bg-emerald-500 text-black shadow-md' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            ⏱️ Đo Đạc & Báo Cáo
-          </button>
-          <button
-            onClick={() => setActiveTab('graph')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-              activeTab === 'graph' ? 'bg-blue-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            📊 Đồ Thị T²-L
-          </button>
-          <button
-            onClick={() => setActiveTab('challenge')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-              activeTab === 'challenge' ? 'bg-rose-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            🎯 Thử Thách
-          </button>
         </div>
       </div>
 
@@ -579,63 +561,80 @@ export const PhetPendulumLab: React.FC = () => {
               </div>
             )}
           </div>
-
-          {/* Live Gravity Selector & Parameters Footer */}
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3 p-3 bg-slate-900/80 border border-slate-800 rounded-2xl">
-            {/* Slider 1: Length */}
-            <div className="flex flex-col gap-1">
-              <div className="flex justify-between text-[11px]">
-                <span className="text-slate-400 font-semibold">Chiều dài dây L:</span>
-                <span className="text-cyan-400 font-bold">{lengthA.toFixed(1)} m</span>
-              </div>
-              <input
-                type="range"
-                min={0.2}
-                max={2.0}
-                step={0.1}
-                value={lengthA}
-                onChange={e => setLengthA(Number(e.target.value))}
-                className="w-full accent-cyan-500 cursor-pointer"
-              />
-            </div>
-
-            {/* Slider 2: Mass */}
-            <div className="flex flex-col gap-1">
-              <div className="flex justify-between text-[11px]">
-                <span className="text-slate-400 font-semibold">Khối lượng tạ m:</span>
-                <span className="text-cyan-400 font-bold">{massA.toFixed(1)} kg</span>
-              </div>
-              <input
-                type="range"
-                min={0.1}
-                max={5.0}
-                step={0.1}
-                value={massA}
-                onChange={e => setMassA(Number(e.target.value))}
-                className="w-full accent-cyan-500 cursor-pointer"
-              />
-            </div>
-
-            {/* Selector 3: Environment Gravity Preset */}
-            <div className="flex flex-col gap-1">
-              <span className="text-[11px] text-slate-400 font-semibold">Môi Trường Trọng Trường g:</span>
-              <select
-                value={gravityPreset}
-                onChange={e => setGravityPreset(Number(e.target.value))}
-                className="bg-slate-950 border border-slate-700 rounded-xl px-2 py-1 text-xs text-emerald-400 font-bold focus:outline-none"
-              >
-                {GRAVITY_PRESETS.map(g => (
-                  <option key={g.label} value={g.value}>
-                    {g.label} ({g.value} m/s²)
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
         </div>
 
         {/* Right Dynamic Content Panel Depending on Active Mode */}
-        <div className="lg:col-span-5 flex flex-col gap-4 overflow-y-auto max-h-[85vh] pr-1">
+        <div className="lg:col-span-5 flex flex-col gap-4">
+          {/* Top Dedicated Tab Navigation Card */}
+          <div className="bg-[#0A0E17] border border-slate-800 rounded-3xl p-4 shadow-xl flex flex-col gap-3">
+            <h3 className="text-xs font-extrabold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+              <span>🎯 Chọn Chế Độ Thí Nghiệm</span>
+              <span className="text-[10px] text-cyan-400 font-mono">6 Modes</span>
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <button
+                onClick={() => setActiveTab('explore')}
+                className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 border ${
+                  activeTab === 'explore'
+                    ? 'bg-cyan-500 text-black border-cyan-400 shadow-lg shadow-cyan-500/20'
+                    : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                }`}
+              >
+                <span>🔬</span> Khám Phá
+              </button>
+              <button
+                onClick={() => setActiveTab('compare')}
+                className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 border ${
+                  activeTab === 'compare'
+                    ? 'bg-amber-500 text-black border-amber-400 shadow-lg shadow-amber-500/20'
+                    : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                }`}
+              >
+                <span>⚖️</span> So Sánh
+              </button>
+              <button
+                onClick={() => setActiveTab('predict')}
+                className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 border ${
+                  activeTab === 'predict'
+                    ? 'bg-purple-500 text-white border-purple-400 shadow-lg shadow-purple-500/20'
+                    : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                }`}
+              >
+                <span>🧠</span> Dự Đoán
+              </button>
+              <button
+                onClick={() => setActiveTab('measure')}
+                className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 border ${
+                  activeTab === 'measure'
+                    ? 'bg-emerald-500 text-black border-emerald-400 shadow-lg shadow-emerald-500/20'
+                    : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                }`}
+              >
+                <span>⏱️</span> Đo Đạc
+              </button>
+              <button
+                onClick={() => setActiveTab('graph')}
+                className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 border ${
+                  activeTab === 'graph'
+                    ? 'bg-blue-500 text-white border-blue-400 shadow-lg shadow-blue-500/20'
+                    : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                }`}
+              >
+                <span>📊</span> Đồ Thị
+              </button>
+              <button
+                onClick={() => setActiveTab('challenge')}
+                className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 border ${
+                  activeTab === 'challenge'
+                    ? 'bg-rose-500 text-white border-rose-400 shadow-lg shadow-rose-500/20'
+                    : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                }`}
+              >
+                <span>🎯</span> Thử Thách
+              </button>
+            </div>
+          </div>
+
           {/* TAB 1: EXPLORE MODE */}
           {activeTab === 'explore' && (
             <div className="bg-[#0A0E17] border border-cyan-500/30 rounded-3xl p-5 shadow-xl flex flex-col gap-4">
@@ -664,6 +663,63 @@ export const PhetPendulumLab: React.FC = () => {
                 <span className="text-[10px] text-slate-400">
                   Khi lực cản &gt; 0, cơ năng giảm dần làm biên độ dao động tắt dần theo thời gian.
                 </span>
+              </div>
+
+              {/* Physical Parameters Controls Moved to Right Panel Card */}
+              <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col gap-4.5 mt-2">
+                <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-wider border-b border-slate-800 pb-2">
+                  ⚙️ Thông Số Thí Nghiệm
+                </h4>
+
+                {/* Slider 1: Length */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-slate-300 font-semibold">Chiều dài dây L:</span>
+                    <span className="text-cyan-400 font-bold font-mono">{lengthA.toFixed(1)} m</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0.2}
+                    max={2.0}
+                    step={0.1}
+                    value={lengthA}
+                    onChange={e => setLengthA(Number(e.target.value))}
+                    className="w-full accent-cyan-500 cursor-pointer"
+                  />
+                </div>
+
+                {/* Slider 2: Mass */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-slate-300 font-semibold">Khối lượng tạ m:</span>
+                    <span className="text-cyan-400 font-bold font-mono">{massA.toFixed(1)} kg</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0.1}
+                    max={5.0}
+                    step={0.1}
+                    value={massA}
+                    onChange={e => setMassA(Number(e.target.value))}
+                    className="w-full accent-cyan-500 cursor-pointer"
+                  />
+                </div>
+
+                {/* Selector 3: Environment Gravity Preset */}
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs text-slate-300 font-semibold">Môi Trường Trọng Trường g:</span>
+                  <select
+                    value={gravityPreset}
+                    onChange={e => setGravityPreset(Number(e.target.value))}
+                    className="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-emerald-400 font-bold focus:outline-none cursor-pointer"
+                  >
+                    {GRAVITY_PRESETS.map(g => (
+                      <option key={g.label} value={g.value}>
+                        {g.label} ({g.value} m/s²)
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
           )}

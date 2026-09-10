@@ -6,8 +6,6 @@ interface PhETFilterBarProps {
   onSearchChange: (query: string) => void;
   selectedSubject: string;
   onSelectSubject: (subject: string) => void;
-  selectedGrade?: number | null;
-  onSelectGrade?: (grade: number | null) => void;
 }
 
 export const PhETFilterBar: React.FC<PhETFilterBarProps> = ({
@@ -15,8 +13,6 @@ export const PhETFilterBar: React.FC<PhETFilterBarProps> = ({
   onSearchChange,
   selectedSubject,
   onSelectSubject,
-  selectedGrade = null,
-  onSelectGrade,
 }) => {
   return (
     <div 
@@ -29,7 +25,7 @@ export const PhETFilterBar: React.FC<PhETFilterBarProps> = ({
           type="text"
           value={searchQuery}
           onChange={e => onSearchChange(e.target.value)}
-          placeholder="Tìm kiếm bài thí nghiệm (VD: Định luật Ohm, Gia tốc g, Nhiệt dung, Thấu kính...)"
+          placeholder="Tìm kiếm bài thí nghiệm (VD: Định luật Ohm, Con lắc đơn, Rơi tự do, Khúc xạ...)"
           className="w-full border rounded-lg px-3.5 py-2 text-xs font-medium focus:outline-none transition-colors"
           style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)', color: 'var(--text-main)' }}
         />
@@ -42,21 +38,6 @@ export const PhETFilterBar: React.FC<PhETFilterBarProps> = ({
           </button>
         )}
       </div>
-
-      {/* Grade Level Dropdown Select */}
-      {onSelectGrade && (
-        <select
-          value={selectedGrade === null ? '' : String(selectedGrade)}
-          onChange={e => onSelectGrade(e.target.value === '' ? null : Number(e.target.value))}
-          className="w-full md:w-48 border rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none cursor-pointer shrink-0"
-          style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)', color: 'var(--text-main)' }}
-        >
-          <option value="">Tất Cả Các Khối Lớp</option>
-          <option value="10">[LỚP 10] Khối Lớp 10</option>
-          <option value="11">[LỚP 11] Khối Lớp 11</option>
-          <option value="12">[LỚP 12] Khối Lớp 12</option>
-        </select>
-      )}
 
       {/* Physics Domain Dropdown Select */}
       <select

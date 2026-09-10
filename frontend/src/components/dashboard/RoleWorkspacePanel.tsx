@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { User } from '../../context/AuthContext';
 import { GitHubContributionGraph } from './GitHubContributionGraph';
 import { ClassJoinModal } from './ClassJoinModal';
 import { PHYSICS_DOMAINS } from '../../config/domainsConfig';
+import { classService } from '../../services/classService';
+import { assignmentService } from '../../services/assignmentService';
 
 interface RoleWorkspacePanelProps {
   user: User | null;
@@ -16,17 +18,62 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
 
   // Student State
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
-  const [joinedClasses, setJoinedClasses] = useState([
-    { id: 'c1', name: 'Lớp 12-A1 Chuyên Lý', code: 'PHY12-A1', teacher: 'Thầy Nguyễn Văn Thành', count: 42 }
-  ]);
+  const [joinedClasses, setJoinedClasses] = useState<any[]>([]);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Teacher State
   const [teacherTab, setTeacherTab] = useState<'classes' | 'catalog' | 'assign' | 'grading'>('classes');
-  const [teacherClasses, setTeacherClasses] = useState([
-    { id: 'tc1', name: 'Vật lý 12 - Lớp 12A1', code: 'X7K9P2', students: 42, assignments: 3 },
-    { id: 'tc2', name: 'Vật lý 11 - Lớp 11A3', code: 'M3N8P9', students: 38, assignments: 2 }
-  ]);
+  const [teacherClasses, setTeacherClasses] = useState<any[]>([]);
   const [newClassName, setNewClassName] = useState('');
+
+  useEffect(() => {
+    if (role === 'TEACHER') {
+      const teacherId = user?.id || 'u-1';
+      classService.getTeacherClasses(teacherId).then(async data => {
+        if (data && data.length > 0) {
+          const classesWithCounts = await Promise.all(
+            data.map(async c => {
+              const asgs = await assignmentService.getAssignmentsByClass(c.id);
+              const roster = await classService.getClassRoster(c.id);
+              return {
+                id: c.id,
+                name: c.name,
+                code: c.code,
+                students: roster ? roster.length : 0,
+                assignments: asgs ? asgs.length : 0
+              };
+            })
+          );
+          setTeacherClasses(classesWithCounts);
+        } else {
+          setTeacherClasses([]);
+        }
+      });
+    } else if (role === 'STUDENT') {
+      const studentId = user?.id || 'u-2';
+      classService.getStudentEnrollments(studentId).then(async data => {
+        if (data && data.length > 0) {
+          const joinedWithCounts = await Promise.all(
+            data.map(async e => {
+              const asgs = await assignmentService.getAssignmentsByClass(e.classId);
+              return {
+                id: e.id,
+                classId: e.classId,
+                name: e.className || `Lớp ${e.classId}`,
+                code: e.classCode || 'ENROLLED',
+                teacher: e.teacherName || 'Giáo viên',
+                count: asgs ? asgs.length : 0
+              };
+            })
+          );
+          setJoinedClasses(joinedWithCounts);
+        } else {
+          setJoinedClasses([]);
+        }
+      });
+    }
+  }, [role, user?.id]);
+
   const [selectedCatalogDomain, setSelectedCatalogDomain] = useState('ALL');
   const [selectedLabForAssign, setSelectedLabForAssign] = useState<string>('sim-dc-circuit');
   const [assignTargetClass, setAssignTargetClass] = useState<string>('tc1');
@@ -86,20 +133,11 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
   ];
 
   // Grading Matrix State
-  const [submissions] = useState([
-    { id: 'sub-1', studentName: 'Trần Minh Quân', labTitle: 'Mạch Điện Đơn Giản & Định Luật Ohm', time: '09/09/2026 14:30', status: 'COMPLETED', score: '9.5 / 10', className: 'Vật lý 12 - Lớp 12A1' },
-    { id: 'sub-2', studentName: 'Lê Hoàng Nam', labTitle: 'Đo Gia Tốc Rơi Tự Do g', time: '09/09/2026 16:15', status: 'IN_PROGRESS', score: 'Đang làm...', className: 'Vật lý 12 - Lớp 12A1' },
-    { id: 'sub-3', studentName: 'Nguyễn Mai Anh', labTitle: 'Mạch Điện Đơn Giản & Định Luật Ohm', time: '—', status: 'NOT_STARTED', score: 'Chưa làm', className: 'Vật lý 11 - Lớp 11A3' }
-  ]);
+  const [submissions] = useState<any[]>([]);
 
   // Admin State
   const [adminTab, setAdminTab] = useState<'users' | 'catalog' | 'overview'>('users');
-  const [usersList, setUsersList] = useState([
-    { id: 'u1', name: 'Nguyễn Văn Thành', email: 'teacher@edulab.vn', role: 'TEACHER', school: 'THPT Chuyên Hà Nội - Amsterdam', status: 'ACTIVE' },
-    { id: 'u2', name: 'Trần Minh Quân', email: 'student@edulab.vn', role: 'STUDENT', school: 'THPT Chuyên Hà Nội - Amsterdam', status: 'ACTIVE' },
-    { id: 'u3', name: 'Phạm Hồng Dung', email: 'dung.ph@edulab.vn', role: 'TEACHER', school: 'THPT Lê Hồng Phong', status: 'ACTIVE' },
-    { id: 'u4', name: 'Lê Hoàng Nam', email: 'nam.lh@edulab.vn', role: 'STUDENT', school: 'THPT Chuyên Hà Nội - Amsterdam', status: 'SUSPENDED' },
-  ]);
+  const [usersList, setUsersList] = useState<any[]>([]);
   const [userSearchQuery, setUserSearchQuery] = useState('');
   const [newTeacherName, setNewTeacherName] = useState('');
   const [newTeacherEmail, setNewTeacherEmail] = useState('');
@@ -114,12 +152,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
     { id: 'lab-6', title: 'Con Lắc Đơn & Dao Động Điều Hòa', domain: '[CƠ HỌC]', route: '/simulation', isVisible: false },
   ]);
 
-  const [auditLogs] = useState([
-    { id: 'log-1', timestamp: '09/09/2026 23:15:02', user: 'Admin System', role: 'ADMIN', action: 'Tạo & Cấp tài khoản Giáo viên: Nguyễn Văn Thành', module: 'QUẢN LÝ NGƯỜI DÙNG' },
-    { id: 'log-2', timestamp: '09/09/2026 22:40:19', user: 'Nguyễn Văn Thành', role: 'TEACHER', action: 'Giao bài lab Mạch Điện cho Lớp 12A1', module: 'GIAO BÀI TẬP' },
-    { id: 'log-3', timestamp: '09/09/2026 21:10:44', user: 'Trần Minh Quân', role: 'STUDENT', action: 'Hoàn thành bài thí nghiệm Con lắc đơn', module: 'PHÒNG LAB 2D' },
-    { id: 'log-4', timestamp: '09/09/2026 20:05:12', user: 'Admin System', role: 'ADMIN', action: 'Cập nhật trạng thái bài lab Đo gia tốc g -> Hiển thị', module: 'KHO LAB ÁO' },
-  ]);
+  const [auditLogs] = useState<any[]>([]);
 
   const handleCreateTeacher = (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,22 +193,56 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
     setAdminLabCatalog(prev => prev.map(l => l.id === labId ? { ...l, isVisible: !l.isVisible } : l));
   };
 
-  const handleCreateClass = (e: React.FormEvent) => {
+  const handleCreateClass = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newClassName.trim()) return;
-    const randomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-    setTeacherClasses(prev => [
-      ...prev,
-      { id: 'tc-' + Date.now(), name: newClassName.trim(), code: randomCode, students: 0, assignments: 0 }
-    ]);
-    setNewClassName('');
+
+    try {
+      const created = await classService.createClass(
+        newClassName.trim(),
+        'Lớp học thí nghiệm Vật lý EduLab',
+        user?.id || 'u-1',
+        user?.fullName || 'Giáo viên EduLab'
+      );
+
+      setTeacherClasses(prev => [
+        {
+          id: created.id,
+          name: created.name,
+          code: created.code,
+          students: 0,
+          assignments: 0
+        },
+        ...prev
+      ]);
+      setNewClassName('');
+      alert(`🎉 Đã tạo lớp "${created.name}" thành công! Class Code: ${created.code}`);
+    } catch (err: any) {
+      alert(`Lỗi tạo lớp: ${err.message || 'Không thể kết nối đến máy chủ backend!'}`);
+    }
   };
 
-  const handleJoinSuccess = (className: string, teacherName: string) => {
-    setJoinedClasses(prev => [
-      ...prev,
-      { id: 'c-' + Date.now(), name: className, code: 'JOINED', teacher: teacherName, count: 1 }
-    ]);
+  const handleJoinSuccess = async (className?: string, _teacherName?: string) => {
+    const studentId = user?.id || 'u-2';
+    const data = await classService.getStudentEnrollments(studentId);
+    if (data && data.length > 0) {
+      const joinedWithCounts = await Promise.all(
+        data.map(async e => {
+          const asgs = await assignmentService.getAssignmentsByClass(e.classId);
+          return {
+            id: e.id,
+            classId: e.classId,
+            name: e.className || `Lớp ${e.classId}`,
+            code: e.classCode || 'ENROLLED',
+            teacher: e.teacherName || 'Giáo viên',
+            count: asgs ? asgs.length : 0
+          };
+        })
+      );
+      setJoinedClasses(joinedWithCounts);
+    }
+    setToastMessage(`🎉 Gia nhập lớp ${className || 'học mới'} thành công!`);
+    setTimeout(() => setToastMessage(null), 4000);
   };
 
   // 1. ADMIN WORKSPACE PANEL
@@ -555,6 +622,14 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
               <h3 className="text-lg font-bold tracking-tight mt-0.5">Bảng Điều Khiển & Quản Lý Lớp Học</h3>
             </div>
           </div>
+
+          <button
+            onClick={() => navigate('/teacher-classes')}
+            className="px-4 py-2 text-xs font-bold text-white rounded-lg shadow-md transition-all hover:opacity-90 flex items-center gap-2 cursor-pointer"
+            style={{ backgroundColor: 'var(--accent-primary)' }}
+          >
+            <span>🚀</span> Mở Dashboard Quản Lý Lớp & Groq AI Full Screen
+          </button>
         </div>
 
         {/* Teacher Flex Container with Left Vertical Sidebar */}
@@ -952,6 +1027,17 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
         </div>
       </div>
 
+      {/* Success Toast Notification Banner */}
+      {toastMessage && (
+        <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-3.5 rounded-xl text-xs font-bold flex justify-between items-center animate-fade-in shadow-lg">
+          <div className="flex items-center gap-2">
+            <span className="text-base">🎉</span>
+            <span>{toastMessage}</span>
+          </div>
+          <button onClick={() => setToastMessage(null)} className="opacity-60 hover:opacity-100 text-sm font-bold">✕</button>
+        </div>
+      )}
+
       {/* GitHub 365-Day Contribution Graph Component */}
       <GitHubContributionGraph />
 
@@ -968,14 +1054,22 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
 
           <div className="space-y-3">
             {joinedClasses.map(c => (
-              <div key={c.id} className="p-3 border rounded-lg flex justify-between items-center" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
+              <div 
+                key={c.id} 
+                onClick={() => navigate(`/student-assignments?classId=${c.classId}`)}
+                className="p-3 border rounded-lg flex justify-between items-center cursor-pointer hover:border-blue-500 transition-all group" 
+                style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}
+              >
                 <div>
-                  <h5 className="font-bold text-xs">{c.name}</h5>
+                  <h5 className="font-bold text-xs group-hover:text-blue-400 transition-colors">{c.name}</h5>
                   <span className="text-[10px] opacity-75" style={{ color: 'var(--text-muted)' }}>GV: {c.teacher}</span>
                 </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded border" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
-                  {c.count} bài tập
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded border" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
+                    {c.count} bài tập
+                  </span>
+                  <span className="text-xs text-blue-400 group-hover:translate-x-0.5 transition-transform">→</span>
+                </div>
               </div>
             ))}
           </div>

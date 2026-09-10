@@ -5,62 +5,68 @@ import { useTheme } from '../context/ThemeContext';
 import { EditProfileModal } from '../components/auth/EditProfileModal';
 import { RoleWorkspacePanel } from '../components/dashboard/RoleWorkspacePanel';
 import { PhETFilterBar } from '../components/dashboard/PhETFilterBar';
-import { type SimItem } from '../components/dashboard/SimCard';
+import { SimCard, type SimItem } from '../components/dashboard/SimCard';
 
 const BUILTIN_SIMULATIONS: SimItem[] = [
   {
+    id: 'sim-simple-pendulum',
+    title: 'Con Lắc Đơn & Dao Động Điều Hòa',
+    gradeLevel: 'THPT - Lớp 11',
+    subjectArea: 'Cơ Học',
+    description: 'Khảo sát chu kỳ dao động T = 2π√(l/g) của con lắc đơn theo chiều dài dây treo l, khối lượng m, gia tốc trọng trường g và lực cản.',
+    thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80',
+    route: '/pendulum-lab',
+    isPopular: true,
+  },
+  {
     id: 'sim-dc-circuit',
     title: 'Mạch Điện Đơn Giản & Định Luật Ohm',
-    gradeLevel: 'THPT',
+    gradeLevel: 'THPT - Lớp 11',
     subjectArea: 'Điện Học',
     description: 'Kéo thả linh kiện Pin, Điện trở, Bóng đèn, Công tắc, Ampe kế, Vôn kế. Thuật toán Kirchhoff tính toán chính xác dòng điện.',
+    thumbnail: 'https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&w=600&q=80',
     route: '/simulation',
     isPopular: true,
   },
   {
     id: 'sim-free-fall',
     title: 'Đo Gia Tốc Rơi Tự Do g',
-    gradeLevel: 'THPT',
+    gradeLevel: 'THPT - Lớp 10',
     subjectArea: 'Cơ Học',
     description: 'Bi sắt rơi qua 2 cổng quang điện, đồng hồ hiện số MC-964 đo thời gian chính xác và tự động tính gia tốc g.',
+    thumbnail: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80',
     route: '/srs-lab',
     isPopular: true,
   },
   {
     id: 'sim-emf-internal-r',
     title: 'Đo Suất Điện Động E & Điện Trở Trong r',
-    gradeLevel: 'THPT',
+    gradeLevel: 'THPT - Lớp 11',
     subjectArea: 'Điện Học',
     description: 'Khảo sát đồ thị U-I của nguồn pin bằng biến trở con chạy, Vôn kế và Ampe kế.',
+    thumbnail: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80',
     route: '/simulation',
     isPopular: false,
   },
   {
     id: 'sim-specific-heat',
     title: 'Đo Nhiệt Dung Riêng c Của Nước',
-    gradeLevel: 'THPT',
+    gradeLevel: 'THPT - Lớp 12',
     subjectArea: 'Nhiệt Học',
     description: 'Đo công suất nhiệt Q = P*t và độ tăng nhiệt độ delta T để xác định chuẩn nhiệt dung riêng c.',
+    thumbnail: 'https://images.unsplash.com/photo-1584483766114-2cea6facdf57?auto=format&fit=crop&w=600&q=80',
     route: '/srs-lab',
     isPopular: false,
   },
   {
     id: 'sim-refraction',
     title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ',
-    gradeLevel: 'THPT',
+    gradeLevel: 'THPT - Lớp 11',
     subjectArea: 'Quang Học',
     description: 'Chiếu chùm tia sáng laser qua các môi trường chiết suất n1, n2 khác nhau và xác định góc khúc xạ.',
+    thumbnail: 'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=600&q=80',
     route: '/simulation',
     isPopular: true,
-  },
-  {
-    id: 'sim-simple-pendulum',
-    title: 'Con Lắc Đơn & Dao Động Điều Hòa',
-    gradeLevel: 'THPT',
-    subjectArea: 'Cơ Học',
-    description: 'Khảo sát chu kỳ dao động T = 2pi*sqrt(l/g) của con lắc đơn theo chiều dài dây treo l.',
-    route: '/simulation',
-    isPopular: false,
   },
 ];
 
@@ -82,7 +88,6 @@ export const DashboardPage: React.FC = () => {
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('ALL');
-  const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
 
   useEffect(() => {
     fetch('http://localhost:8080/api/curriculum/topics')
@@ -122,17 +127,9 @@ export const DashboardPage: React.FC = () => {
         selectedSubject === 'ALL' ||
         sim.subjectArea.toLowerCase().includes(selectedSubject.toLowerCase());
 
-      const matchesGrade =
-        selectedGrade === null ||
-        sim.title.includes(` ${selectedGrade}`) ||
-        sim.description.includes(` ${selectedGrade}`) ||
-        (selectedGrade === 10 && (sim.title.includes('Gia Tốc') || sim.title.includes('Newton') || sim.title.includes('Panme') || sim.title.includes('Va Chạm') || sim.title.includes('Hooke'))) ||
-        (selectedGrade === 11 && (sim.title.includes('Con Lắc') || sim.title.includes('Ohm') || sim.title.includes('Khúc Xạ') || sim.title.includes('Suất Điện Động') || sim.title.includes('Truyền Âm') || sim.title.includes('Khe Young'))) ||
-        (selectedGrade === 12 && (sim.title.includes('Nhiệt') || sim.title.includes('Boyle') || sim.title.includes('Quang Điện') || sim.title.includes('Từ Trường') || sim.title.includes('Hạt Nhân')));
-
-      return matchesSearch && matchesSubject && matchesGrade;
+      return matchesSearch && matchesSubject;
     });
-  }, [allSimulations, searchQuery, selectedSubject, selectedGrade]);
+  }, [allSimulations, searchQuery, selectedSubject]);
 
   return (
     <div className="min-h-screen w-screen flex flex-col font-sans overflow-x-hidden transition-colors duration-200" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
@@ -195,17 +192,15 @@ export const DashboardPage: React.FC = () => {
         {/* For Student role: Show public lab library & streamlined filter */}
         {(user?.role === 'STUDENT' || !user?.role) && (
           <>
-            {/* PhET Filter Bar with Grade Level and Domain Knowledge */}
+            {/* PhET Filter Bar with Domain Knowledge & Search */}
             <PhETFilterBar
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
               selectedSubject={selectedSubject}
               onSelectSubject={setSelectedSubject}
-              selectedGrade={selectedGrade}
-              onSelectGrade={setSelectedGrade}
             />
 
-            {/* Library Table Header */}
+            {/* Library Section Header */}
             <div className="flex justify-between items-center">
               <div>
                 <h3 className="text-lg font-bold tracking-tight flex items-center gap-2" style={{ color: 'var(--text-main)' }}>
@@ -215,16 +210,15 @@ export const DashboardPage: React.FC = () => {
                   </span>
                 </h3>
                 <p className="text-xs mt-0.5 opacity-75" style={{ color: 'var(--text-muted)' }}>
-                  Cây Mục Lục 3 Cấp (Khối Lớp ➔ Chương SGK ➔ Bài Lab Áo) • Dual Engine Canvas 60fps
+                  Học sinh chọn bài lab bên dưới để bắt đầu thực hành mô phỏng trực quan 2D
                 </p>
               </div>
 
-              {selectedSubject !== 'ALL' || searchQuery || selectedGrade !== null ? (
+              {selectedSubject !== 'ALL' || searchQuery ? (
                 <button
                   onClick={() => {
                     setSearchQuery('');
                     setSelectedSubject('ALL');
-                    setSelectedGrade(null);
                   }}
                   className="text-xs font-semibold hover:underline cursor-pointer"
                   style={{ color: 'var(--accent-primary)' }}
@@ -234,48 +228,12 @@ export const DashboardPage: React.FC = () => {
               ) : null}
             </div>
 
-            {/* High-Density Simulation Data Table (Zero Cards, Full Width) */}
+            {/* Visual Simulation Cards Grid */}
             {filteredSimulations.length > 0 ? (
-              <div className="border rounded-lg overflow-hidden" style={{ borderColor: 'var(--border-color)' }}>
-                <table className="w-full text-left text-xs">
-                  <thead className="border-b uppercase font-semibold text-[10px] tracking-wider" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)', color: 'var(--text-muted)' }}>
-                    <tr>
-                      <th className="p-3">Mạch Kiến Thức</th>
-                      <th className="p-3">Tên Bài Thí Nghiệm Mô Phỏng</th>
-                      <th className="p-3">Mô Tả & Chuẩn Kiến Thức GDPT</th>
-                      <th className="p-3 text-right">Thao Tác</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y" style={{ borderColor: 'var(--border-color)' }}>
-                    {filteredSimulations.map(sim => (
-                      <tr key={sim.id} className="hover:bg-opacity-50 transition-colors" style={{ backgroundColor: 'var(--bg-main)' }}>
-                        <td className="p-3 shrink-0 whitespace-nowrap">
-                          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded border" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)', color: 'var(--accent-primary)' }}>
-                            [{sim.subjectArea.toUpperCase()}]
-                          </span>
-                        </td>
-                        <td className="p-3 font-bold text-xs" style={{ color: 'var(--text-main)' }}>
-                          {sim.title}
-                          {sim.isPopular && (
-                            <span className="ml-2 text-[9px] font-semibold px-1.5 py-0.5 rounded border opacity-75" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
-                              [Nổi Bật]
-                            </span>
-                          )}
-                        </td>
-                        <td className="p-3 opacity-75 max-w-xl">{sim.description}</td>
-                        <td className="p-3 text-right whitespace-nowrap">
-                          <button
-                            onClick={() => navigate(sim.route)}
-                            className="px-3.5 py-1.5 text-xs font-bold text-white rounded transition-opacity hover:opacity-90 cursor-pointer"
-                            style={{ backgroundColor: 'var(--accent-primary)' }}
-                          >
-                            Khởi Chạy →
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredSimulations.map(sim => (
+                  <SimCard key={sim.id} sim={sim} />
+                ))}
               </div>
             ) : (
               <div className="border rounded-xl p-10 text-center flex flex-col items-center justify-center gap-3" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
@@ -287,12 +245,11 @@ export const DashboardPage: React.FC = () => {
                   onClick={() => {
                     setSearchQuery('');
                     setSelectedSubject('ALL');
-                    setSelectedGrade(null);
                   }}
                   className="mt-2 px-4 py-2 text-xs font-semibold rounded border transition-colors cursor-pointer"
                   style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}
                 >
-                  Xem Tất Cả Thí Nghiệm
+                  Đặt Lại Tìm Kiếm
                 </button>
               </div>
             )}

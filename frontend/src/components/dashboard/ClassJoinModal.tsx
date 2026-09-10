@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { classService } from '../../services/classService';
+import { useAuth } from '../../context/AuthContext';
 
 interface ClassJoinModalProps {
   isOpen: boolean;
@@ -7,14 +9,19 @@ interface ClassJoinModalProps {
 }
 
 export const ClassJoinModal: React.FC<ClassJoinModalProps> = ({ isOpen, onClose, onJoinSuccess }) => {
+  const { user } = useAuth();
   const [code, setCode] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [isDuplicate, setIsDuplicate] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsDuplicate(false);
 
     const cleanCode = code.trim().toUpperCase();
     if (!cleanCode) {
@@ -23,13 +30,31 @@ export const ClassJoinModal: React.FC<ClassJoinModalProps> = ({ isOpen, onClose,
     }
 
     if (cleanCode.length < 5) {
-      setError('Mã lớp học không hợp lệ (cần ít nhất 5-6 ký tự).');
+      setError('Mã lớp học không hợp lệ (cần 6 ký tự).');
       return;
     }
 
-    onJoinSuccess(`Lớp Chuyên Vật lý 12-A1 (${cleanCode})`, 'Thầy Nguyễn Văn Thành');
-    setCode('');
-    onClose();
+    setLoading(true);
+    try {
+      const enrollment = await classService.joinClass(
+        cleanCode,
+        user?.id || 'u-2',
+        user?.fullName || 'Học sinh EduLab',
+        user?.email || 'student@edulab.vn'
+      );
+      onJoinSuccess(enrollment.className || `Lớp học (${cleanCode})`, enrollment.teacherName || 'Giáo viên');
+      setCode('');
+      onClose();
+    } catch (err: any) {
+      if (err.isDuplicate) {
+        setIsDuplicate(true);
+        setError('⚠️ Bạn đã tham gia lớp học này từ trước!');
+      } else {
+        setError(err.message || 'Mã lớp không tồn tại trên hệ thống!');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,12 +77,16 @@ export const ClassJoinModal: React.FC<ClassJoinModalProps> = ({ isOpen, onClose,
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-            Nhập <b>Mã mời 6 ký tự</b> do Giáo viên cung cấp (ví dụ: <code>PHY12-A1</code> hoặc <code>X7K9P2</code>) hoặc dán đường link mời tham gia.
+            Nhập <b>Mã mời 6 ký tự</b> do Giáo viên cung cấp (ví dụ: <code>LAB892</code> hoặc <code>X7K9P2</code>) hoặc dán đường link mời tham gia.
           </p>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/30 text-red-500 text-xs p-2.5 rounded font-medium">
-              [LỖI] {error}
+            <div className={`p-2.5 rounded font-medium text-xs border ${
+              isDuplicate 
+                ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' 
+                : 'bg-red-500/10 border-red-500/30 text-red-500'
+            }`}>
+              {isDuplicate ? '' : '[LỖI] '}{error}
             </div>
           )}
 
@@ -67,7 +96,7 @@ export const ClassJoinModal: React.FC<ClassJoinModalProps> = ({ isOpen, onClose,
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              placeholder="VD: X7K9P2"
+              placeholder="VD: LAB892"
               className="w-full border rounded-md p-2.5 text-sm uppercase tracking-wider font-mono focus:outline-none transition-colors"
               style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)', color: 'var(--text-main)' }}
             />
@@ -84,10 +113,11 @@ export const ClassJoinModal: React.FC<ClassJoinModalProps> = ({ isOpen, onClose,
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-xs font-bold text-white rounded transition-opacity hover:opacity-90 cursor-pointer"
+              disabled={loading}
+              className="px-4 py-2 text-xs font-bold text-white rounded transition-opacity hover:opacity-90 cursor-pointer disabled:opacity-50"
               style={{ backgroundColor: 'var(--accent-primary)' }}
             >
-              Tham Gia Lớp
+              {loading ? 'Đang tham gia...' : 'Tham Gia Lớp'}
             </button>
           </div>
         </form>
