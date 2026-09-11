@@ -160,6 +160,16 @@
     "priority": "P1"
   },
   {
+    "id": "user-avatar-dropdown-header",
+    "title": "Replace awkward 'Vào Dashboard' button with User Avatar Dropdown",
+    "user_visible_behavior": "When logged in, the public header replaces the 'Vào Dashboard' button with a user avatar trigger (initials + full name) that opens a dropdown menu with workspace link, edit profile, and logout",
+    "verification_command": "Clicking user avatar opens dropdown card with workspace navigation, profile modal trigger, and logout action",
+    "status": "passing",
+    "evidence": "LandingPage.tsx updated with User Avatar Dropdown menu and click-outside listener",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
     "id": "phet-spring-lab-hooke-law",
     "title": "Interactive PhET Spring Mass Lab & Hooke's Law simulation",
     "user_visible_behavior": "Interactive Spring Mass simulation with 6 pedagogy tabs, 60 FPS Canvas render, persistent parameter controls, data table and real-time graphs",
@@ -178,5 +188,35 @@
     "evidence": "Created emf-engine.ts & PhetEmfLab.tsx with DC solver, knife switch & U(I) linear plot",
     "notes": "",
     "priority": "P1"
+  },
+  {
+    "id": "experiments-catalog-sidebar-tree",
+    "title": "Option B Sidebar Tree View filtering by Grade (10, 11, 12) and Chapter according to DacTa.md",
+    "user_visible_behavior": "Filter experiments in /thu-vien by selecting Grade 10, 11, or 12 and expanding Chapters from the Sidebar Tree View",
+    "verification_command": "Clicking Grade or Chapter node in Sidebar filters displayed experiment cards instantly",
+    "status": "passing",
+    "evidence": "CatalogPage.tsx implemented Option B Sidebar Tree View with Grade accordions and Chapter sub-nodes",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "experiments-catalog-real-api",
+    "title": "Dynamic experiment catalog loading via labService fetching from backend API",
+    "user_visible_behavior": "Experiments catalog loads real backend curriculum topics enriched with DacTa.md metadata (Grade, Chapter, SGK Page)",
+    "verification_command": "labService.getAllLabs() fetches real API data with fallback to DacTa.md catalog structure",
+    "status": "passing",
+    "evidence": "labService.ts updated with 14 DacTa.md experiments merged with live http://localhost:8080/api/curriculum/topics API",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "experiments-catalog-search-badges",
+    "title": "Search input filtering and Grade/Chapter tag filtering",
+    "user_visible_behavior": "Search bar filters experiments by keyword, and cards display clear Grade and Chapter badges",
+    "verification_command": "Typing in search bar filters grid cards in real time",
+    "status": "passing",
+    "evidence": "Search input bar with instant filtering, clear button, active tag badges and empty state implemented",
+    "notes": "",
+    "priority": "P2"
   }
 ]

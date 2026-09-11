@@ -94,45 +94,34 @@ export const TeacherHeader: React.FC<TeacherHeaderProps> = ({
         {/* Teacher Profile Dropdown */}
         <div className="relative">
           <button
+            type="button"
             onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border transition-colors cursor-pointer"
-            style={{
-              borderColor: 'var(--border-color)',
-              backgroundColor: 'var(--bg-main)',
-            }}
+            className="w-9 h-9 rounded-full text-white font-extrabold text-sm uppercase flex items-center justify-center shadow-md hover:ring-2 hover:ring-blue-400 transition-all cursor-pointer"
+            style={{ backgroundColor: 'var(--accent-primary)' }}
+            title={user?.fullName || 'Giáo viên'}
+            aria-label="User Menu"
           >
-            <div
-              className="w-6 h-6 rounded-md text-[10px] font-extrabold text-white flex items-center justify-center shrink-0"
-              style={{ backgroundColor: 'var(--accent-primary)' }}
-            >
-              GV
-            </div>
-            <div className="hidden md:flex flex-col text-left">
-              <span className="text-xs font-bold leading-tight truncate max-w-[140px]">
-                {user?.fullName || 'Nguyễn Văn Thành'}
-              </span>
-              <span
-                className="text-[9px] uppercase font-bold tracking-wider opacity-60 truncate max-w-[140px]"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                {user?.school || 'THPT Chuyên Hà Nội - Amsterdam'}
-              </span>
-            </div>
-            <span className="text-[10px] opacity-60">▼</span>
+            {user?.fullName ? user.fullName.charAt(0) : 'G'}
           </button>
 
           {/* Profile Dropdown Menu */}
           {isProfileMenuOpen && (
             <div
-              className="absolute right-0 mt-2 w-52 rounded-xl border shadow-lg py-1.5 z-50 text-xs transition-all"
+              className="absolute right-0 mt-2.5 w-52 rounded-xl border shadow-xl py-1.5 z-50 text-xs transition-all"
               style={{
                 backgroundColor: 'var(--bg-panel)',
                 borderColor: 'var(--border-color)',
                 color: 'var(--text-main)',
               }}
             >
+              {/* Top Pointer Arrow Centered on Avatar */}
+              <div 
+                className="absolute -top-[7px] right-5 w-3 h-3 rotate-45 border-t border-l z-50" 
+                style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }} 
+              />
+
               <div
-                className="px-3 py-2 border-b space-y-0.5"
+                className="px-3 py-2 border-b space-y-0.5 relative z-10"
                 style={{ borderColor: 'var(--border-color)' }}
               >
                 <p className="font-bold truncate">{user?.fullName || 'Giáo viên Vật lý'}</p>
