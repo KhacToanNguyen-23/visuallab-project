@@ -31,6 +31,7 @@ import { PhetPendulumLab } from './components/simulation/PhetPendulumLab';
 import { PhetSpringLab } from './components/simulation/PhetSpringLab';
 import { PhetEmfLab } from './components/simulation/PhetEmfLab';
 import { PhetRefractionLab } from './components/simulation/PhetRefractionLab';
+import { PhetFreeFallLab } from './components/simulation/PhetFreeFallLab';
 import { PhetVietnamLabWrapper } from './components/simulation/PhetVietnamLabWrapper';
 import { WaveInterferenceLab } from './components/simulation/WaveInterferenceLab';
 
@@ -114,7 +115,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path="/lab/spring-mass" element={<PhetSpringLab />} />
               <Route path="/lab/emf-internal-r" element={<PhetEmfLab />} />
               <Route path="/lab/refraction" element={<PhetRefractionLab />} />
-              <Route path="/lab/free-fall" element={<SRSWorkflowPage />} />
+              <Route path="/lab/free-fall" element={<PhetFreeFallLab />} />
               <Route path="/lab/ohm-vietnam" element={<PhetVietnamLabWrapper />} />
               <Route path="/lab/wave-interference" element={<WaveInterferenceLab />} />
 
