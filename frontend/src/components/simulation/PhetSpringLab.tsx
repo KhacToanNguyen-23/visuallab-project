@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Display, Node, Path, Circle, Rectangle, Line, Text } from 'scenerystack/scenery';
+import { Shape } from 'scenerystack/kite';
+import { Vector2 } from 'scenerystack/dot';
 import { SpringEngine } from '../../engine/physics/spring-engine';
+import { ScreenshotCaptureModal } from '../common/ScreenshotCaptureModal';
 
 type LabTabMode = 'explore' | 'compare' | 'predict' | 'measure' | 'graph' | 'challenge';
 
@@ -22,7 +26,21 @@ const GRAVITY_PRESETS = [
 
 export const PhetSpringLab: React.FC = () => {
   const navigate = useNavigate();
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const displayRef = useRef<Display | null>(null);
+
+  // Scenery Nodes References
+  const nodesRef = useRef<{
+    rootNode: Node;
+    springPath: Path;
+    massCircle: Circle;
+    massText: Text;
+    naturalLine: Line;
+    naturalText: Text;
+    equilibriumLine: Line;
+    equilibriumText: Text;
+    rulerGroup: Node;
+  } | null>(null);
 
   // Tab & Learning Mode State
   const [activeTab, setActiveTab] = useState<LabTabMode>('explore');
@@ -51,15 +69,232 @@ export const PhetSpringLab: React.FC = () => {
   const [stopwatchTime, setStopwatchTime] = useState<number>(0);
   const [isStopwatchRunning, setIsStopwatchRunning] = useState<boolean>(false);
 
-  // Update engine params
+  // Screenshot Storage State
+  const [isScreenshotModalOpen, setIsScreenshotModalOpen] = useState(false);
+  const [screenshotBase64, setScreenshotBase64] = useState<string>('');
+
+  // 1. Initialize PhET SceneryStack Display & SceneGraph
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // Create Root Scene Node
+    const rootNode = new Node();
+
+    // Background Decorative Grid Node
+    const gridNode = new Node();
+    const width = 750;
+    const height = 450;
+    for (let x = 0; x < width; x += 40) {
+      gridNode.addChild(new Line(x, 0, x, height, { stroke: '#1E293B', lineWidth: 1 }));
+    }
+    for (let y = 0; y < height; y += 40) {
+      gridNode.addChild(new Line(0, y, width, y, { stroke: '#1E293B', lineWidth: 1 }));
+    }
+    rootNode.addChild(gridNode);
+
+    const startX = width / 2 - 40;
+    const startY = 50;
+
+    // Ceiling Support Mount Node (PhET Metallic Mount)
+    const mountPlate = new Rectangle(startX - 60, startY - 12, 120, 12, {
+      fill: '#475569',
+      stroke: '#94A3B8',
+      lineWidth: 2,
+      cornerRadius: 3,
+    });
+    rootNode.addChild(mountPlate);
+
+    // Spring Path Node (PhET Dynamic Coil)
+    const springPath = new Path(null, {
+      stroke: '#38BDF8',
+      lineWidth: 4,
+      lineCap: 'round',
+      lineJoin: 'round',
+    });
+    rootNode.addChild(springPath);
+
+    // Reference Line L0 (Natural Length)
+    const naturalLine = new Line(startX - 120, startY, startX + 120, startY, {
+      stroke: '#FACC15',
+      lineWidth: 2,
+      lineDash: [6, 6],
+    });
+    const naturalText = new Text('Vị trí lò xo tự nhiên L0 (PhET Core)', {
+      fill: '#FACC15',
+      font: '11px sans-serif',
+      x: startX + 130,
+      y: startY - 4,
+    });
+    rootNode.addChild(naturalLine);
+    rootNode.addChild(naturalText);
+
+    // Reference Line Equilibrium O
+    const equilibriumLine = new Line(startX - 120, startY, startX + 120, startY, {
+      stroke: '#34D399',
+      lineWidth: 2,
+      lineDash: [4, 4],
+    });
+    const equilibriumText = new Text('Vị trí cân bằng (O)', {
+      fill: '#34D399',
+      font: '11px sans-serif',
+      x: startX + 130,
+      y: startY - 4,
+    });
+    rootNode.addChild(equilibriumLine);
+    rootNode.addChild(equilibriumText);
+
+    // Ruler Node Group (PhET Scale Ruler)
+    const rulerGroup = new Node();
+    const rulerX = startX - 160;
+    rulerGroup.addChild(
+      new Rectangle(rulerX, startY, 40, height - startY - 20, {
+        fill: '#0F172A',
+        stroke: '#334155',
+        lineWidth: 2,
+        cornerRadius: 4,
+      })
+    );
+
+    for (let y = startY; y < height - 30; y += 20) {
+      rulerGroup.addChild(new Line(rulerX + 25, y, rulerX + 40, y, { stroke: '#94A3B8', lineWidth: 1 }));
+      const cm = Math.round((y - startY) / 3);
+      if (cm % 10 === 0) {
+        rulerGroup.addChild(
+          new Text(`${cm}cm`, {
+            fill: '#94A3B8',
+            font: '9px monospace',
+            x: rulerX + 4,
+            y: y - 4,
+          })
+        );
+      }
+    }
+    rootNode.addChild(rulerGroup);
+
+    // Mass Weight Sphere & Label
+    const massCircle = new Circle(18, {
+      fill: '#EC4899',
+      stroke: '#F472B6',
+      lineWidth: 3,
+    });
+    const massText = new Text('200g', {
+      fill: '#FFFFFF',
+      font: 'bold 12px monospace',
+    });
+
+    rootNode.addChild(massCircle);
+    rootNode.addChild(massText);
+
+    // Save references
+    nodesRef.current = {
+      rootNode,
+      springPath,
+      massCircle,
+      massText,
+      naturalLine,
+      naturalText,
+      equilibriumLine,
+      equilibriumText,
+      rulerGroup,
+    };
+
+    // Attach Scenery Display instance to container DOM element
+    const display = new Display(rootNode, {
+      container: containerRef.current,
+      width,
+      height,
+      backgroundColor: '#020617',
+      allowWebGL: false,
+    });
+    displayRef.current = display;
+
+    return () => {
+      display.dispose();
+      displayRef.current = null;
+    };
+  }, []);
+
+  // 2. Update Engine Config
   useEffect(() => {
     engineRef.current.updateConfig({ stiffness, mass, gravity, damping });
   }, [stiffness, mass, gravity, damping]);
 
-  // Main Physics & Render Loop (60 FPS)
+  // 3. Animation & Scenery Rendering Loop (60 FPS)
   useEffect(() => {
     let animationFrameId: number;
     let lastTime = performance.now();
+
+    const updateSceneryScene = () => {
+      if (!nodesRef.current || !displayRef.current) return;
+      const {
+        springPath,
+        massCircle,
+        massText,
+        naturalLine,
+        naturalText,
+        equilibriumLine,
+        equilibriumText,
+        rulerGroup,
+      } = nodesRef.current;
+
+      const width = 750;
+      const startX = width / 2 - 40;
+      const startY = 50;
+
+      const state = engineRef.current.getState();
+      const config = engineRef.current.getConfig();
+
+      const naturalPixels = config.naturalLength * 300;
+      const eqStretchPixels = engineRef.current.getEquilibriumStretch() * 300;
+      const currentDisplacementPixels = state.displacement * 300;
+
+      const springEndY = startY + naturalPixels + eqStretchPixels + currentDisplacementPixels;
+
+      // Update Spring Coil Shape using Kite.Shape
+      const shape = new Shape();
+      const coils = 14;
+      const coilWidth = 24;
+      const springLength = springEndY - startY;
+      const stepY = springLength / coils;
+
+      shape.moveTo(startX, startY);
+      for (let i = 0; i <= coils; i++) {
+        const currentY = startY + i * stepY;
+        const currentX = i === 0 || i === coils ? startX : startX + (i % 2 === 0 ? coilWidth : -coilWidth);
+        shape.lineTo(currentX, currentY);
+      }
+      springPath.setShape(shape);
+
+      // Mass Bob Position
+      const massRadius = 18 + mass * 30;
+      massCircle.setRadius(massRadius);
+      massCircle.setCenter(new Vector2(startX, springEndY + massRadius));
+
+      massText.setString(`${(mass * 1000).toFixed(0)}g`);
+      massText.setCenter(new Vector2(startX, springEndY + massRadius));
+
+      // Reference Lines Visibility & Positions
+      naturalLine.setVisible(showEquilibrium);
+      naturalText.setVisible(showEquilibrium);
+      equilibriumLine.setVisible(showEquilibrium);
+      equilibriumText.setVisible(showEquilibrium);
+
+      if (showEquilibrium) {
+        const naturalY = startY + naturalPixels;
+        naturalLine.setLine(startX - 120, naturalY, startX + 120, naturalY);
+        naturalText.translation = new Vector2(startX + 130, naturalY + 4);
+
+        const eqY = startY + naturalPixels + eqStretchPixels;
+        equilibriumLine.setLine(startX - 120, eqY, startX + 120, eqY);
+        equilibriumText.translation = new Vector2(startX + 130, eqY + 4);
+      }
+
+      // Ruler Visibility
+      rulerGroup.setVisible(showRuler);
+
+      // Trigger Scenery Display Render Pass
+      displayRef.current.updateDisplay();
+    };
 
     const loop = (currentTime: number) => {
       const dt = Math.min((currentTime - lastTime) / 1000, 0.033);
@@ -69,13 +304,11 @@ export const PhetSpringLab: React.FC = () => {
         engineRef.current.step(dt);
       }
 
-      // Update stopwatch
       if (isStopwatchRunning) {
         setStopwatchTime(prev => prev + dt);
       }
 
-      // Render Canvas
-      renderCanvas();
+      updateSceneryScene();
 
       animationFrameId = requestAnimationFrame(loop);
     };
@@ -84,137 +317,28 @@ export const PhetSpringLab: React.FC = () => {
     return () => cancelAnimationFrame(animationFrameId);
   }, [isRunning, isStopwatchRunning, showEquilibrium, showRuler, stiffness, mass]);
 
-  const renderCanvas = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const width = canvas.width;
-    const height = canvas.height;
-    ctx.clearRect(0, 0, width, height);
-
-    // Background Grid
-    ctx.strokeStyle = '#1E293B';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < width; x += 40) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
-      ctx.stroke();
-    }
-    for (let y = 0; y < height; y += 40) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
-      ctx.stroke();
-    }
-
-    const startX = width / 2 - 40;
-    const startY = 50; // Ceiling
-
-    // Draw Ceiling Mount
-    ctx.fillStyle = '#475569';
-    ctx.fillRect(startX - 60, startY - 12, 120, 12);
-    ctx.strokeStyle = '#94A3B8';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(startX - 60, startY - 12, 120, 12);
-
-    const state = engineRef.current.getState();
-    const config = engineRef.current.getConfig();
-
-    const naturalPixels = config.naturalLength * 300; // 0.4m = 120px
-    const eqStretchPixels = engineRef.current.getEquilibriumStretch() * 300;
-    const currentDisplacementPixels = state.displacement * 300;
-
-    const springEndY = startY + naturalPixels + eqStretchPixels + currentDisplacementPixels;
-
-    // Draw Spring Coils
-    ctx.beginPath();
-    ctx.strokeStyle = '#38BDF8';
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-
-    const coils = 14;
-    const coilWidth = 24;
-    const springLength = springEndY - startY;
-    const stepY = springLength / coils;
-
-    ctx.moveTo(startX, startY);
-    for (let i = 0; i <= coils; i++) {
-      const currentY = startY + i * stepY;
-      const currentX = i === 0 || i === coils ? startX : startX + (i % 2 === 0 ? coilWidth : -coilWidth);
-      ctx.lineTo(currentX, currentY);
-    }
-    ctx.stroke();
-
-    // Draw Mass Weight Block
-    const massRadius = 18 + mass * 30;
-    ctx.fillStyle = '#EC4899';
-    ctx.beginPath();
-    ctx.arc(startX, springEndY + massRadius, massRadius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#F472B6';
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
-    // Mass Label text
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = 'bold 12px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText(`${(mass * 1000).toFixed(0)}g`, startX, springEndY + massRadius + 4);
-
-    // Reference Lines
-    if (showEquilibrium) {
-      // Natural Length Line (Yellow)
-      const naturalY = startY + naturalPixels;
-      ctx.strokeStyle = '#FACC15';
-      ctx.setLineDash([6, 6]);
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(startX - 120, naturalY);
-      ctx.lineTo(startX + 120, naturalY);
-      ctx.stroke();
-      ctx.fillStyle = '#FACC15';
-      ctx.font = '10px sans-serif';
-      ctx.fillText('Vị trí lò xo tự nhiên L0', startX + 130, naturalY + 4);
-
-      // Equilibrium Line O (Green)
-      const eqY = startY + naturalPixels + eqStretchPixels;
-      ctx.strokeStyle = '#34D399';
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.moveTo(startX - 120, eqY);
-      ctx.lineTo(startX + 120, eqY);
-      ctx.stroke();
-      ctx.fillStyle = '#34D399';
-      ctx.fillText('Vị trí cân bằng (O)', startX + 130, eqY + 4);
-
-      ctx.setLineDash([]);
-    }
-
-    // Draw Ruler Tool
-    if (showRuler) {
-      const rulerX = startX - 160;
-      ctx.fillStyle = '#0F172A';
-      ctx.strokeStyle = '#334155';
-      ctx.lineWidth = 2;
-      ctx.fillRect(rulerX, startY, 40, height - startY - 20);
-      ctx.strokeRect(rulerX, startY, 40, height - startY - 20);
-
-      ctx.fillStyle = '#94A3B8';
-      ctx.font = '9px monospace';
-      ctx.textAlign = 'right';
-      for (let y = startY; y < height - 30; y += 20) {
-        ctx.beginPath();
-        ctx.moveTo(rulerX + 25, y);
-        ctx.lineTo(rulerX + 40, y);
-        ctx.stroke();
-        const cm = Math.round((y - startY) / 3);
-        if (cm % 10 === 0) {
-          ctx.fillText(`${cm}cm`, rulerX + 22, y + 3);
-        }
+  const handleCaptureScreenshot = () => {
+    if (containerRef.current) {
+      const svgElement = containerRef.current.querySelector('svg');
+      if (svgElement) {
+        const svgData = new XMLSerializer().serializeToString(svgElement);
+        const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+        const URL = window.URL || window.webkitURL || window;
+        const blobURL = URL.createObjectURL(svgBlob);
+        const image = new Image();
+        image.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 750;
+          canvas.height = 450;
+          const context = canvas.getContext('2d');
+          if (context) {
+            context.drawImage(image, 0, 0);
+            const png = canvas.toDataURL('image/png');
+            setScreenshotBase64(png);
+            setIsScreenshotModalOpen(true);
+          }
+        };
+        image.src = blobURL;
       }
     }
   };
@@ -258,8 +382,15 @@ export const PhetSpringLab: React.FC = () => {
             ← Về Bài Tập
           </button>
           <h1 className="text-base font-black text-cyan-400 tracking-tight flex items-center gap-2">
-            <span>🌀 Thí Nghiệm Con Lắc Lò Xo & Định Luật Hooke</span>
+            <span>🌀 Thí Nghiệm Con Lắc Lò Xo (PhET SceneryStack Engine)</span>
           </h1>
+
+          <button
+            onClick={handleCaptureScreenshot}
+            className="px-3 py-1.5 rounded-lg bg-cyan-950 border border-cyan-600/60 text-cyan-300 hover:text-white text-xs font-extrabold transition shadow-md cursor-pointer flex items-center gap-1.5 ml-2"
+          >
+            <span>📸 Chụp Ảnh & Lưu Kho</span>
+          </button>
         </div>
 
         <div className="flex gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
@@ -286,7 +417,7 @@ export const PhetSpringLab: React.FC = () => {
 
       {/* Main Workspace Layout */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 p-4">
-        {/* Left Interactive Canvas Area (8 cols) */}
+        {/* Left Interactive PhET Scenery Area (8 cols) */}
         <div className="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative shadow-xl">
           <div className="flex justify-between items-center mb-2 bg-slate-950 p-3 rounded-xl border border-slate-800">
             <div className="flex items-center gap-4 text-xs font-mono font-bold">
@@ -319,10 +450,11 @@ export const PhetSpringLab: React.FC = () => {
           </div>
 
           <div className="flex-1 flex justify-center items-center bg-slate-950 rounded-xl relative overflow-hidden border border-slate-800">
-            <canvas ref={canvasRef} width={750} height={450} className="w-full h-[450px]" />
+            {/* SceneryStack DOM Container */}
+            <div ref={containerRef} className="w-[750px] h-[450px] relative overflow-hidden" />
 
             {/* Drag Pull Controls Overlay */}
-            <div className="absolute top-4 right-4 bg-slate-900/90 backdrop-blur-sm border border-slate-700 rounded-xl p-3 flex flex-col gap-2 text-xs">
+            <div className="absolute top-4 right-4 bg-slate-900/90 backdrop-blur-sm border border-slate-700 rounded-xl p-3 flex flex-col gap-2 text-xs z-10">
               <span className="font-bold text-slate-300">Kéo lệch vị trí cân bằng:</span>
               <div className="flex gap-1.5">
                 {[5, 10, 15, 20].map(cm => (
@@ -496,6 +628,15 @@ export const PhetSpringLab: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <ScreenshotCaptureModal
+        isOpen={isScreenshotModalOpen}
+        onClose={() => setIsScreenshotModalOpen(false)}
+        imageBase64={screenshotBase64}
+        labId="sim-spring-mass"
+        labTitle="Khảo Sát Con Lắc Lò Xo & Định Luật Hooke (PhET Core Engine)"
+        difficulty="MEDIUM"
+      />
     </div>
   );
 };

@@ -178,5 +178,45 @@
     "evidence": "Created emf-engine.ts & PhetEmfLab.tsx with DC solver, knife switch & U(I) linear plot",
     "notes": "",
     "priority": "P1"
+  },
+  {
+    "id": "lab-db-catalog-metadata",
+    "title": "Store and query Lab Catalog metadata from PostgreSQL (`labs` table) including difficulty level",
+    "user_visible_behavior": "Admin and teachers can manage labs dynamically with difficulty level, grade, and domain fields from PostgreSQL database",
+    "verification_command": "Lab catalog queries return PostgreSQL records from /api/labs with difficulty and grade fields in < 100ms",
+    "status": "passing",
+    "evidence": "Created Lab.java, StudentLabSnapshot.java, LabRepository, StudentLabSnapshotRepository, and seeded 6 core physics labs in EduLabApplication.java",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "lab-screenshot-cloudinary-upload",
+    "title": "Capture simulation canvas screenshot and upload to Cloudinary via Spring Boot backend proxy",
+    "user_visible_behavior": "Student can click 'Chụp ảnh & Lưu kho' in any lab to securely upload canvas screenshot via Spring Boot proxy to Cloudinary",
+    "verification_command": "Clicking 'Lưu Kho' opens capture modal, submitting posts image to /api/storage/upload, returning Cloudinary secure URL and saving DB snapshot record",
+    "status": "passing",
+    "evidence": "Created CloudinaryService.java, CloudinaryServiceImpl.java, LabController.java, StorageController.java with /api/storage/upload endpoint",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "student-my-storage-timeline-ui",
+    "title": "Student 'My Storage' chronological timeline journal with date headers and difficulty badges",
+    "user_visible_behavior": "Student can view their saved lab screenshots in /student/storage formatted as a date-grouped timeline journal with difficulty badges and lightbox preview",
+    "verification_command": "Navigating to /student/storage renders date-grouped timeline cards with screenshot previews, difficulty badges, notes, and lightbox modal",
+    "status": "passing",
+    "evidence": "Created StudentStoragePage.tsx, ScreenshotCaptureModal.tsx, storageService.ts, registered route /student/storage in main.tsx",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "student-my-storage-delete-edit",
+    "title": "Delete snapshot or edit caption notes in student 'My Storage'",
+    "user_visible_behavior": "Student can manage their stored snapshots by editing notes or deleting unwanted items from Cloudinary and DB",
+    "verification_command": "Clicking delete on a snapshot card triggers confirmation and removes record from PostgreSQL and Cloudinary",
+    "status": "passing",
+    "evidence": "Integrated delete functionality in StudentStoragePage.tsx with confirm modal and storageService.deleteSnapshot call",
+    "notes": "",
+    "priority": "P1"
   }
 ]

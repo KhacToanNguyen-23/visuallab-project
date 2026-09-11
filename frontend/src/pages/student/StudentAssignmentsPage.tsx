@@ -5,6 +5,7 @@ import { classService } from '../../services/classService';
 import { assignmentService } from '../../services/assignmentService';
 import { useAuth } from '../../context/AuthContext';
 import type { Assignment } from '../../types/assignment';
+import { getLabRoute } from '../../utils/labRoutes';
 
 export const StudentAssignmentsPage: React.FC = () => {
   const { user } = useAuth();
@@ -38,7 +39,7 @@ export const StudentAssignmentsPage: React.FC = () => {
               teacherName: teacherName,
               dueDate: 'Sắp tới',
               status: 'NOT_STARTED',
-              route: '/simulation',
+              route: getLabRoute(a.labType || a.id, a.title),
               instructions: a.description || 'Hoàn thành bài thí nghiệm theo đúng thông số được giao.',
               rawAssignment: a,
             });

@@ -72,7 +72,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
                   id: a.id,
                   title: a.title,
                   className: e.className || `Lớp ${e.classId}`,
-                  route: '/simulation'
+                  route: getLabRoute(a.labType || a.id, a.title)
                 });
               });
             }
@@ -100,7 +100,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       title: 'Mạch Điện Đơn Giản & Định Luật Ohm',
       domain: 'Điện & Từ Học',
       description: 'Mô phỏng lắp mạch Pin, Điện trở, Ampe kế, Vôn kế. Ghi nhận dòng điện & hiệu điện thế.',
-      route: '/simulation',
+      route: '/lab/dc-circuit',
       badge: '[ĐIỆN HỌC]'
     },
     {
@@ -108,7 +108,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       title: 'Đo Suất Điện Động E & Điện Trở Trong r',
       domain: 'Điện & Từ Học',
       description: 'Khảo sát đồ thị U-I của nguồn pin bằng biến trở con chạy.',
-      route: '/simulation',
+      route: '/lab/emf-internal-r',
       badge: '[ĐIỆN HỌC]'
     },
     {
@@ -116,7 +116,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       title: 'Đo Gia Tốc Rơi Tự Do g',
       domain: 'Cơ Học & Năng Lượng',
       description: 'Bi sắt rơi qua cổng quang điện, đo thời gian t và tự động tính gia tốc g.',
-      route: '/srs-lab',
+      route: '/lab/free-fall',
       badge: '[CƠ HỌC]'
     },
     {
@@ -124,7 +124,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       title: 'Con Lắc Đơn & Dao Động Điều Hòa',
       domain: 'Cơ Học & Năng Lượng',
       description: 'Khảo sát chu kỳ dao động T = 2pi*sqrt(l/g) của con lắc đơn.',
-      route: '/simulation',
+      route: '/lab/simple-pendulum',
       badge: '[CƠ HỌC]'
     },
     {
@@ -132,7 +132,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       title: 'Đo Nhiệt Dung Riêng c Của Nước',
       domain: 'Sóng & Nhiệt Học',
       description: 'Đo công suất Q = P*t và độ tăng nhiệt độ delta T để xác định c.',
-      route: '/srs-lab',
+      route: '/lab/wave-interference',
       badge: '[SÓNG - NHIỆT]'
     },
     {
@@ -140,7 +140,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ',
       domain: 'Quang Học & Hiện Đại',
       description: 'Chiếu laser qua môi trường chiết suất n1, n2 và xác định góc khúc xạ.',
-      route: '/simulation',
+      route: '/lab/refraction',
       badge: '[QUANG HỌC]'
     }
   ];
@@ -157,12 +157,12 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
   const [newTeacherSchool, setNewTeacherSchool] = useState('');
 
   const [adminLabCatalog, setAdminLabCatalog] = useState([
-    { id: 'lab-1', title: 'Mạch Điện Đơn Giản & Định Luật Ohm', domain: '[ĐIỆN HỌC]', route: '/simulation', isVisible: true },
-    { id: 'lab-2', title: 'Đo Gia Tốc Rơi Tự Do g', domain: '[CƠ HỌC]', route: '/srs-lab', isVisible: true },
-    { id: 'lab-3', title: 'Đo Suất Điện Động E & Điện Trở Trong r', domain: '[ĐIỆN HỌC]', route: '/simulation', isVisible: true },
-    { id: 'lab-4', title: 'Đo Nhiệt Dung Riêng c Của Nước', domain: '[SÓNG - NHIỆT]', route: '/srs-lab', isVisible: true },
-    { id: 'lab-5', title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ', domain: '[QUANG HỌC]', route: '/simulation', isVisible: true },
-    { id: 'lab-6', title: 'Con Lắc Đơn & Dao Động Điều Hòa', domain: '[CƠ HỌC]', route: '/simulation', isVisible: false },
+    { id: 'lab-1', title: 'Mạch Điện Đơn Giản & Định Luật Ohm', domain: '[ĐIỆN HỌC]', route: '/lab/dc-circuit', isVisible: true },
+    { id: 'lab-2', title: 'Đo Gia Tốc Rơi Tự Do g', domain: '[CƠ HỌC]', route: '/lab/free-fall', isVisible: true },
+    { id: 'lab-3', title: 'Đo Suất Điện Động E & Điện Trở Trong r', domain: '[ĐIỆN HỌC]', route: '/lab/emf-internal-r', isVisible: true },
+    { id: 'lab-4', title: 'Đo Nhiệt Dung Riêng c Của Nước', domain: '[SÓNG - NHIỆT]', route: '/lab/wave-interference', isVisible: true },
+    { id: 'lab-5', title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ', domain: '[QUANG HỌC]', route: '/lab/refraction', isVisible: true },
+    { id: 'lab-6', title: 'Con Lắc Đơn & Dao Động Điều Hòa', domain: '[CƠ HỌC]', route: '/lab/simple-pendulum', isVisible: false },
   ]);
 
   const [auditLogs] = useState<any[]>([]);
