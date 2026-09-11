@@ -47,6 +47,11 @@ export const StudentSidebar: React.FC<StudentSidebarProps> = ({
       label: 'Lịch Sử & Kết Quả',
       path: '/student/history',
     },
+    {
+      id: 'storage',
+      label: 'Kho Lưu Trữ (My Storage)',
+      path: '/student/storage',
+    },
   ];
 
   const isActive = (item: NavItem) => {

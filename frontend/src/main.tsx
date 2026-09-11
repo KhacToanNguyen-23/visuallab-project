@@ -6,8 +6,6 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { LandingPage } from './pages/LandingPage';
-import { PhetSpringLab } from './components/simulation/PhetSpringLab';
-import { PhetEmfLab } from './components/simulation/PhetEmfLab';
 import { CatalogPage } from './pages/CatalogPage';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -26,6 +24,16 @@ import { StudentLayout } from './components/student/StudentLayout';
 import { StudentClassesPage } from './pages/student/StudentClassesPage';
 import { StudentAssignmentsPage } from './pages/student/StudentAssignmentsPage';
 import { StudentHistoryPage } from './pages/student/StudentHistoryPage';
+import { StudentStoragePage } from './pages/student/StudentStoragePage';
+
+// Simulation Engine Components
+import { PhetPendulumLab } from './components/simulation/PhetPendulumLab';
+import { PhetSpringLab } from './components/simulation/PhetSpringLab';
+import { PhetEmfLab } from './components/simulation/PhetEmfLab';
+import { PhetRefractionLab } from './components/simulation/PhetRefractionLab';
+import { PhetVietnamLabWrapper } from './components/simulation/PhetVietnamLabWrapper';
+import { WaveInterferenceLab } from './components/simulation/WaveInterferenceLab';
+
 import App from './App.tsx';
 import './index.css';
 
@@ -97,10 +105,23 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route path="classes" element={<StudentClassesPage />} />
                 <Route path="assignments" element={<StudentAssignmentsPage />} />
                 <Route path="history" element={<StudentHistoryPage />} />
+                <Route path="storage" element={<StudentStoragePage />} />
               </Route>
 
+              {/* Individual Simulation Lab Engine Routes */}
+              <Route path="/lab/dc-circuit" element={<App />} />
+              <Route path="/lab/simple-pendulum" element={<PhetPendulumLab />} />
+              <Route path="/lab/spring-mass" element={<PhetSpringLab />} />
+              <Route path="/lab/emf-internal-r" element={<PhetEmfLab />} />
+              <Route path="/lab/refraction" element={<PhetRefractionLab />} />
+              <Route path="/lab/free-fall" element={<SRSWorkflowPage />} />
+              <Route path="/lab/ohm-vietnam" element={<PhetVietnamLabWrapper />} />
+              <Route path="/lab/wave-interference" element={<WaveInterferenceLab />} />
+
+              {/* Backward compatibility routes */}
               <Route path="/simulation" element={<App />} />
               <Route path="/srs-lab" element={<SRSWorkflowPage />} />
+
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </AuthProvider>
@@ -109,3 +130,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </GoogleOAuthProvider>
   </React.StrictMode>
 );
+

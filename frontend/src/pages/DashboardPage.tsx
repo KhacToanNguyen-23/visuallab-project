@@ -6,6 +6,7 @@ import { EditProfileModal } from '../components/auth/EditProfileModal';
 import { RoleWorkspacePanel } from '../components/dashboard/RoleWorkspacePanel';
 import { PhETFilterBar } from '../components/dashboard/PhETFilterBar';
 import { SimCard, type SimItem } from '../components/dashboard/SimCard';
+import { getLabRoute } from '../utils/labRoutes';
 
 const BUILTIN_SIMULATIONS: SimItem[] = [];
 
@@ -52,7 +53,7 @@ export const DashboardPage: React.FC = () => {
       gradeLevel: 'THPT',
       subjectArea: t.subjectArea || 'Điện Học',
       description: t.description || 'Bài thí nghiệm mô phỏng tương tác theo chuẩn chương trình GDPT 2018.',
-      route: '/simulation',
+      route: getLabRoute(t.id, t.title),
       isPopular: index % 2 === 0,
     }));
 

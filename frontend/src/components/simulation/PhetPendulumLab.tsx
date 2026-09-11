@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PendulumEngine } from '../../engine/physics/pendulum-engine';
+import { ScreenshotCaptureModal } from '../common/ScreenshotCaptureModal';
 
 type LabTabMode = 'explore' | 'compare' | 'predict' | 'measure' | 'graph' | 'challenge';
 
@@ -51,6 +52,18 @@ export const PhetPendulumLab: React.FC = () => {
 
   // Trajectory History (Canvas points)
   const [trajectoryPoints, setTrajectoryPoints] = useState<{ x: number; y: number }[]>([]);
+
+  // Screenshot Storage State
+  const [isScreenshotModalOpen, setIsScreenshotModalOpen] = useState(false);
+  const [screenshotBase64, setScreenshotBase64] = useState<string>('');
+
+  const handleCaptureScreenshot = () => {
+    if (canvasRef.current) {
+      const dataUrl = canvasRef.current.toDataURL('image/png');
+      setScreenshotBase64(dataUrl);
+      setIsScreenshotModalOpen(true);
+    }
+  };
 
   // Measurement Tool State
   const [stopwatchTime, setStopwatchTime] = useState<number>(0);
@@ -467,6 +480,13 @@ export const PhetPendulumLab: React.FC = () => {
             </p>
           </div>
         </div>
+
+        <button
+          onClick={handleCaptureScreenshot}
+          className="px-4 py-2 rounded-full bg-cyan-950 border border-cyan-600/60 text-cyan-300 hover:text-white text-xs font-extrabold transition shadow-lg shadow-cyan-950/50 cursor-pointer flex items-center gap-2"
+        >
+          <span>📸 Chụp Ảnh & Lưu Kho</span>
+        </button>
       </div>
 
       {/* Main Interactive Grid */}
@@ -966,6 +986,15 @@ export const PhetPendulumLab: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <ScreenshotCaptureModal
+        isOpen={isScreenshotModalOpen}
+        onClose={() => setIsScreenshotModalOpen(false)}
+        imageBase64={screenshotBase64}
+        labId="sim-simple-pendulum"
+        labTitle="Con Lắc Đơn & Dao Động Điều Hòa"
+        difficulty="EASY"
+      />
     </div>
   );
 };

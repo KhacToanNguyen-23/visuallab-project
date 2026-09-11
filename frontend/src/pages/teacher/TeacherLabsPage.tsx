@@ -11,12 +11,12 @@ export interface PresetLabItem {
 }
 
 const PRESET_LABS: PresetLabItem[] = [
-  { id: 'sim-dc-circuit', title: 'Mạch Điện Đơn Giản & Định Luật Ohm', domain: 'Điện Học', description: 'Mô phỏng lắp mạch Pin, Điện trở, Ampe kế, Vôn kế.', route: '/simulation', badge: 'ĐIỆN HỌC' },
-  { id: 'sim-emf-internal-r', title: 'Đo Suất Điện Động E & Điện Trở Trong r', domain: 'Điện Học', description: 'Khảo sát đồ thị U-I của nguồn pin bằng biến trở con chạy.', route: '/simulation', badge: 'ĐIỆN HỌC' },
-  { id: 'sim-free-fall', title: 'Đo Gia Tốc Rơi Tự Do g', domain: 'Cơ Học', description: 'Bi sắt rơi qua cổng quang điện, đo t và tự động tính gia tốc g.', route: '/srs-lab', badge: 'CƠ HỌC' },
-  { id: 'sim-simple-pendulum', title: 'Con Lắc Đơn & Dao Động Điều Hòa', domain: 'Cơ Học', description: 'Khảo sát chu kỳ dao động T = 2pi*sqrt(l/g) của con lắc đơn.', route: '/simulation', badge: 'CƠ HỌC' },
-  { id: 'sim-specific-heat', title: 'Đo Nhiệt Dung Riêng c Của Nước', domain: 'Sóng - Nhiệt', description: 'Đo công suất Q = P*t và độ tăng nhiệt độ delta T.', route: '/srs-lab', badge: 'SÓNG - NHIỆT' },
-  { id: 'sim-refraction', title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ', domain: 'Quang Học', description: 'Chiếu laser qua môi trường n1, n2 và xác định góc khúc xạ.', route: '/simulation', badge: 'QUANG HỌC' },
+  { id: 'sim-dc-circuit', title: 'Mạch Điện Đơn Giản & Định Luật Ohm', domain: 'Điện Học', description: 'Mô phỏng lắp mạch Pin, Điện trở, Ampe kế, Vôn kế.', route: '/lab/dc-circuit', badge: 'ĐIỆN HỌC' },
+  { id: 'sim-emf-internal-r', title: 'Đo Suất Điện Động E & Điện Trở Trong r', domain: 'Điện Học', description: 'Khảo sát đồ thị U-I của nguồn pin bằng biến trở con chạy.', route: '/lab/emf-internal-r', badge: 'ĐIỆN HỌC' },
+  { id: 'sim-free-fall', title: 'Đo Gia Tốc Rơi Tự Do g', domain: 'Cơ Học', description: 'Bi sắt rơi qua cổng quang điện, đo t và tự động tính gia tốc g.', route: '/lab/free-fall', badge: 'CƠ HỌC' },
+  { id: 'sim-simple-pendulum', title: 'Con Lắc Đơn & Dao Động Điều Hòa', domain: 'Cơ Học', description: 'Khảo sát chu kỳ dao động T = 2pi*sqrt(l/g) của con lắc đơn.', route: '/lab/simple-pendulum', badge: 'CƠ HỌC' },
+  { id: 'sim-specific-heat', title: 'Đo Nhiệt Dung Riêng c Của Nước', domain: 'Sóng - Nhiệt', description: 'Đo công suất Q = P*t và độ tăng nhiệt độ delta T.', route: '/lab/wave-interference', badge: 'SÓNG - NHIỆT' },
+  { id: 'sim-refraction', title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ', domain: 'Quang Học', description: 'Chiếu laser qua môi trường n1, n2 và xác định góc khúc xạ.', route: '/lab/refraction', badge: 'QUANG HỌC' },
 ];
 
 export const TeacherLabsPage: React.FC = () => {

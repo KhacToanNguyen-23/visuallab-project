@@ -8,6 +8,7 @@ import { PhetEmfLab } from '../simulation/PhetEmfLab';
 import { WaveInterferenceLab } from '../simulation/WaveInterferenceLab';
 import { FreeFallCanvas } from '../simulations/FreeFallCanvas';
 import { GradeResultView } from './GradeResultView';
+import App from '../../App';
 
 interface StudentLabAssignmentViewProps {
   assignment: Assignment;
@@ -107,7 +108,7 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
     if (t.includes('REFRACTION') || t.includes('KHÚC XẠ') || t.includes('THẤU KÍNH')) {
       return <PhetRefractionLab />;
     }
-    if (t.includes('WAVE') || t.includes('SÓNG') || t.includes('NHIỆT DUNG')) {
+    if (t.includes('WAVE') || t.includes('SÓNG') || t.includes('NHIỆT DUNG') || t.includes('HEAT')) {
       return <WaveInterferenceLab />;
     }
     if (t.includes('FREE_FALL') || t.includes('RƠI TỰ DO')) {
@@ -117,16 +118,15 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
         </div>
       );
     }
-    if (t.includes('ELECTRICITY') || t.includes('OHM') || t.includes('MẠCH ĐIỆN')) {
+    if (t.includes('ELECTRICITY') || t.includes('OHM') || t.includes('MẠCH ĐIỆN') || t.includes('DC-CIRCUIT')) {
       return (
-        <iframe
-          src="/simulations/ohms-law_vi.html"
-          title="PhET Ohm's Law Apparatus"
-          className="w-full h-full min-h-[450px] border-0 rounded-xl"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
+        <div className="w-full h-full min-h-[500px] border border-slate-800 rounded-xl overflow-hidden">
+          <App />
+        </div>
       );
+    }
+    if (t.includes('PENDULUM') || t.includes('CON LẮC ĐƠN')) {
+      return <PhetPendulumLab />;
     }
     return <PhetPendulumLab />;
   };

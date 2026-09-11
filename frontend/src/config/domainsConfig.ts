@@ -72,7 +72,7 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'MECH',
         domainBadge: '[CƠ HỌC]',
         labs: [
-          { id: 'sim-caliper-micrometer', title: 'Đo Kích Thước Bằng Thước Kẹp & Panme', description: 'Đo đường kính bi sắt và độ dày tấm kim loại, tính sai số dụng cụ.', engineType: 'DRAG_DROP', route: '/simulation' }
+          { id: 'sim-caliper-micrometer', title: 'Đo Kích Thước Bằng Thước Kẹp & Panme', description: 'Đo đường kính bi sắt và độ dày tấm kim loại, tính sai số dụng cụ.', engineType: 'DRAG_DROP', route: '/lab/dc-circuit' }
         ]
       },
       {
@@ -81,7 +81,7 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'MECH',
         domainBadge: '[CƠ HỌC]',
         labs: [
-          { id: 'sim-free-fall', title: 'Đo Gia Tốc Rơi Tự Do g Bằng Cổng Quang Điện', description: 'Bi sắt rơi qua 2 cổng quang điện kết hợp đồng hồ hiện số.', engineType: 'DRAG_DROP', route: '/srs-lab' }
+          { id: 'sim-free-fall', title: 'Đo Gia Tốc Rơi Tự Do g Bằng Cổng Quang Điện', description: 'Bi sắt rơi qua 2 cổng quang điện kết hợp đồng hồ hiện số.', engineType: 'DRAG_DROP', route: '/lab/free-fall' }
         ]
       },
       {
@@ -90,7 +90,7 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'MECH',
         domainBadge: '[CƠ HỌC]',
         labs: [
-          { id: 'sim-newton-second-law', title: 'Khảo Sát Định Luật II Newton F = m*a', description: 'Xe con chạy trên máng đệm khí với lực kéo biến đổi.', engineType: 'DRAG_DROP', route: '/simulation' }
+          { id: 'sim-newton-second-law', title: 'Khảo Sát Định Luật II Newton F = m*a', description: 'Xe con chạy trên máng đệm khí với lực kéo biến đổi.', engineType: 'DRAG_DROP', route: '/lab/dc-circuit' }
         ]
       },
       {
@@ -99,7 +99,7 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'MECH',
         domainBadge: '[CƠ HỌC]',
         labs: [
-          { id: 'sim-collisions', title: 'Thí Nghiệm Va Chạm Đàn Hồi & Va Chạm Mềm', description: 'Đo vận tốc trước và sau va chạm của 2 xe trượt.', engineType: 'PARAMETER_STUDIO', route: '/simulation' }
+          { id: 'sim-collisions', title: 'Thí Nghiệm Va Chạm Đàn Hồi & Va Chạm Mềm', description: 'Đo vận tốc trước và sau va chạm của 2 xe trượt.', engineType: 'PARAMETER_STUDIO', route: '/lab/dc-circuit' }
         ]
       },
       {
@@ -108,7 +108,7 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'MECH',
         domainBadge: '[CƠ HỌC]',
         labs: [
-          { id: 'sim-hooke-law', title: 'Khảo Sát Lực Đàn Hồi Lò Xo - Định Luật Hooke', description: 'Móc quả cân vào lò xo, đo độ giãn delta L và vẽ đồ thị F-delta L.', engineType: 'DRAG_DROP', route: '/simulation' }
+          { id: 'sim-hooke-law', title: 'Khảo Sát Lực Đàn Hồi Lò Xo - Định Luật Hooke', description: 'Móc quả cân vào lò xo, đo độ giãn delta L và vẽ đồ thị F-delta L.', engineType: 'DRAG_DROP', route: '/lab/spring-mass' }
         ]
       }
     ]
@@ -124,8 +124,8 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'MECH',
         domainBadge: '[CƠ HỌC]',
         labs: [
-          { id: 'sim-simple-pendulum', title: 'Con Lắc Đơn & Dao Động Điều Hòa', description: 'Khảo sát chu kỳ T = 2π√(l/g) của con lắc đơn.', engineType: 'PARAMETER_STUDIO', route: '/pendulum-lab' },
-          { id: 'sim-spring-pendulum', title: 'Con Lắc Lò Xo Nằm Ngang & Thẳng Đứng', description: 'Khảo sát tần số góc omega = sqrt(k/m) và bảo toàn cơ năng.', engineType: 'DRAG_DROP', route: '/simulation' }
+          { id: 'sim-simple-pendulum', title: 'Con Lắc Đơn & Dao Động Điều Hòa', description: 'Khảo sát chu kỳ T = 2π√(l/g) của con lắc đơn.', engineType: 'PARAMETER_STUDIO', route: '/lab/simple-pendulum' },
+          { id: 'sim-spring-pendulum', title: 'Con Lắc Lò Xo Nằm Ngang & Thẳng Đứng', description: 'Khảo sát tần số góc omega = sqrt(k/m) và bảo toàn cơ năng.', engineType: 'DRAG_DROP', route: '/lab/spring-mass' }
         ]
       },
       {
@@ -134,8 +134,8 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'WAVE_THERMO',
         domainBadge: '[SÓNG - NHIỆT]',
         labs: [
-          { id: 'sim-sound-speed', title: 'Đo Tốc Độ Truyền Âm Trong Không Khí', description: 'Sử dụng ống cộng hưởng âm và âm thoa/máy phát tần số.', engineType: 'PARAMETER_STUDIO', route: '/srs-lab' },
-          { id: 'sim-young-interference', title: 'Đo Bước Sóng Ánh Sáng Giao Thoa Khe Young', description: 'Chiếu laser qua 2 khe hẹp, đo khoảng vân i để tính bước sóng lambda.', engineType: 'PARAMETER_STUDIO', route: '/simulation' }
+          { id: 'sim-sound-speed', title: 'Đo Tốc Độ Truyền Âm Trong Không Khí', description: 'Sử dụng ống cộng hưởng âm và âm thoa/máy phát tần số.', engineType: 'PARAMETER_STUDIO', route: '/lab/wave-interference' },
+          { id: 'sim-young-interference', title: 'Đo Bước Sóng Ánh Sáng Giao Thoa Khe Young', description: 'Chiếu laser qua 2 khe hẹp, đo khoảng vân i để tính bước sóng lambda.', engineType: 'PARAMETER_STUDIO', route: '/lab/wave-interference' }
         ]
       },
       {
@@ -144,8 +144,8 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'EM',
         domainBadge: '[ĐIỆN HỌC]',
         labs: [
-          { id: 'sim-dc-circuit', title: 'Mạch Điện Đơn Giản & Định Luật Ohm', description: 'Lắp mạch Pin, Điện trở, Ampe kế, Vôn kế đo I và U.', engineType: 'DRAG_DROP', route: '/simulation' },
-          { id: 'sim-emf-internal-r', title: 'Đo Suất Điện Động E & Điện Trở Trong r', description: 'Khảo sát đồ thị U-I của nguồn pin bằng biến trở con chạy.', engineType: 'DRAG_DROP', route: '/simulation' }
+          { id: 'sim-dc-circuit', title: 'Mạch Điện Đơn Giản & Định Luật Ohm', description: 'Lắp mạch Pin, Điện trở, Ampe kế, Vôn kế đo I và U.', engineType: 'DRAG_DROP', route: '/lab/dc-circuit' },
+          { id: 'sim-emf-internal-r', title: 'Đo Suất Điện Động E & Điện Trở Trong r', description: 'Khảo sát đồ thị U-I của nguồn pin bằng biến trở con chạy.', engineType: 'DRAG_DROP', route: '/lab/emf-internal-r' }
         ]
       },
       {
@@ -154,7 +154,7 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'OPTICS',
         domainBadge: '[QUANG HỌC]',
         labs: [
-          { id: 'sim-refraction', title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ', description: 'Chiếu tia sáng qua khối bán trụ, xác định góc khúc xạ và chiết suất n.', engineType: 'PARAMETER_STUDIO', route: '/simulation' }
+          { id: 'sim-refraction', title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ', description: 'Chiếu tia sáng qua khối bán trụ, xác định góc khúc xạ và chiết suất n.', engineType: 'PARAMETER_STUDIO', route: '/lab/refraction' }
         ]
       }
     ]
@@ -170,8 +170,8 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'WAVE_THERMO',
         domainBadge: '[SÓNG - NHIỆT]',
         labs: [
-          { id: 'sim-specific-heat', title: 'Đo Nhiệt Dung Riêng c Của Nước', description: 'Đo công suất Q = P*t và độ tăng nhiệt độ delta T để xác định c.', engineType: 'PARAMETER_STUDIO', route: '/srs-lab' },
-          { id: 'sim-latent-heat', title: 'Đo Nhiệt Hóa Hơi Riêng Của Nước', description: 'Đo lượng nước hóa hơi m theo thời gian đun sôi t.', engineType: 'PARAMETER_STUDIO', route: '/simulation' }
+          { id: 'sim-specific-heat', title: 'Đo Nhiệt Dung Riêng c Của Nước', description: 'Đo công suất Q = P*t và độ tăng nhiệt độ delta T để xác định c.', engineType: 'PARAMETER_STUDIO', route: '/lab/wave-interference' },
+          { id: 'sim-latent-heat', title: 'Đo Nhiệt Hóa Hơi Riêng Của Nước', description: 'Đo lượng nước hóa hơi m theo thời gian đun sôi t.', engineType: 'PARAMETER_STUDIO', route: '/lab/wave-interference' }
         ]
       },
       {
@@ -180,7 +180,7 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'WAVE_THERMO',
         domainBadge: '[SÓNG - NHIỆT]',
         labs: [
-          { id: 'sim-boyle-law', title: 'Khảo Sát Định Luật Boyle (P*V = const)', description: 'Nén xilanh khí, đo áp suất P và thể tích V ở nhiệt độ không đổi.', engineType: 'PARAMETER_STUDIO', route: '/simulation' }
+          { id: 'sim-boyle-law', title: 'Khảo Sát Định Luật Boyle (P*V = const)', description: 'Nén xilanh khí, đo áp suất P và thể tích V ở nhiệt độ không đổi.', engineType: 'PARAMETER_STUDIO', route: '/lab/wave-interference' }
         ]
       },
       {
@@ -189,7 +189,7 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'EM',
         domainBadge: '[ĐIỆN HỌC]',
         labs: [
-          { id: 'sim-magnetic-force', title: 'Khảo Sát Lực Từ Tác Dụng Lên Đoạn Dây Dẫn', description: 'Đo lực F tác dụng lên dây dẫn trong từ trường của nam châm U.', engineType: 'DRAG_DROP', route: '/simulation' }
+          { id: 'sim-magnetic-force', title: 'Khảo Sát Lực Từ Tác Dụng Lên Đoạn Dây Dẫn', description: 'Đo lực F tác dụng lên dây dẫn trong từ trường của nam châm U.', engineType: 'DRAG_DROP', route: '/lab/emf-internal-r' }
         ]
       },
       {
@@ -198,8 +198,8 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'OPTICS',
         domainBadge: '[QUANG HỌC]',
         labs: [
-          { id: 'sim-photoelectric', title: 'Mô Phỏng Hiện Tượng Quang Điện Ngoài', description: 'Chiếu bức xạ đơn sắc vào tế bào quang điện, đo hiệu điện thế hãm Uh.', engineType: 'PARAMETER_STUDIO', route: '/simulation' },
-          { id: 'sim-radioactive-decay', title: 'Khảo Sát Đồ Thị Phân Rã Hạt Nhân', description: 'Khảo sát số hạt nhân N(t) giảm theo thời gian bán rã T.', engineType: 'PARAMETER_STUDIO', route: '/simulation' }
+          { id: 'sim-photoelectric', title: 'Mô Phỏng Hiện Tượng Quang Điện Ngoài', description: 'Chiếu bức xạ đơn sắc vào tế bào quang điện, đo hiệu điện thế hãm Uh.', engineType: 'PARAMETER_STUDIO', route: '/lab/refraction' },
+          { id: 'sim-radioactive-decay', title: 'Khảo Sát Đồ Thị Phân Rã Hạt Nhân', description: 'Khảo sát số hạt nhân N(t) giảm theo thời gian bán rã T.', engineType: 'PARAMETER_STUDIO', route: '/lab/refraction' }
         ]
       }
     ]
