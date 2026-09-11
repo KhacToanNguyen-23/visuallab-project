@@ -6,6 +6,7 @@ import { ClassJoinModal } from './ClassJoinModal';
 import { PHYSICS_DOMAINS } from '../../config/domainsConfig';
 import { classService } from '../../services/classService';
 import { assignmentService } from '../../services/assignmentService';
+import { getLabRoute } from '../../utils/labRoutes';
 
 interface RoleWorkspacePanelProps {
   user: User | null;
