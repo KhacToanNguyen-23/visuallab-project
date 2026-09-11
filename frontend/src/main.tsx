@@ -24,6 +24,7 @@ import { StudentClassesPage } from './pages/student/StudentClassesPage';
 import { StudentAssignmentsPage } from './pages/student/StudentAssignmentsPage';
 import { StudentHistoryPage } from './pages/student/StudentHistoryPage';
 import { StudentStoragePage } from './pages/student/StudentStoragePage';
+import { UniversalWorkbenchPage } from './pages/UniversalWorkbenchPage';
 
 // Simulation Engine Components
 import { PhetPendulumLab } from './components/simulation/PhetPendulumLab';
@@ -105,6 +106,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             </Route>
 
             {/* Individual Simulation Lab Engine Routes */}
+            <Route path="/workbench/universal" element={<UniversalWorkbenchPage />} />
             <Route path="/lab/dc-circuit" element={<App />} />
             <Route path="/lab/simple-pendulum" element={<PhetPendulumLab />} />
             <Route path="/lab/spring-mass" element={<PhetSpringLab />} />

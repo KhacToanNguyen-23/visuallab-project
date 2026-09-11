@@ -5,6 +5,11 @@ export const getLabRoute = (labId?: string, title?: string, fallback?: string): 
   const id = (labId || '').toLowerCase();
   const t = (title || '').toLowerCase();
 
+  // Universal Workbench Sandbox
+  if (id.includes('workbench') || id.includes('sandbox') || id.includes('tu-do') || t.includes('tự do') || t.includes('workbench')) {
+    return '/workbench/universal';
+  }
+
   // Pendulum
   if (id.includes('pendulum') || id.includes('con-lac-don') || id === 'lab-6' || t.includes('con lắc đơn')) {
     return '/lab/simple-pendulum';

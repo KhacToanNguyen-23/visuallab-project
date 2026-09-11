@@ -95,6 +95,19 @@ export const DEFAULT_PUBLIC_LABS: PublicLabItem[] = [
     thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=500&auto=format&fit=crop&q=60',
     route: '/lab/refraction',
   },
+  {
+    id: 'workbench-universal',
+    title: 'Bàn Thí Nghiệm Tự Do (Universal Physics Sandbox)',
+    subject: 'Vật lý',
+    domain: 'Cơ Học',
+    grade: 'Lớp 12',
+    difficulty: 'HARD',
+    chapter: 'Sandbox Sáng Tạo',
+    description: 'Tự do chọn và ghép nối các linh kiện PhET SceneryStack thuộc 3 môn Cơ - Điện - Quang.',
+    tags: ['Sandbox', 'PhET', 'Sáng tạo'],
+    thumbnail: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&auto=format&fit=crop&q=60',
+    route: '/workbench/universal',
+  },
 ];
 
 export const labService = {

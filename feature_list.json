@@ -218,5 +218,35 @@
     "evidence": "Integrated delete functionality in StudentStoragePage.tsx with confirm modal and storageService.deleteSnapshot call",
     "notes": "",
     "priority": "P1"
+  },
+  {
+    "id": "universal-workbench-palette-canvas",
+    "title": "Universal Physics Workbench Palette toolbox & SceneryStack Canvas Sandbox",
+    "user_visible_behavior": "Drag-and-drop apparatus components from left Palette drawer (Mechanics, Circuits, Optics) onto SceneryStack sandbox canvas",
+    "verification_command": "Selecting items in WorkbenchPalette adds SceneryStack Nodes onto SceneryUniversalWorkbench canvas at 60 FPS",
+    "status": "passing",
+    "evidence": "WorkbenchPalette & SceneryUniversalWorkbench implemented with SceneryStack Display and 60 FPS drag interaction",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "universal-workbench-snapport-solvers",
+    "title": "Magnetic Snap-Port connection engine and multi-domain physics solvers",
+    "user_visible_behavior": "Components auto-snap when closer than 15px (springs to masses, wires to batteries/bulbs, lasers to lenses) and simulate real-time physics",
+    "verification_command": "SnapPortManager detects <15px distance, highlights magnetic snap, and calculates Spring-Mass, DC Circuit, and Snell RayTracing equations",
+    "status": "passing",
+    "evidence": "Created SnapPortManager.ts & PhysicsSolverManager.ts for magnetic snapping and physics calculations",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "universal-workbench-routing-snapshot",
+    "title": "Universal Workbench measurement tools, routing, and snapshot export",
+    "user_visible_behavior": "Ruler, Protractor, Voltmeter, Ammeter tools with /workbench/universal route and 'Save Snapshot to Storage' button",
+    "verification_command": "Navigating to /workbench/universal mounts workbench page, and clicking capture posts snapshot image to Cloudinary and DB",
+    "status": "passing",
+    "evidence": "UniversalWorkbenchPage created, route /workbench/universal registered in main.tsx, snapshot export modal integrated",
+    "notes": "",
+    "priority": "P2"
   }
 ]
