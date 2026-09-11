@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Display, Node, Path, Circle, Rectangle, Line, Text, DragListener } from 'scenerystack/scenery';
 import { Shape } from 'scenerystack/kite';
 import { Vector2 } from 'scenerystack/dot';
-import type { PlacedItem, PaletteItemDef } from './types';
+import { PlacedItem, PaletteItemDef } from './types';
 
 interface SceneryUniversalWorkbenchProps {
   placedItems: PlacedItem[];
@@ -19,6 +19,7 @@ export const SceneryUniversalWorkbench: React.FC<SceneryUniversalWorkbenchProps>
   const displayRef = useRef<Display | null>(null);
   const rootNodeRef = useRef<Node | null>(null);
   const itemNodesMapRef = useRef<Map<string, Node>>(new Map());
+  const draggingSetRef = useRef<Set<string>>(new Set());
 
   // 1. Initialize SceneryStack SceneGraph & Display
   useEffect(() => {
@@ -57,13 +58,16 @@ export const SceneryUniversalWorkbench: React.FC<SceneryUniversalWorkbenchProps>
       backgroundColor: '#020617',
       allowWebGL: false,
     });
+    display.initializeEvents();
     displayRef.current = display;
 
     return () => {
+      display.detachEvents();
       display.dispose();
       displayRef.current = null;
       rootNodeRef.current = null;
       itemNodesMapRef.current.clear();
+      draggingSetRef.current.clear();
     };
   }, []);
 
@@ -89,13 +93,21 @@ export const SceneryUniversalWorkbench: React.FC<SceneryUniversalWorkbenchProps>
       let itemNode = itemNodesMap.get(item.id);
 
       if (!itemNode) {
-        itemNode = createSceneryNodeForItem(item, onRemoveItem, onUpdateItemPosition);
+        itemNode = createSceneryNodeForItem(
+          item,
+          onRemoveItem,
+          onUpdateItemPosition,
+          displayRef,
+          draggingSetRef
+        );
         rootNode.addChild(itemNode);
         itemNodesMap.set(item.id, itemNode);
       }
 
-      // Update position
-      itemNode.translation = new Vector2(item.x, item.y);
+      // Update position only if not currently actively dragged
+      if (!draggingSetRef.current.has(item.id)) {
+        itemNode.translation = new Vector2(item.x, item.y);
+      }
     });
 
     display.updateDisplay();
@@ -105,7 +117,7 @@ export const SceneryUniversalWorkbench: React.FC<SceneryUniversalWorkbenchProps>
     <div className="flex-1 h-full bg-slate-950 flex flex-col justify-center items-center relative overflow-hidden select-none p-4">
       <div
         ref={containerRef}
-        className="w-[900px] h-[600px] relative rounded-2xl shadow-2xl overflow-hidden border border-slate-800"
+        className="w-[900px] h-[600px] relative rounded-2xl shadow-2xl overflow-hidden border border-slate-800 touch-none select-none"
       />
 
       {placedItems.length === 0 && (
@@ -122,7 +134,9 @@ export const SceneryUniversalWorkbench: React.FC<SceneryUniversalWorkbenchProps>
 function createSceneryNodeForItem(
   item: PlacedItem,
   onRemoveItem: (id: string) => void,
-  onUpdateItemPosition: (id: string, x: number, y: number) => void
+  onUpdateItemPosition: (id: string, x: number, y: number) => void,
+  displayRef: React.RefObject<Display | null>,
+  draggingSetRef: React.RefObject<Set<string>>
 ): Node {
   const containerNode = new Node({ cursor: 'pointer' });
 
@@ -229,15 +243,22 @@ function createSceneryNodeForItem(
   // Scenery DragListener for smooth 60 FPS drag interaction
   containerNode.addInputListener(
     new DragListener({
-      drag: (event, listener) => {
-        const delta = listener.modelDelta;
-        item.x += delta.x;
-        item.y += delta.y;
-        containerNode.translation = new Vector2(item.x, item.y);
-        onUpdateItemPosition(item.id, item.x, item.y);
+      translateNode: containerNode,
+      start: () => {
+        draggingSetRef.current?.add(item.id);
+        containerNode.moveToFront();
+      },
+      drag: () => {
+        displayRef.current?.updateDisplay();
+      },
+      end: () => {
+        draggingSetRef.current?.delete(item.id);
+        onUpdateItemPosition(item.id, containerNode.translation.x, containerNode.translation.y);
+        displayRef.current?.updateDisplay();
       },
     })
   );
 
   return containerNode;
 }
+

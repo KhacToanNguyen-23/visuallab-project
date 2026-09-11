@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { WorkbenchPalette } from '../components/workbench/WorkbenchPalette';
 import { SceneryUniversalWorkbench } from '../components/workbench/SceneryUniversalWorkbench';
@@ -35,16 +35,16 @@ export const UniversalWorkbenchPage: React.FC = () => {
     showToast(`Đã thêm ${itemDef.icon} ${itemDef.name} vào bàn thí nghiệm`);
   };
 
-  const handleRemoveItem = (id: string) => {
+  const handleRemoveItem = useCallback((id: string) => {
     setPlacedItems(prev => prev.filter(item => item.id !== id));
     showToast('Đã xóa linh kiện khỏi bàn thí nghiệm');
-  };
+  }, []);
 
-  const handleUpdateItemPosition = (id: string, x: number, y: number) => {
+  const handleUpdateItemPosition = useCallback((id: string, x: number, y: number) => {
     setPlacedItems(prev =>
       prev.map(item => (item.id === id ? { ...item, x, y } : item))
     );
-  };
+  }, []);
 
   const handleClearAll = () => {
     if (placedItems.length === 0) return;
