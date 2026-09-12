@@ -27,6 +27,7 @@ import { StudentClassesPage } from './pages/student/StudentClassesPage';
 import { StudentAssignmentsPage } from './pages/student/StudentAssignmentsPage';
 import { StudentHistoryPage } from './pages/student/StudentHistoryPage';
 import { StudentStoragePage } from './pages/student/StudentStoragePage';
+import { UniversalWorkbenchPage } from './pages/UniversalWorkbenchPage';
 
 // Simulation Engine Components (Lazy Loaded for Bundle Optimization)
 const PhetPendulumLab = lazy(() => import('./components/simulations/PhetPendulumLab').then(m => ({ default: m.PhetPendulumLab })));
@@ -127,6 +128,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                   <Route path="history" element={<StudentHistoryPage />} />
                   <Route path="storage" element={<StudentStoragePage />} />
                 </Route>
+
+                {/* Universal Workbench Route */}
+                <Route path="/workbench" element={<UniversalWorkbenchPage />} />
+                <Route path="/workbench/universal" element={<UniversalWorkbenchPage />} />
 
                 {/* Individual Simulation Lab Engine Routes */}
                 <Route path="/lab/speed-measurement" element={<LabErrorBoundary><SpeedMeasurementLab /></LabErrorBoundary>} />

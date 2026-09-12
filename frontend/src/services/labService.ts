@@ -151,8 +151,6 @@ export const DEFAULT_PUBLIC_LABS: PublicLabItem[] = [
     thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=500&auto=format&fit=crop&q=60',
     route: '/lab/refraction',
   },
-
-  // LỚP 12
   {
     id: 'sim-specific-heat',
     title: 'Bài 3: Đo Nhiệt Dung Riêng Của Nước',
@@ -204,6 +202,19 @@ export const DEFAULT_PUBLIC_LABS: PublicLabItem[] = [
     tags: ['GDPT 2018', 'SGK T52', 'Kéo thả', 'Cảm ứng từ'],
     thumbnail: 'https://images.unsplash.com/photo-1555664424-778a1e5e1b48?w=500&auto=format&fit=crop&q=60',
     route: '/lab/induction',
+  },
+  {
+    id: 'workbench-universal',
+    title: 'Bàn Thí Nghiệm Tự Do (Universal Physics Sandbox)',
+    subject: 'Vật lý',
+    domain: 'Cơ - Điện - Quang',
+    grade: 'Lớp 10 - 12',
+    difficulty: 'HARD',
+    chapter: 'Sandbox Sáng Tạo',
+    description: 'Tự do chọn và ghép nối các linh kiện PhET SceneryStack thuộc 3 môn Cơ - Điện - Quang.',
+    tags: ['Sandbox', 'PhET', 'Sáng tạo'],
+    thumbnail: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&auto=format&fit=crop&q=60',
+    route: '/workbench/universal',
   },
 ];
 

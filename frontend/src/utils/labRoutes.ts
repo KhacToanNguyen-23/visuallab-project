@@ -5,6 +5,11 @@ export const getLabRoute = (labId?: string, title?: string, fallback?: string): 
   const id = (labId || '').toLowerCase();
   const t = (title || '').toLowerCase();
 
+  // Universal Workbench Sandbox
+  if (id.includes('workbench') || id.includes('sandbox') || id.includes('tu-do') || t.includes('tự do') || t.includes('workbench')) {
+    return '/workbench/universal';
+  }
+
   // Speed Measurement (Bài 6 Lớp 10)
   if (id.includes('speed-measurement') || t.includes('tốc độ vật chuyển động')) {
     return '/lab/speed-measurement';
