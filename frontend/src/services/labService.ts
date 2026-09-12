@@ -33,6 +33,19 @@ export const DEFAULT_PUBLIC_LABS: PublicLabItem[] = [
     route: '/lab/speed-measurement',
   },
   {
+    id: 'sim-speed-measurement',
+    title: 'Đo Tốc Độ Của Vật Chuyển Động (3D)',
+    subject: 'Vật lý',
+    domain: 'Cơ Học & Động Học',
+    grade: 'Lớp 10',
+    difficulty: 'EASY',
+    chapter: 'Chương 2: Động Học',
+    description: 'Mô phỏng 3D máng nghiêng và 2 cổng quang điện đo tốc độ trung bình và tốc độ tức thời theo SGK GDPT 2018.',
+    tags: ['GDPT 2018', '3D WebGL', 'Three.js', 'Máng nghiêng', 'Cổng quang'],
+    thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=500&auto=format&fit=crop&q=60',
+    route: '/lab/speed-measurement',
+  },
+  {
     id: 'sim-free-fall',
     title: 'Bài 14: Đo Gia Tốc Rơi Tự Do g',
     subject: 'Vật lý',
@@ -269,14 +282,9 @@ export const labService = {
             route: getLabRoute(item.id, item.title, item.route),
           }));
 
-          // If backend DB returns fewer items than DEFAULT_PUBLIC_LABS, merge missing ones
-          if (apiLabs.length < DEFAULT_PUBLIC_LABS.length) {
-            const apiIds = new Set(apiLabs.map(l => l.id));
-            const missing = DEFAULT_PUBLIC_LABS.filter(l => !apiIds.has(l.id));
-            return [...apiLabs, ...missing];
-          }
-
-          return apiLabs;
+          const apiLabIds = new Set(apiLabs.map((l: any) => l.id));
+          const missingDefaults = DEFAULT_PUBLIC_LABS.filter(d => !apiLabIds.has(d.id));
+          return [...apiLabs, ...missingDefaults];
         }
       }
       return DEFAULT_PUBLIC_LABS;

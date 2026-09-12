@@ -179,7 +179,7 @@ export const PhetFreeFallLab: React.FC = () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMapping = (THREE as any).ACESFilmicToneMapping ?? 3;
     renderer.toneMappingExposure = 1.3;
 
     container.innerHTML = '';
@@ -216,7 +216,7 @@ export const PhetFreeFallLab: React.FC = () => {
     table.receiveShadow = true;
     scene.add(table);
 
-    const grid = new THREE.GridHelper(3.8, 19, '#334155', '#0f172a');
+    const grid = new THREE.GridHelper(3.8, 19, new THREE.Color('#334155'), new THREE.Color('#0f172a'));
     grid.position.set(0, 0.001, 0);
     scene.add(grid);
 

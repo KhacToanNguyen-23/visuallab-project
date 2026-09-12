@@ -139,9 +139,8 @@ export const SoundResonanceLab: React.FC = () => {
       transparent: true,
       opacity: 0.3,
       roughness: 0.1,
-      transmission: 0.9,
-      thickness: 1.2,
       side: THREE.DoubleSide,
+      ...({ transmission: 0.9, thickness: 1.2 } as any),
     });
     const glassTube = new THREE.Mesh(glassGeo, glassMat);
     scene.add(glassTube);

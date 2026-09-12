@@ -7,6 +7,7 @@ import { PhetSpringLab } from '../simulations/PhetSpringLab';
 import { PhetEmfLab } from '../simulations/PhetEmfLab';
 import { WaveInterferenceLab } from '../simulations/WaveInterferenceLab';
 import { FreeFallCanvas } from '../simulations/FreeFallCanvas';
+import { SpeedMeasurementLab } from '../simulations/speed-measurement/SpeedMeasurementLab';
 import { GradeResultView } from './GradeResultView';
 import App from '../../App';
 
@@ -110,6 +111,9 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
     }
     if (t.includes('WAVE') || t.includes('SÓNG') || t.includes('NHIỆT DUNG') || t.includes('HEAT')) {
       return <WaveInterferenceLab />;
+    }
+    if (t.includes('SPEED') || t.includes('TỐC ĐỘ') || t.includes('CHUYỂN ĐỘNG')) {
+      return <SpeedMeasurementLab />;
     }
     if (t.includes('FREE_FALL') || t.includes('RƠI TỰ DO')) {
       return (

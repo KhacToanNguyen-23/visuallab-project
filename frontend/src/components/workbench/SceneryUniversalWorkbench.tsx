@@ -1,19 +1,21 @@
 import React, { useEffect, useRef } from 'react';
-import { Display, Node, Path, Circle, Rectangle, Line, Text, DragListener } from 'scenerystack/scenery';
+import { Display, Node, Path, Circle, Rectangle, Line, Text } from 'scenerystack/scenery';
 import { Shape } from 'scenerystack/kite';
 import { Vector2 } from 'scenerystack/dot';
-import type { PlacedItem } from './types';
+import type { PlacedItem, PaletteItemDef } from './types';
 
 interface SceneryUniversalWorkbenchProps {
   placedItems: PlacedItem[];
   onRemoveItem: (id: string) => void;
   onUpdateItemPosition: (id: string, x: number, y: number) => void;
+  onAddItemAtPos?: (itemDef: PaletteItemDef, x: number, y: number) => void;
 }
 
 export const SceneryUniversalWorkbench: React.FC<SceneryUniversalWorkbenchProps> = ({
   placedItems,
   onRemoveItem,
   onUpdateItemPosition,
+  onAddItemAtPos,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const displayRef = useRef<Display | null>(null);
@@ -113,17 +115,42 @@ export const SceneryUniversalWorkbench: React.FC<SceneryUniversalWorkbenchProps>
     display.updateDisplay();
   }, [placedItems, onRemoveItem, onUpdateItemPosition]);
 
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (!containerRef.current || !onAddItemAtPos) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = Math.max(40, Math.min(860, e.clientX - rect.left));
+    const y = Math.max(40, Math.min(560, e.clientY - rect.top));
+
+    try {
+      const dataStr = e.dataTransfer.getData('application/json');
+      if (dataStr) {
+        const itemDef = JSON.parse(dataStr);
+        onAddItemAtPos(itemDef, x, y);
+      }
+    } catch (err) {
+      console.error('Failed to drop item:', err);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  };
+
   return (
     <div className="flex-1 h-full bg-slate-950 flex flex-col justify-center items-center relative overflow-hidden select-none p-4">
       <div
         ref={containerRef}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
         className="w-[900px] h-[600px] relative rounded-2xl shadow-2xl overflow-hidden border border-slate-800 touch-none select-none"
       />
 
       {placedItems.length === 0 && (
         <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center text-slate-500 gap-2">
           <span className="text-4xl animate-bounce">👈</span>
-          <p className="text-sm font-bold">Hãy chọn linh kiện từ bảng dụng cụ bên trái để thêm vào bàn thí nghiệm</p>
+          <p className="text-sm font-bold">Hãy chọn hoặc kéo thả linh kiện từ bảng dụng cụ vào bàn thí nghiệm</p>
         </div>
       )}
     </div>
@@ -240,25 +267,133 @@ function createSceneryNodeForItem(
   titleText.centerX = 0;
   containerNode.addChild(titleText);
 
-  // Scenery DragListener for smooth 60 FPS drag interaction
-  containerNode.addInputListener(
-    new DragListener({
-      translateNode: true,
-      start: () => {
-        draggingSetRef.current?.add(item.id);
-        containerNode.moveToFront();
-      },
-      drag: () => {
-        displayRef.current?.updateDisplay();
-      },
-      end: () => {
-        draggingSetRef.current?.delete(item.id);
-        onUpdateItemPosition(item.id, containerNode.translation.x, containerNode.translation.y);
-        displayRef.current?.updateDisplay();
-      },
-    })
-  );
+  // Add Visual Snap Ports (Connection Hooks/Terminals)
+  const snapPorts = getItemSnapPorts(item);
+  snapPorts.forEach(port => {
+    const portDot = new Circle(5, {
+      x: port.localX,
+      y: port.localY,
+      fill: '#06B6D4',
+      stroke: '#38BDF8',
+      lineWidth: 1.5,
+    });
+    containerNode.addChild(portDot);
+  });
+
+  // Delete Button Node (X badge at top-right)
+  const deleteBtn = new Rectangle(24, -38, 18, 18, {
+    fill: '#EF4444',
+    stroke: '#B91C1C',
+    lineWidth: 1,
+    cornerRadius: 9,
+    cursor: 'pointer',
+  });
+  const deleteCross = new Text('×', { fill: '#FFFFFF', font: 'bold 13px sans-serif' });
+  deleteCross.center = new Vector2(33, -29);
+  deleteBtn.addChild(deleteCross);
+
+  deleteBtn.addInputListener({
+    down: (event) => {
+      event.handle();
+      _onRemoveItem(item.id);
+    },
+  });
+  containerNode.addChild(deleteBtn);
+
+  // Scenery Pointer InputListener for direct, robust 60 FPS drag interaction
+  let isDragging = false;
+  let dragOffset = new Vector2(0, 0);
+
+  containerNode.addInputListener({
+    down: (event: any) => {
+      if (event.trail && event.trail.nodes.includes(deleteBtn)) return;
+      isDragging = true;
+      draggingSetRef.current?.add(item.id);
+      containerNode.moveToFront();
+
+      const point = event.pointer.point;
+      dragOffset = new Vector2(point.x - containerNode.translation.x, point.y - containerNode.translation.y);
+    },
+    drag: (event: any) => {
+      if (!isDragging) return;
+      const point = event.pointer.point;
+      const newX = Math.max(20, Math.min(880, point.x - dragOffset.x));
+      const newY = Math.max(20, Math.min(580, point.y - dragOffset.y));
+
+      containerNode.translation = new Vector2(newX, newY);
+      item.x = newX;
+      item.y = newY;
+      displayRef.current?.updateDisplay();
+    },
+    up: () => {
+      if (!isDragging) return;
+      isDragging = false;
+      draggingSetRef.current?.delete(item.id);
+      onUpdateItemPosition(item.id, containerNode.translation.x, containerNode.translation.y);
+      displayRef.current?.updateDisplay();
+    },
+    cancel: () => {
+      if (!isDragging) return;
+      isDragging = false;
+      draggingSetRef.current?.delete(item.id);
+      onUpdateItemPosition(item.id, containerNode.translation.x, containerNode.translation.y);
+      displayRef.current?.updateDisplay();
+    },
+  } as any);
 
   return containerNode;
+}
+
+interface ItemSnapPort {
+  id: string;
+  itemId: string;
+  localX: number;
+  localY: number;
+  type: string;
+}
+
+function getItemSnapPorts(item: PlacedItem): ItemSnapPort[] {
+  switch (item.type) {
+    case 'SPRING':
+      return [
+        { id: `${item.id}-top`, itemId: item.id, localX: 0, localY: -10, type: 'SPRING_HOOK' },
+        { id: `${item.id}-bottom`, itemId: item.id, localX: 0, localY: 120, type: 'SPRING_HOOK' },
+      ];
+    case 'MASS_BOB':
+      return [
+        { id: `${item.id}-top`, itemId: item.id, localX: 0, localY: -24, type: 'MASS_LOOP' },
+        { id: `${item.id}-bottom`, itemId: item.id, localX: 0, localY: 24, type: 'MASS_LOOP' },
+      ];
+    case 'BATTERY':
+      return [
+        { id: `${item.id}-left`, itemId: item.id, localX: -45, localY: 0, type: 'CIRCUIT_TERMINAL' },
+        { id: `${item.id}-right`, itemId: item.id, localX: 45, localY: 0, type: 'CIRCUIT_TERMINAL' },
+      ];
+    case 'BULB':
+      return [
+        { id: `${item.id}-left`, itemId: item.id, localX: -10, localY: 22, type: 'CIRCUIT_TERMINAL' },
+        { id: `${item.id}-right`, itemId: item.id, localX: 10, localY: 22, type: 'CIRCUIT_TERMINAL' },
+      ];
+    case 'WIRE':
+      return [
+        { id: `${item.id}-left`, itemId: item.id, localX: -30, localY: 0, type: 'CIRCUIT_TERMINAL' },
+        { id: `${item.id}-right`, itemId: item.id, localX: 30, localY: 0, type: 'CIRCUIT_TERMINAL' },
+      ];
+    case 'RESISTOR':
+      return [
+        { id: `${item.id}-left`, itemId: item.id, localX: -40, localY: 0, type: 'CIRCUIT_TERMINAL' },
+        { id: `${item.id}-right`, itemId: item.id, localX: 40, localY: 0, type: 'CIRCUIT_TERMINAL' },
+      ];
+    case 'LASER':
+      return [
+        { id: `${item.id}-emitter`, itemId: item.id, localX: 40, localY: 0, type: 'OPTIC_SURFACE' },
+      ];
+    case 'CONVEX_LENS':
+      return [
+        { id: `${item.id}-center`, itemId: item.id, localX: 0, localY: 0, type: 'OPTIC_SURFACE' },
+      ];
+    default:
+      return [];
+  }
 }
 

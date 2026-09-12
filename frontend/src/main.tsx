@@ -38,7 +38,7 @@ const PhetFreeFallLab = lazy(() => import('./components/simulations/PhetFreeFall
 const PhetVietnamLabWrapper = lazy(() => import('./components/simulations/PhetVietnamLabWrapper').then(m => ({ default: m.PhetVietnamLabWrapper })));
 const WaveInterferenceLab = lazy(() => import('./components/simulations/WaveInterferenceLab').then(m => ({ default: m.WaveInterferenceLab })));
 const SoundResonanceLab = lazy(() => import('./components/simulations/SoundResonanceLab').then(m => ({ default: m.SoundResonanceLab })));
-const SpeedMeasurementLab = lazy(() => import('./components/simulations/SpeedMeasurementLab').then(m => ({ default: m.SpeedMeasurementLab })));
+const SpeedMeasurementLab = lazy(() => import('./components/simulations/speed-measurement/SpeedMeasurementLab').then(m => ({ default: m.SpeedMeasurementLab })));
 const SlidingFrictionLab = lazy(() => import('./components/simulations/SlidingFrictionLab').then(m => ({ default: m.SlidingFrictionLab })));
 const MomentumCollisionLab = lazy(() => import('./components/simulations/MomentumCollisionLab').then(m => ({ default: m.MomentumCollisionLab })));
 const SpecificHeatLab = lazy(() => import('./components/simulations/SpecificHeatLab').then(m => ({ default: m.SpecificHeatLab })));
@@ -130,8 +130,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 </Route>
 
                 {/* Universal Workbench Route */}
-                <Route path="/workbench" element={<UniversalWorkbenchPage />} />
-                <Route path="/workbench/universal" element={<UniversalWorkbenchPage />} />
+                <Route path="/workbench" element={<LabErrorBoundary><UniversalWorkbenchPage /></LabErrorBoundary>} />
+                <Route path="/workbench/universal" element={<LabErrorBoundary><UniversalWorkbenchPage /></LabErrorBoundary>} />
 
                 {/* Individual Simulation Lab Engine Routes */}
                 <Route path="/lab/speed-measurement" element={<LabErrorBoundary><SpeedMeasurementLab /></LabErrorBoundary>} />
