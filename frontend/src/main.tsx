@@ -37,6 +37,13 @@ const PhetFreeFallLab = lazy(() => import('./components/simulations/PhetFreeFall
 const PhetVietnamLabWrapper = lazy(() => import('./components/simulations/PhetVietnamLabWrapper').then(m => ({ default: m.PhetVietnamLabWrapper })));
 const WaveInterferenceLab = lazy(() => import('./components/simulations/WaveInterferenceLab').then(m => ({ default: m.WaveInterferenceLab })));
 const SoundResonanceLab = lazy(() => import('./components/simulations/SoundResonanceLab').then(m => ({ default: m.SoundResonanceLab })));
+const SpeedMeasurementLab = lazy(() => import('./components/simulations/SpeedMeasurementLab').then(m => ({ default: m.SpeedMeasurementLab })));
+const SlidingFrictionLab = lazy(() => import('./components/simulations/SlidingFrictionLab').then(m => ({ default: m.SlidingFrictionLab })));
+const MomentumCollisionLab = lazy(() => import('./components/simulations/MomentumCollisionLab').then(m => ({ default: m.MomentumCollisionLab })));
+const SpecificHeatLab = lazy(() => import('./components/simulations/SpecificHeatLab').then(m => ({ default: m.SpecificHeatLab })));
+const LatentHeatLab = lazy(() => import('./components/simulations/LatentHeatLab').then(m => ({ default: m.LatentHeatLab })));
+const BoyleMariotteLab = lazy(() => import('./components/simulations/BoyleMariotteLab').then(m => ({ default: m.BoyleMariotteLab })));
+const InductionLab = lazy(() => import('./components/simulations/InductionLab').then(m => ({ default: m.InductionLab })));
 
 import App from './App.tsx';
 import './index.css';
@@ -122,15 +129,22 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 </Route>
 
                 {/* Individual Simulation Lab Engine Routes */}
-                <Route path="/lab/dc-circuit" element={<LabErrorBoundary><App /></LabErrorBoundary>} />
-                <Route path="/lab/simple-pendulum" element={<LabErrorBoundary><PhetPendulumLab /></LabErrorBoundary>} />
+                <Route path="/lab/speed-measurement" element={<LabErrorBoundary><SpeedMeasurementLab /></LabErrorBoundary>} />
+                <Route path="/lab/free-fall" element={<LabErrorBoundary><PhetFreeFallLab /></LabErrorBoundary>} />
+                <Route path="/lab/sliding-friction" element={<LabErrorBoundary><SlidingFrictionLab /></LabErrorBoundary>} />
+                <Route path="/lab/momentum-collision" element={<LabErrorBoundary><MomentumCollisionLab /></LabErrorBoundary>} />
                 <Route path="/lab/spring-mass" element={<LabErrorBoundary><PhetSpringLab /></LabErrorBoundary>} />
+                <Route path="/lab/simple-pendulum" element={<LabErrorBoundary><PhetPendulumLab /></LabErrorBoundary>} />
+                <Route path="/lab/sound-resonance" element={<LabErrorBoundary><SoundResonanceLab /></LabErrorBoundary>} />
                 <Route path="/lab/emf-internal-r" element={<LabErrorBoundary><PhetEmfLab /></LabErrorBoundary>} />
                 <Route path="/lab/refraction" element={<LabErrorBoundary><PhetRefractionLab /></LabErrorBoundary>} />
-                <Route path="/lab/free-fall" element={<LabErrorBoundary><PhetFreeFallLab /></LabErrorBoundary>} />
-                <Route path="/lab/ohm-vietnam" element={<LabErrorBoundary><PhetVietnamLabWrapper /></LabErrorBoundary>} />
                 <Route path="/lab/wave-interference" element={<LabErrorBoundary><WaveInterferenceLab /></LabErrorBoundary>} />
-                <Route path="/lab/sound-resonance" element={<LabErrorBoundary><SoundResonanceLab /></LabErrorBoundary>} />
+                <Route path="/lab/specific-heat" element={<LabErrorBoundary><SpecificHeatLab /></LabErrorBoundary>} />
+                <Route path="/lab/latent-heat" element={<LabErrorBoundary><LatentHeatLab /></LabErrorBoundary>} />
+                <Route path="/lab/boyle-mariotte" element={<LabErrorBoundary><BoyleMariotteLab /></LabErrorBoundary>} />
+                <Route path="/lab/induction" element={<LabErrorBoundary><InductionLab /></LabErrorBoundary>} />
+                <Route path="/lab/dc-circuit" element={<LabErrorBoundary><App /></LabErrorBoundary>} />
+                <Route path="/lab/ohm-vietnam" element={<LabErrorBoundary><PhetVietnamLabWrapper /></LabErrorBoundary>} />
                 <Route path="/test-sound" element={<LabErrorBoundary><SoundResonanceLab /></LabErrorBoundary>} />
 
                 {/* Backward compatibility routes */}

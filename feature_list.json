@@ -308,5 +308,55 @@
     "evidence": "Verified via mvnw compile with zero Java compilation errors",
     "notes": "",
     "priority": "P1"
+  },
+  {
+    "id": "world-class-live-graphing",
+    "title": "Dynamic live graphing panel and multimodal feedback",
+    "user_visible_behavior": "Realtime dynamic plot rendering alongside physics simulation",
+    "verification_command": "DataTableAndGraph renders live SVG curve from data points",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "world-class-radar-competency",
+    "title": "Radar chart 3-pillar competency breakdown in grade view",
+    "user_visible_behavior": "GradeResultView renders 3-axis radar chart for operation, error, and theory scores",
+    "verification_command": "GradeResultView displays SVG radar chart with score metrics",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "master-dacta-14-labs",
+    "title": "Standardize 14 official GDPT 2018 physics practical labs from DacTa.md",
+    "user_visible_behavior": "Catalog, landing page, and workspaces display exact 14 official physics practical labs",
+    "verification_command": "DEFAULT_PUBLIC_LABS contains 14 official labs from DacTa.md",
+    "status": "passing",
+    "evidence": "Verified via npm run build (tsc -b && vite build) with zero compilation errors",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "master-realistic-lab-ui",
+    "title": "Photorealistic engineering lab equipment UI with metallics and glass sheen",
+    "user_visible_behavior": "Canvas 2D apparatus renders with metallic gradients, glass sheen, and filament incandescence",
+    "verification_command": "CanvasRenderer renders metallic gradients and filament glow without cartoon lines",
+    "status": "passing",
+    "evidence": "Verified via npm run build (tsc -b && vite build) with zero compilation errors",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "master-world-class-live-graph-radar",
+    "title": "World-class live SVG graphing panel and 3-axis competency radar chart",
+    "user_visible_behavior": "Realtime dynamic plot rendering and 3-axis radar chart in grade view",
+    "verification_command": "DataTableAndGraph renders live SVG curve and GradeResultView renders radar chart",
+    "status": "passing",
+    "evidence": "Verified via npm run build (tsc -b && vite build) with zero compilation errors",
+    "notes": "",
+    "priority": "P1"
   }
 ]

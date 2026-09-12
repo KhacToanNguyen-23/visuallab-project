@@ -5,6 +5,41 @@ export const getLabRoute = (labId?: string, title?: string, fallback?: string): 
   const id = (labId || '').toLowerCase();
   const t = (title || '').toLowerCase();
 
+  // Speed Measurement (Bài 6 Lớp 10)
+  if (id.includes('speed-measurement') || t.includes('tốc độ vật chuyển động')) {
+    return '/lab/speed-measurement';
+  }
+
+  // Sliding Friction (Bài 21 Lớp 10)
+  if (id.includes('friction') || t.includes('ma sát trượt')) {
+    return '/lab/sliding-friction';
+  }
+
+  // Momentum Collision (Bài 30 Lớp 10)
+  if (id.includes('momentum') || t.includes('động lượng') || t.includes('va chạm')) {
+    return '/lab/momentum-collision';
+  }
+
+  // Specific Heat (Bài 3 Lớp 12)
+  if (id.includes('specific-heat') || t.includes('nhiệt dung riêng')) {
+    return '/lab/specific-heat';
+  }
+
+  // Latent Heat (Bài 4 Lớp 12)
+  if (id.includes('latent-heat') || t.includes('nhiệt nóng chảy')) {
+    return '/lab/latent-heat';
+  }
+
+  // Boyle Mariotte (Bài 7 Lớp 12)
+  if (id.includes('boyle') || t.includes('đẳng nhiệt') || t.includes('boyle - mariotte')) {
+    return '/lab/boyle-mariotte';
+  }
+
+  // Induction (Bài 12 Lớp 12)
+  if (id.includes('induction') || t.includes('cảm ứng điện từ')) {
+    return '/lab/induction';
+  }
+
   // Pendulum
   if (id.includes('pendulum') || id.includes('con-lac-don') || id === 'lab-6' || t.includes('con lắc đơn')) {
     return '/lab/simple-pendulum';
@@ -69,16 +104,14 @@ export const getLabRoute = (labId?: string, title?: string, fallback?: string): 
     return '/lab/sound-resonance';
   }
 
-  // Wave / Sound / Specific Heat
+  // Wave / Sound / Wave Interference
   if (
     id.includes('wave') ||
     id.includes('sound') ||
     id.includes('interference') ||
-    id.includes('heat') ||
     id === 'lab-4' ||
     t.includes('giao thoa') ||
-    t.includes('sóng') ||
-    t.includes('nhiệt dung')
+    t.includes('sóng')
   ) {
     return '/lab/wave-interference';
   }
