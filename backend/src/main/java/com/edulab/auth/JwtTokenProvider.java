@@ -1,5 +1,6 @@
 package com.edulab.auth;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
@@ -10,14 +11,15 @@ import java.util.Base64;
 @Component
 public class JwtTokenProvider {
 
-    private static final String SECRET_KEY = "EduLabPhysicsSecretKeyForJwtTokenGeneration2026";
+    @Value("${jwt.secret:EduLabPhysicsSecretKeyForJwtTokenGeneration2026}")
+    private String jwtSecret;
 
     public String generateToken(String userId, String email) {
         String header = base64UrlEncode("{\"alg\":\"HS256\",\"typ\":\"JWT\"}");
         long exp = (System.currentTimeMillis() / 1000) + 86400; // 24 hours
         String payload = base64UrlEncode(String.format("{\"sub\":\"%s\",\"email\":\"%s\",\"exp\":%d}", userId, email, exp));
 
-        String signature = sign(header + "." + payload, SECRET_KEY);
+        String signature = sign(header + "." + payload, jwtSecret);
         return header + "." + payload + "." + signature;
     }
 
@@ -26,7 +28,7 @@ public class JwtTokenProvider {
             String[] parts = token.split("\\.");
             if (parts.length != 3) return false;
 
-            String signature = sign(parts[0] + "." + parts[1], SECRET_KEY);
+            String signature = sign(parts[0] + "." + parts[1], jwtSecret);
             return signature.equals(parts[2]);
         } catch (Exception e) {
             return false;

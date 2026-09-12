@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@react-oauth/google": "^0.13.5",
+    "@types/three": "^0.185.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3",
-    "scenerystack": "^3.0.0"
+    "scenerystack": "^3.0.0",
+    "three": "^0.186.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",

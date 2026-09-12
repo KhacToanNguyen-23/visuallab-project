@@ -16,6 +16,7 @@ const PRESET_LABS: PresetLabItem[] = [
   { id: 'sim-free-fall', title: 'Đo Gia Tốc Rơi Tự Do g', domain: 'Cơ Học', description: 'Bi sắt rơi qua cổng quang điện, đo t và tự động tính gia tốc g.', route: '/lab/free-fall', badge: 'CƠ HỌC' },
   { id: 'sim-simple-pendulum', title: 'Con Lắc Đơn & Dao Động Điều Hòa', domain: 'Cơ Học', description: 'Khảo sát chu kỳ dao động T = 2pi*sqrt(l/g) của con lắc đơn.', route: '/lab/simple-pendulum', badge: 'CƠ HỌC' },
   { id: 'sim-specific-heat', title: 'Đo Nhiệt Dung Riêng c Của Nước', domain: 'Sóng - Nhiệt', description: 'Đo công suất Q = P*t và độ tăng nhiệt độ delta T.', route: '/lab/wave-interference', badge: 'SÓNG - NHIỆT' },
+  { id: 'sim-sound-resonance', title: 'Đo Tốc Độ Truyền Âm (Cộng Hưởng Âm Thanh)', domain: 'Sóng - Nhiệt', description: 'Mô phỏng 3D ống cộng hưởng âm thanh, điều chỉnh cột nước và máy phát tần số.', route: '/lab/sound-resonance', badge: 'SÓNG - NHIỆT' },
   { id: 'sim-refraction', title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ', domain: 'Quang Học', description: 'Chiếu laser qua môi trường n1, n2 và xác định góc khúc xạ.', route: '/lab/refraction', badge: 'QUANG HỌC' },
 ];
 

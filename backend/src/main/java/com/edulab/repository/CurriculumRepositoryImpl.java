@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class InMemoryCurriculumRepository implements CurriculumRepository {
+public class CurriculumRepositoryImpl implements CurriculumRepository {
 
     private final List<ExperimentTopic> topics;
 
-    public InMemoryCurriculumRepository() {
+    public CurriculumRepositoryImpl() {
         SimulationPreset dcCircuitBasic = new SimulationPreset(
             "preset-dc-basic",
             "Mạch Điện Đơn Giản (Định luật Ohm)",

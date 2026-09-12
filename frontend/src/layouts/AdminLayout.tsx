@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { AdminSidebar } from './AdminSidebar';
-import { AdminHeader } from './AdminHeader';
-import { EditProfileModal } from '../auth/EditProfileModal';
+import { AdminSidebar } from '../components/admin/AdminSidebar';
+import { AdminHeader } from '../components/admin/AdminHeader';
+import { EditProfileModal } from '../components/auth/EditProfileModal';
 
 export const AdminLayout: React.FC = () => {
   const navigate = useNavigate();

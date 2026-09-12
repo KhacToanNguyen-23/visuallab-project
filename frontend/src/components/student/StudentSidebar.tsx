@@ -84,7 +84,7 @@ export const StudentSidebar: React.FC<StudentSidebarProps> = ({
       >
         <div
           className="flex items-center gap-3 cursor-pointer overflow-hidden whitespace-nowrap"
-          onClick={() => handleNavClick('/')}
+          onClick={() => { window.location.href = '/'; }}
         >
           <div
             className="w-9 h-9 rounded-lg font-black text-white text-sm flex items-center justify-center shrink-0 shadow-xs tracking-wider"

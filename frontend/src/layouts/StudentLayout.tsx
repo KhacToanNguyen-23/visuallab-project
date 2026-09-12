@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { StudentSidebar } from './StudentSidebar';
-import { StudentHeader } from './StudentHeader';
-import { EditProfileModal } from '../auth/EditProfileModal';
+import { StudentSidebar } from '../components/student/StudentSidebar';
+import { StudentHeader } from '../components/student/StudentHeader';
+import { EditProfileModal } from '../components/auth/EditProfileModal';
 
 export const StudentLayout: React.FC = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);

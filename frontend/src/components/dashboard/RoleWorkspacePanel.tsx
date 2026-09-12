@@ -6,6 +6,7 @@ import { ClassJoinModal } from './ClassJoinModal';
 import { PHYSICS_DOMAINS } from '../../config/domainsConfig';
 import { classService } from '../../services/classService';
 import { assignmentService } from '../../services/assignmentService';
+import { getLabRoute } from '../../utils/labRoutes';
 
 interface RoleWorkspacePanelProps {
   user: User | null;
@@ -133,6 +134,14 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       domain: 'Sóng & Nhiệt Học',
       description: 'Đo công suất Q = P*t và độ tăng nhiệt độ delta T để xác định c.',
       route: '/lab/wave-interference',
+      badge: '[SÓNG - NHIỆT]'
+    },
+    {
+      id: 'sim-sound-resonance',
+      title: 'Đo Tốc Độ Truyền Âm (Cộng Hưởng Âm Thanh)',
+      domain: 'Sóng & Nhiệt Học',
+      description: 'Mô phỏng 3D ống cộng hưởng âm thanh, điều chỉnh cột nước và loa phát tần số.',
+      route: '/lab/sound-resonance',
       badge: '[SÓNG - NHIỆT]'
     },
     {

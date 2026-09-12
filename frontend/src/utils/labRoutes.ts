@@ -62,6 +62,18 @@ export const getLabRoute = (labId?: string, title?: string, fallback?: string): 
     return '/lab/ohm-vietnam';
   }
 
+  // Sound / Acoustic Resonance
+  if (
+    id.includes('sound-resonance') ||
+    id.includes('acoustic') ||
+    id === '11-b5' ||
+    id === 'sim-sound-resonance' ||
+    t.includes('cộng hưởng') ||
+    t.includes('truyền âm')
+  ) {
+    return '/lab/sound-resonance';
+  }
+
   // Wave / Sound / Specific Heat
   if (
     id.includes('wave') ||

@@ -1,6 +1,7 @@
 import { getLabRoute } from '../utils/labRoutes';
+import { API_BASE_URL } from '../config/api';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+const API_URL = API_BASE_URL;
 
 export interface PublicLabItem {
   id: string;
@@ -94,6 +95,19 @@ export const DEFAULT_PUBLIC_LABS: PublicLabItem[] = [
     tags: ['GDPT 2018', 'Laser', 'Thấu kính'],
     thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=500&auto=format&fit=crop&q=60',
     route: '/lab/refraction',
+  },
+  {
+    id: 'sim-sound-resonance',
+    title: 'Đo Tốc Độ Truyền Âm (Cộng Hưởng Âm Thanh)',
+    subject: 'Vật lý',
+    domain: 'Sóng & Âm Học',
+    grade: 'Lớp 11',
+    difficulty: 'MEDIUM',
+    chapter: 'Chương 2: Sóng Âm',
+    description: 'Mô phỏng 3D ống thủy tinh cộng hưởng âm thanh, điều chỉnh cột nước và loa tần số Tone.js để đo tốc độ truyền âm v.',
+    tags: ['GDPT 2018', 'Three.js', 'Tone.js', 'Âm học'],
+    thumbnail: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=60',
+    route: '/lab/sound-resonance',
   },
   {
     id: 'workbench-universal',

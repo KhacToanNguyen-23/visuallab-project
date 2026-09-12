@@ -1,6 +1,7 @@
 import type { Classroom, ClassEnrollment } from '../types/class';
+import { API_BASE_URL } from '../config/api';
 
-const API_BASE = 'http://localhost:8080/api/classes';
+const API_BASE = `${API_BASE_URL}/classes`;
 
 export const classService = {
   async createClass(name: string, description: string, teacherId: string, teacherName: string): Promise<Classroom> {
