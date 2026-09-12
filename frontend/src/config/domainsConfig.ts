@@ -134,7 +134,7 @@ export const GDPT2018_CURRICULUM_TREE: GradeNode[] = [
         domainId: 'WAVE_THERMO',
         domainBadge: '[SÓNG - NHIỆT]',
         labs: [
-          { id: 'sim-sound-speed', title: 'Đo Tốc Độ Truyền Âm Trong Không Khí', description: 'Sử dụng ống cộng hưởng âm và âm thoa/máy phát tần số.', engineType: 'PARAMETER_STUDIO', route: '/lab/wave-interference' },
+          { id: 'sim-sound-speed', title: 'Đo Tốc Độ Truyền Âm Trong Không Khí', description: 'Sử dụng ống cộng hưởng âm và âm thoa/máy phát tần số.', engineType: 'PARAMETER_STUDIO', route: '/lab/sound-resonance' },
           { id: 'sim-young-interference', title: 'Đo Bước Sóng Ánh Sáng Giao Thoa Khe Young', description: 'Chiếu laser qua 2 khe hẹp, đo khoảng vân i để tính bước sóng lambda.', engineType: 'PARAMETER_STUDIO', route: '/lab/wave-interference' }
         ]
       },

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { assignmentService } from '../../services/assignmentService';
 import type { Assignment, StudentAssignmentInstance, AssignmentSubmission } from '../../types/assignment';
-import { PhetPendulumLab } from '../simulation/PhetPendulumLab';
-import { PhetRefractionLab } from '../simulation/PhetRefractionLab';
-import { PhetSpringLab } from '../simulation/PhetSpringLab';
-import { PhetEmfLab } from '../simulation/PhetEmfLab';
-import { WaveInterferenceLab } from '../simulation/WaveInterferenceLab';
+import { PhetPendulumLab } from '../simulations/PhetPendulumLab';
+import { PhetRefractionLab } from '../simulations/PhetRefractionLab';
+import { PhetSpringLab } from '../simulations/PhetSpringLab';
+import { PhetEmfLab } from '../simulations/PhetEmfLab';
+import { WaveInterferenceLab } from '../simulations/WaveInterferenceLab';
 import { FreeFallCanvas } from '../simulations/FreeFallCanvas';
 import { GradeResultView } from './GradeResultView';
 import App from '../../App';

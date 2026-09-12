@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { TeacherSidebar } from './TeacherSidebar';
-import { TeacherHeader } from './TeacherHeader';
-import { EditProfileModal } from '../auth/EditProfileModal';
+import { TeacherSidebar } from '../components/teacher/TeacherSidebar';
+import { TeacherHeader } from '../components/teacher/TeacherHeader';
+import { EditProfileModal } from '../components/auth/EditProfileModal';
 
 export const TeacherLayout: React.FC = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);

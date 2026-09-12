@@ -137,6 +137,14 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       badge: '[SÓNG - NHIỆT]'
     },
     {
+      id: 'sim-sound-resonance',
+      title: 'Đo Tốc Độ Truyền Âm (Cộng Hưởng Âm Thanh)',
+      domain: 'Sóng & Nhiệt Học',
+      description: 'Mô phỏng 3D ống cộng hưởng âm thanh, điều chỉnh cột nước và loa phát tần số.',
+      route: '/lab/sound-resonance',
+      badge: '[SÓNG - NHIỆT]'
+    },
+    {
       id: 'sim-refraction',
       title: 'Khúc Xạ Ánh Sáng & Thấu Kính Hội Tụ',
       domain: 'Quang Học & Hiện Đại',

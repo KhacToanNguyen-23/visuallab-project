@@ -218,5 +218,95 @@
     "evidence": "Search input bar with instant filtering, clear button, active tag badges and empty state implemented",
     "notes": "",
     "priority": "P2"
+  },
+  {
+    "id": "free-fall-lab-redesign",
+    "title": "Redesign Free Fall Acceleration Lab (Lesson 14 Page 57 SGK Physics 10) PhET Style",
+    "user_visible_behavior": "Clean 2D PhET-style interactive physics stand for free fall with accurate acceleration g = 9.81 m/s², zero emojis, 5-step guided workflow, digital timer, and experimental table",
+    "verification_command": "Free fall simulation calculates g = 9.81 m/s² accurately, displays clean 2D physics stand, digital timer, and logs measurements to table",
+    "status": "passing",
+    "evidence": "SRSWorkflowPage.tsx & FreeFallCanvas.tsx redesigned with 2D physics stand, g = 9.81 m/s² accuracy, zero emojis, and theme variables",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "3d-sound-resonance-lab",
+    "title": "3D Sound & Acoustic Resonance Tube Lab (Lesson 5 Page 22 SGK Physics 11)",
+    "user_visible_behavior": "Three.js 3D glass resonance tube with Tone.js real audio frequency synthesizer, no-scroll fit-to-viewport layout, zero emojis, and speed of sound calculation v ≈ 340 m/s",
+    "verification_command": "SoundResonanceLab renders 3D glass tube, synthesizes audio sine wave at f Hz, and calculates speed of sound v ≈ 340 m/s",
+    "status": "passing",
+    "evidence": "SoundResonanceLab.tsx created with Three.js 3D glass tube, Tone.js/Web Audio API frequency generator, resonance amplification, zero emojis, and verified build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "3d-pendulum-lab",
+    "title": "3D Simple Pendulum & Harmonic Motion Lab (Lesson 1 Page 6 SGK Physics 11)",
+    "user_visible_behavior": "Three.js 3D metallic simple pendulum with Web Audio velocity pitch synthesizer, no-scroll fit-to-viewport layout, zero emojis, and energy conservation graphs",
+    "verification_command": "PhetPendulumLab renders 3D brass pendulum, synthesizes audio pitch with angular velocity, and calculates period T = 2pi*sqrt(l/g)",
+    "status": "passing",
+    "evidence": "PhetPendulumLab.tsx upgraded with Three.js 3D brass pendulum, Web Audio velocity pitch synth, zero emojis, no-scroll layout, and verified build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "frontend-role-protection",
+    "title": "Role-based route protection in ProtectedRoute.tsx",
+    "user_visible_behavior": "Students or unauthorized roles attempting to access /admin or /teacher routes are automatically redirected",
+    "verification_command": "ProtectedRoute validates allowedRoles against user.role and redirects unauthorized users",
+    "status": "passing",
+    "evidence": "Verified via npm run build (tsc -b && vite build) with zero errors",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "frontend-junk-file-cleanup",
+    "title": "Delete orphan .jsx proxy files and default assets",
+    "user_visible_behavior": "Cleaner codebase with 100% TypeScript files and no orphan JS wrappers",
+    "verification_command": "No .jsx files or default vite assets exist in frontend/src",
+    "status": "passing",
+    "evidence": "Verified via npm run build (tsc -b && vite build) with zero errors",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "frontend-api-config-centralization",
+    "title": "Centralize API_BASE_URL in src/config/api.ts",
+    "user_visible_behavior": "API base URL is configured via environment variable with fallback",
+    "verification_command": "AuthContext and services import API_BASE_URL from src/config/api.ts",
+    "status": "passing",
+    "evidence": "Verified via npm run build (tsc -b && vite build) with zero errors",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "frontend-layouts-relocation",
+    "title": "Relocate AdminLayout, TeacherLayout, StudentLayout to src/layouts/",
+    "user_visible_behavior": "Standardized layout architecture under src/layouts/",
+    "verification_command": "Layout files reside in src/layouts/ and imports in main.tsx are updated",
+    "status": "passing",
+    "evidence": "Verified via npm run build (tsc -b && vite build) with zero errors",
+    "notes": "",
+    "priority": "P2"
+  },
+  {
+    "id": "frontend-code-splitting",
+    "title": "Code splitting and LabErrorBoundary for simulation routes",
+    "user_visible_behavior": "Faster initial bundle loading and graceful WebGL runtime error handling",
+    "verification_command": "React.lazy and LabErrorBoundary wrapped around lab routes in main.tsx",
+    "status": "passing",
+    "evidence": "Verified via npm run build (tsc -b && vite build) with zero errors",
+    "notes": "",
+    "priority": "P2"
+  },
+  {
+    "id": "backend-security-hardening",
+    "title": "Centralize JWT config and remove orphan in-memory repositories",
+    "user_visible_behavior": "Backend uses environment variables for JWT configuration and cleans dead repositories",
+    "verification_command": "JwtTokenProvider reads token properties from application config and orphan in-memory repos are deleted",
+    "status": "passing",
+    "evidence": "Verified via mvnw compile with zero Java compilation errors",
+    "notes": "",
+    "priority": "P1"
   }
 ]
