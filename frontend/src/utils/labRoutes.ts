@@ -57,6 +57,18 @@ export const getLabRoute = (labId?: string, title?: string, fallback?: string): 
     return '/lab/free-fall';
   }
 
+  // Speed Measurement (Grade 10 Lesson 6)
+  if (
+    id.includes('speed') ||
+    id.includes('toc-do') ||
+    id === '10-b6' ||
+    id === 'sim-speed-measurement' ||
+    t.includes('đo tốc độ') ||
+    t.includes('tốc độ của vật')
+  ) {
+    return '/lab/speed-measurement';
+  }
+
   // PhET Vietnam Ohm
   if (id.includes('ohm-vietnam') || id.includes('phet-vietnam')) {
     return '/lab/ohm-vietnam';

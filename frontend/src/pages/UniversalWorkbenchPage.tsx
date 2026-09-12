@@ -35,6 +35,22 @@ export const UniversalWorkbenchPage: React.FC = () => {
     showToast(`Đã thêm ${itemDef.icon} ${itemDef.name} vào bàn thí nghiệm`);
   };
 
+  const handleAddItemAtPos = useCallback((itemDef: PaletteItemDef, x: number, y: number) => {
+    const newItem: PlacedItem = {
+      id: `item-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      type: itemDef.type,
+      name: itemDef.name,
+      icon: itemDef.icon,
+      category: itemDef.category,
+      x,
+      y,
+      config: itemDef.defaultConfig ? { ...itemDef.defaultConfig } : {},
+    };
+
+    setPlacedItems(prev => [...prev, newItem]);
+    showToast(`Đã thả ${itemDef.icon} ${itemDef.name} vào bàn thí nghiệm`);
+  }, []);
+
   const handleRemoveItem = useCallback((id: string) => {
     setPlacedItems(prev => prev.filter(item => item.id !== id));
     showToast('Đã xóa linh kiện khỏi bàn thí nghiệm');
@@ -131,6 +147,7 @@ export const UniversalWorkbenchPage: React.FC = () => {
           placedItems={placedItems}
           onRemoveItem={handleRemoveItem}
           onUpdateItemPosition={handleUpdateItemPosition}
+          onAddItemAtPos={handleAddItemAtPos}
         />
       </div>
 

@@ -240,7 +240,11 @@ export const WorkbenchPalette: React.FC<WorkbenchPaletteProps> = ({ onAddItem })
         {filteredItems.map(item => (
           <div
             key={item.type}
-            className={`p-3 rounded-xl border transition shadow-md hover:border-cyan-400/60 flex flex-col justify-between gap-2 bg-slate-950/70 hover:bg-slate-800/80 group`}
+            draggable={true}
+            onDragStart={(e) => {
+              e.dataTransfer.setData('application/json', JSON.stringify(item));
+            }}
+            className={`p-3 rounded-xl border transition shadow-md hover:border-cyan-400/60 flex flex-col justify-between gap-2 bg-slate-950/70 hover:bg-slate-800/80 group cursor-grab active:cursor-grabbing`}
           >
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2.5">

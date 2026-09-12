@@ -38,6 +38,7 @@ const PhetFreeFallLab = lazy(() => import('./components/simulations/PhetFreeFall
 const PhetVietnamLabWrapper = lazy(() => import('./components/simulations/PhetVietnamLabWrapper').then(m => ({ default: m.PhetVietnamLabWrapper })));
 const WaveInterferenceLab = lazy(() => import('./components/simulations/WaveInterferenceLab').then(m => ({ default: m.WaveInterferenceLab })));
 const SoundResonanceLab = lazy(() => import('./components/simulations/SoundResonanceLab').then(m => ({ default: m.SoundResonanceLab })));
+const SpeedMeasurementLab = lazy(() => import('./components/simulations/speed-measurement/SpeedMeasurementLab').then(m => ({ default: m.SpeedMeasurementLab })));
 
 import App from './App.tsx';
 import './index.css';
@@ -133,6 +134,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route path="/lab/ohm-vietnam" element={<LabErrorBoundary><PhetVietnamLabWrapper /></LabErrorBoundary>} />
                 <Route path="/lab/wave-interference" element={<LabErrorBoundary><WaveInterferenceLab /></LabErrorBoundary>} />
                 <Route path="/lab/sound-resonance" element={<LabErrorBoundary><SoundResonanceLab /></LabErrorBoundary>} />
+                <Route path="/lab/speed-measurement" element={<LabErrorBoundary><SpeedMeasurementLab /></LabErrorBoundary>} />
                 <Route path="/test-sound" element={<LabErrorBoundary><SoundResonanceLab /></LabErrorBoundary>} />
 
                 {/* Backward compatibility routes */}
