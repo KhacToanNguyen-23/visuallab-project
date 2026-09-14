@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataTableAndGraph, type MeasurementRecord } from '../workflow/DataTableAndGraph';
+import { soundEngine } from '../../utils/soundEngine';
 
 interface Measurement {
   trial: number;
@@ -25,6 +26,7 @@ export const InductionLab: React.FC = () => {
   const handleMoveIn = () => {
     if (isMoving) return;
     setIsMoving(true);
+    soundEngine.playMagneticHum(speed);
 
     const targetX = coilX - 20;
     const directionSign = pole === 'N-S' ? 1 : -1;
@@ -53,6 +55,7 @@ export const InductionLab: React.FC = () => {
   const handleMoveOut = () => {
     if (isMoving) return;
     setIsMoving(true);
+    soundEngine.playMagneticHum(speed);
 
     const directionSign = pole === 'N-S' ? -1 : 1;
     const peakIc = 15 * speed * directionSign;

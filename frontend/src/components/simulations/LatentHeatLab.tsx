@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataTableAndGraph, type MeasurementRecord } from '../workflow/DataTableAndGraph';
+import { soundEngine } from '../../utils/soundEngine';
 
 interface Measurement {
   trial: number;
@@ -28,6 +29,7 @@ export const LatentHeatLab: React.FC = () => {
   const handleStartMelting = () => {
     if (isMelting) return;
     setIsMelting(true);
+    soundEngine.playCollisionClack(0.7);
 
     const tCb = (waterMass * cWater * initialWaterTemp - iceMass * theoreticalLambda) / ((waterMass + iceMass) * cWater);
 

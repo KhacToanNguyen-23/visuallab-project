@@ -7,6 +7,7 @@ import type { ComponentData, ComponentType } from './engine/physics/CircuitSolve
 import { CanvasRenderer } from './engine/canvas/CanvasRenderer';
 import { exportCanvasToPNG } from './utils/exportImage';
 import { decodeStateFromURL, encodeStateToURL } from './utils/urlState';
+import { soundEngine } from './utils/soundEngine';
 
 // Default initial circuit: Battery + Bulb + Switch
 const INITIAL_COMPONENTS: ComponentData[] = [
@@ -102,6 +103,7 @@ export const App: React.FC = () => {
 
   // Handle adding new component
   const handleAddComponent = (type: ComponentType, defaultValue: number) => {
+    soundEngine.playButtonBeep();
     const id = `c-${Date.now()}`;
     const nextNodeA = `n-${Date.now()}-A`;
     const nextNodeB = `n-${Date.now()}-B`;

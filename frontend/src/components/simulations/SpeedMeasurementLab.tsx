@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataTableAndGraph, type MeasurementRecord } from '../workflow/DataTableAndGraph';
+import { soundEngine } from '../../utils/soundEngine';
 
 interface Measurement {
   trial: number;
@@ -45,9 +46,11 @@ export const SpeedMeasurementLab: React.FC = () => {
 
       if (currentX >= posE_Px && gateETime === null) {
         gateETime = elapsedSec;
+        soundEngine.playCollisionClack(0.8);
       }
       if (currentX >= posF_Px && gateFTime === null) {
         gateFTime = elapsedSec;
+        soundEngine.playCollisionClack(1.2);
         const deltaT = gateFTime - gateETime!;
         setTimerText(deltaT.toFixed(3));
       }

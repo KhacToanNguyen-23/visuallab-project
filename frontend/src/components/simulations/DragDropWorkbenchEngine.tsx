@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { soundEngine } from '../../utils/soundEngine';
 
 interface ComponentItem {
   id: string;
@@ -25,6 +26,7 @@ export const DragDropWorkbenchEngine: React.FC = () => {
   const [voltageU] = useState<number>(9.0);
 
   const handleAddComponent = (item: ComponentItem) => {
+    soundEngine.playBananaPlugSnap();
     const newItem = {
       id: `wb-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
       item,
@@ -36,12 +38,14 @@ export const DragDropWorkbenchEngine: React.FC = () => {
   };
 
   const handleRemoveComponent = (id: string) => {
+    soundEngine.playButtonBeep();
     const next = workbenchItems.filter(i => i.id !== id);
     setWorkbenchItems(next);
     recalculateCircuit(next, isCircuitClosed);
   };
 
   const handleToggleSwitch = () => {
+    soundEngine.playSwitchClick();
     const nextClosed = !isCircuitClosed;
     setIsCircuitClosed(nextClosed);
     recalculateCircuit(workbenchItems, nextClosed);

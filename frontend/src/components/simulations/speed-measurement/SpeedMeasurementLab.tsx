@@ -6,6 +6,7 @@ import { SpeedWorkbenchHudDock } from './SpeedWorkbenchHudDock';
 import { SpeedLabWizardWorksheet } from './SpeedLabWizardWorksheet';
 import { generateSimulatedMeasurement } from './speedLabEngine';
 import { ScreenshotCaptureModal } from '../../common/ScreenshotCaptureModal';
+import { soundEngine } from '../../../utils/soundEngine';
 
 interface LabTaskTarget {
   id: string;
@@ -106,11 +107,15 @@ export const SpeedMeasurementLab: React.FC = () => {
   const handleReleaseBall = () => {
     if (isBallReleased) return;
     setIsBallReleased(true);
+    soundEngine.playCollisionClack(0.7); // Unlatch & release sound
     setTotalTrialsCount(prev => prev + 1);
   };
 
   // Optical Sensor Callbacks
   const handleBallPassGateE = () => {
+    if (wireEConnected) {
+      soundEngine.playButtonBeep(); // Beep when sensor E breaks
+    }
     if (mode === 'AVERAGE_SPEED') {
       if (wireEConnected) {
         setIsTimerRunning(true);
@@ -130,6 +135,9 @@ export const SpeedMeasurementLab: React.FC = () => {
   };
 
   const handleBallPassGateF = () => {
+    if (wireFConnected) {
+      soundEngine.playButtonBeep(); // Beep when sensor F breaks
+    }
     if (mode === 'AVERAGE_SPEED' && wireFConnected && isTimerRunning) {
       setIsTimerRunning(false);
       const measured = generateSimulatedMeasurement(
@@ -144,6 +152,7 @@ export const SpeedMeasurementLab: React.FC = () => {
   };
 
   const handleBallReachEnd = () => {
+    soundEngine.playCollisionClack(1.2); // Steel ball impacts end stopper
     setIsTimerRunning(false);
   };
 

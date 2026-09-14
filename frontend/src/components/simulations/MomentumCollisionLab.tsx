@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataTableAndGraph, type MeasurementRecord } from '../workflow/DataTableAndGraph';
+import { soundEngine } from '../../utils/soundEngine';
 
 interface Measurement {
   trial: number;
@@ -62,6 +63,9 @@ export const MomentumCollisionLab: React.FC = () => {
         requestAnimationFrame(animate);
       } else {
         const dtAfter = elapsedSec - 1.0;
+        if (dtAfter < 0.05) {
+          soundEngine.playCollisionClack(1.5);
+        }
         setCar1X(250 + v1Final * 150 * dtAfter);
         setCar2X(400 + v2Final * 150 * dtAfter);
 

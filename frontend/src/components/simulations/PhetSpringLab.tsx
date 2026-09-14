@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { SpringEngine } from '../../engine/physics/spring-engine';
 import { useTheme } from '../../context/ThemeContext';
 import { ScreenshotCaptureModal } from '../common/ScreenshotCaptureModal';
+import { soundEngine } from '../../utils/soundEngine';
 
 type LabTabMode = 'explore' | 'measure' | 'graph' | 'challenge';
 
@@ -328,11 +329,8 @@ export const PhetSpringLab: React.FC = () => {
       createSpringMesh(topY, currentY);
 
       // Audio Frequency Pitch Modulation
-      if (oscRef.current && audioCtxRef.current && isAudioEnabled) {
-        const omega = Math.sqrt(config.stiffness / Math.max(0.01, config.mass));
-        const velocityAbs = Math.abs(state.velocity);
-        const pitchShift = velocityAbs * 80;
-        oscRef.current.frequency.setValueAtTime(150 + omega * 12 + pitchShift, audioCtxRef.current.currentTime);
+      if (isAudioEnabled) {
+        soundEngine.playSpringTwang(stiffness);
       }
 
       // Append to graph history buffer

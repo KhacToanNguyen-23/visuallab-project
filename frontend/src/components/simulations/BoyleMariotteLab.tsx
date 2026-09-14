@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataTableAndGraph, type MeasurementRecord } from '../workflow/DataTableAndGraph';
+import { soundEngine } from '../../utils/soundEngine';
 
 interface Measurement {
   trial: number;
@@ -25,6 +26,7 @@ export const BoyleMariotteLab: React.FC = () => {
   const handleCompressStep = () => {
     if (isCompressing || volume <= 10) return;
     setIsCompressing(true);
+    soundEngine.playGasHiss(currentPressure);
 
     const targetV = Math.max(10, volume - 5);
     const startTime = performance.now();

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { soundEngine } from '../../utils/soundEngine';
 
 interface LabStep {
   stepNumber: number;
@@ -77,6 +78,8 @@ export const WaveInterferenceLab: React.FC = () => {
 
     let animationFrameId: number;
     let time = 0;
+    const isResonant = Math.abs(numNodesExact - Math.round(numNodesExact)) < 0.15;
+    soundEngine.playResonanceTone(frequency * 5, isResonant);
 
     const render = () => {
       time += 0.08;

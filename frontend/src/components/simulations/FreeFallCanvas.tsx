@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { calculateFreeFallTime, calculateExperimentalG } from '../../engine/simulations/FreeFallSimulation';
+import { soundEngine } from '../../utils/soundEngine';
 
 interface Props {
   onRecordMeasurement: (s: number, t: number) => void;
@@ -18,6 +19,7 @@ export const FreeFallCanvas: React.FC<Props> = ({ onRecordMeasurement }) => {
   const handleStartFall = () => {
     if (isFalling) return;
     setIsFalling(true);
+    soundEngine.playCollisionClack(0.7); // Magnet release click
 
     const startY = 100; // Top position E1
     const targetY = 100 + distanceS * 400; // 400px per meter
@@ -38,6 +40,7 @@ export const FreeFallCanvas: React.FC<Props> = ({ onRecordMeasurement }) => {
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
+        soundEngine.playCollisionClack(1.2); // Steel ball strikes bottom optical sensor
         setIsFalling(false);
       }
     };

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
+import { soundEngine } from '../../utils/soundEngine';
 
 interface Props {
   onExportImage: () => void;
@@ -15,6 +16,7 @@ export const Header: React.FC<Props> = ({
   onLoadPreset,
 }) => {
   const { theme, toggleTheme } = useTheme();
+  const [isMutedState, setIsMutedState] = useState(() => soundEngine.getMuted());
 
   return (
     <header 
@@ -58,6 +60,31 @@ export const Header: React.FC<Props> = ({
           )}
           <span className="font-medium text-[11px] hidden sm:inline">
             {theme === 'light' ? 'Chế độ Tối' : 'Chế độ Sáng'}
+          </span>
+        </button>
+
+        {/* Audio Mute/Unmute Toggle Button */}
+        <button
+          onClick={() => {
+            const isMuted = soundEngine.toggleMute();
+            setIsMutedState(isMuted);
+          }}
+          className="p-1.5 rounded border transition-colors flex items-center justify-center cursor-pointer text-xs gap-1.5"
+          style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}
+          title={isMutedState ? 'Bật Âm Thanh' : 'Tắt Âm Thanh'}
+          aria-label="Toggle audio mute"
+        >
+          {!isMutedState ? (
+            <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            </svg>
+          ) : (
+            <svg className="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+            </svg>
+          )}
+          <span className="font-medium text-[11px] hidden sm:inline">
+            {isMutedState ? 'Tắt Tiếng' : 'Âm Thanh'}
           </span>
         </button>
 

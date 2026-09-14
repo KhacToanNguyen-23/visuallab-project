@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataTableAndGraph, type MeasurementRecord } from '../workflow/DataTableAndGraph';
+import { soundEngine } from '../../utils/soundEngine';
 
 interface Measurement {
   trial: number;
@@ -28,10 +29,12 @@ export const SpecificHeatLab: React.FC = () => {
   const handleStartHeating = () => {
     if (isHeating) return;
     setIsHeating(true);
+    soundEngine.playGasHiss(0.8);
 
     const initT = currentTemp;
 
     const interval = setInterval(() => {
+      soundEngine.playBoilingSizzle(currentTemp);
       setElapsedSec(prev => {
         const nextSec = prev + 1;
         const deltaT = (power * nextSec) / (waterMass * theoreticalC);

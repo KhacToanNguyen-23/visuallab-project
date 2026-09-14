@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { PendulumEngine } from '../../engine/physics/pendulum-engine';
 import { useTheme } from '../../context/ThemeContext';
 import { ScreenshotCaptureModal } from '../common/ScreenshotCaptureModal';
+import { soundEngine } from '../../utils/soundEngine';
 
 type LabTabMode = 'explore' | 'compare' | 'measure' | 'graph';
 
@@ -344,9 +345,9 @@ export const PhetPendulumLab: React.FC = () => {
       protractorGroup.visible = showProtractor;
 
       // Audio pitch shift with angular velocity
-      if (oscRef.current && audioCtxRef.current && isAudioEnabled) {
+      if (isAudioEnabled) {
         const velAbs = Math.abs(stateA.omega);
-        oscRef.current.frequency.setValueAtTime(180 + velAbs * 60, audioCtxRef.current.currentTime);
+        soundEngine.playAirSwoop(velAbs);
       }
 
       // Buffer history for graphs
