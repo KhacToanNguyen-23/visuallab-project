@@ -73,11 +73,10 @@ export const SpeedWorkbenchHudDock: React.FC<SpeedWorkbenchHudDockProps> = ({
   return (
     <div className="bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-3.5 shadow-2xl space-y-3">
       {/* Integrated Task Target Bar right inside HUD Dock */}
-      <div className={`p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 ${
-        isTaskMatched
+      <div className={`p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 ${isTaskMatched
           ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-200 shadow-[0_0_12px_rgba(16,185,129,0.15)]'
           : 'bg-slate-950/80 border-amber-500/40 text-amber-200'
-      }`}>
+        }`}>
         <div className="flex items-center gap-2 text-xs">
           <span className="text-base">{isTaskMatched ? '🎯' : '📝'}</span>
           <div className="leading-tight">
@@ -139,11 +138,10 @@ export const SpeedWorkbenchHudDock: React.FC<SpeedWorkbenchHudDockProps> = ({
           <button
             onClick={onReleaseBall}
             disabled={isBallReleased || !isCorrectWiring}
-            className={`py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg cursor-pointer ${
-              isBallReleased || !isCorrectWiring
+            className={`py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg cursor-pointer ${isBallReleased || !isCorrectWiring
                 ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/40'
                 : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-cyan-500/20 active:scale-[0.98]'
-            }`}
+              }`}
           >
             <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
@@ -168,11 +166,10 @@ export const SpeedWorkbenchHudDock: React.FC<SpeedWorkbenchHudDockProps> = ({
         {/* Sliders (8 cols) */}
         <div className="sm:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-2">
           {/* Angle Slider */}
-          <div className={`p-2 rounded-xl border transition-all ${
-            isAngleMatched
+          <div className={`p-2 rounded-xl border transition-all ${isAngleMatched
               ? 'bg-emerald-950/30 border-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.1)]'
               : 'bg-slate-950/70 border-slate-800'
-          }`}>
+            }`}>
             <div className="flex justify-between text-[10px] font-mono mb-1">
               <span className="text-slate-400">Góc α:</span>
               <span className={isAngleMatched ? 'text-emerald-400 font-bold' : 'text-cyan-300 font-bold'}>
@@ -209,11 +206,10 @@ export const SpeedWorkbenchHudDock: React.FC<SpeedWorkbenchHudDockProps> = ({
 
           {/* Gate F Slider / Distance status */}
           {mode === 'AVERAGE_SPEED' ? (
-            <div className={`p-2 rounded-xl border transition-all col-span-2 sm:col-span-1 ${
-              isDistanceMatched
+            <div className={`p-2 rounded-xl border transition-all col-span-2 sm:col-span-1 ${isDistanceMatched
                 ? 'bg-emerald-950/30 border-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.1)]'
                 : 'bg-slate-950/70 border-slate-800'
-            }`}>
+              }`}>
               <div className="flex justify-between text-[10px] font-mono mb-1">
                 <span className="text-slate-400">Cổng F (s={currentDistanceCm}cm):</span>
                 <span className={isDistanceMatched ? 'text-emerald-400 font-bold' : 'text-purple-300 font-bold'}>
@@ -241,11 +237,10 @@ export const SpeedWorkbenchHudDock: React.FC<SpeedWorkbenchHudDockProps> = ({
         <div className="sm:col-span-4 flex items-center justify-end gap-1.5">
           <button
             onClick={onToggleWireE}
-            className={`px-2.5 py-1.5 rounded-lg border text-[10px] font-mono flex items-center gap-1.5 transition-all cursor-pointer ${
-              wireEConnected
+            className={`px-2.5 py-1.5 rounded-lg border text-[10px] font-mono flex items-center gap-1.5 transition-all cursor-pointer ${wireEConnected
                 ? 'bg-cyan-950/50 border-cyan-500/40 text-cyan-300 shadow-[0_0_6px_rgba(6,182,212,0.15)]'
                 : 'bg-slate-900 border-slate-800 text-slate-500'
-            }`}
+              }`}
             title="Đấu nối Cổng E vào Ngõ A"
           >
             <span className={`w-1.5 h-1.5 rounded-full ${wireEConnected ? 'bg-cyan-400' : 'bg-slate-600'}`} />
@@ -255,11 +250,10 @@ export const SpeedWorkbenchHudDock: React.FC<SpeedWorkbenchHudDockProps> = ({
           {mode === 'AVERAGE_SPEED' && (
             <button
               onClick={onToggleWireF}
-              className={`px-2.5 py-1.5 rounded-lg border text-[10px] font-mono flex items-center gap-1.5 transition-all cursor-pointer ${
-                wireFConnected
+              className={`px-2.5 py-1.5 rounded-lg border text-[10px] font-mono flex items-center gap-1.5 transition-all cursor-pointer ${wireFConnected
                   ? 'bg-purple-950/50 border-purple-500/40 text-purple-300 shadow-[0_0_6px_rgba(168,85,247,0.15)]'
-                : 'bg-slate-900 border-slate-800 text-slate-500'
-              }`}
+                  : 'bg-slate-900 border-slate-800 text-slate-500'
+                }`}
               title="Đấu nối Cổng F vào Ngõ B"
             >
               <span className={`w-1.5 h-1.5 rounded-full ${wireFConnected ? 'bg-purple-400' : 'bg-slate-600'}`} />

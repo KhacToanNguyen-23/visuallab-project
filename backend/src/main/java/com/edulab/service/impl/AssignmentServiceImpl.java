@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,6 +32,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Assignment createAssignment(String classId, String title, String description, String labType, String paramBoundsJson, String targetFormula, double tolerancePercent, String teacherId) {
+        if (assignmentRepository.existsByClassIdAndLabType(classId, labType) ||
+            assignmentRepository.existsByClassIdAndTitle(classId, title)) {
+            throw new IllegalArgumentException("DUPLICATE_ASSIGNMENT:Bài thực hành này đã được giao cho lớp học rồi! Không được giao trùng bài.");
+        }
         String id = "asg_" + UUID.randomUUID().toString().substring(0, 8);
         Assignment assignment = new Assignment(id, classId, title, description, labType, paramBoundsJson, targetFormula, tolerancePercent, teacherId);
         return assignmentRepository.save(assignment);
@@ -37,7 +43,15 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public List<Assignment> getAssignmentsByClass(String classId) {
-        return assignmentRepository.findByClassId(classId);
+        List<Assignment> list = assignmentRepository.findByClassId(classId);
+        Map<String, Assignment> dedupMap = new LinkedHashMap<>();
+        for (Assignment a : list) {
+            String key = (a.getLabType() != null && !a.getLabType().isBlank()) ? a.getLabType() : a.getTitle();
+            if (!dedupMap.containsKey(key)) {
+                dedupMap.put(key, a);
+            }
+        }
+        return new ArrayList<>(dedupMap.values());
     }
 
     @Override
@@ -98,5 +112,23 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     private double round(double val) {
         return Math.round(val * 100.0) / 100.0;
+    }
+
+    @Override
+    public void deleteAssignment(String id) {
+        Optional<Assignment> opt = assignmentRepository.findById(id);
+        if (opt.isPresent()) {
+            Assignment target = opt.get();
+            List<Assignment> classAsgs = assignmentRepository.findByClassId(target.getClassId());
+            for (Assignment a : classAsgs) {
+                if (a.getId().equals(id) ||
+                    (target.getLabType() != null && !target.getLabType().isBlank() && target.getLabType().equals(a.getLabType())) ||
+                    (target.getTitle() != null && !target.getTitle().isBlank() && target.getTitle().equals(a.getTitle()))) {
+                    assignmentRepository.deleteById(a.getId());
+                }
+            }
+        } else {
+            assignmentRepository.deleteById(id);
+        }
     }
 }

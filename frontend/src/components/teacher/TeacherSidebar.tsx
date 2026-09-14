@@ -23,8 +23,8 @@ export const TeacherSidebar: React.FC<TeacherSidebarProps> = ({
   onToggleCollapse,
   isMobileOpen,
   onCloseMobile,
-  classCount = 2,
-  labCount = 6,
+  classCount,
+  labCount = 15,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();

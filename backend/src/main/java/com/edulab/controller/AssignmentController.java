@@ -37,12 +37,15 @@ public class AssignmentController {
             return ResponseEntity.badRequest().body(Map.of("message", "Mã lớp, tiêu đề và mã giáo viên không được để trống!"));
         }
 
-        Assignment assignment = assignmentService.createAssignment(
-                classId, title, description, labType != null ? labType : "PENDULUM",
-                paramBoundsJson, targetFormula, tolerancePercent, teacherId
-        );
-
-        return ResponseEntity.ok(assignment);
+        try {
+            Assignment assignment = assignmentService.createAssignment(
+                    classId, title, description, labType != null ? labType : "PENDULUM",
+                    paramBoundsJson, targetFormula, tolerancePercent, teacherId
+            );
+            return ResponseEntity.ok(assignment);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(409).body(Map.of("message", e.getMessage()));
+        }
     }
 
     @GetMapping("/class/{classId}")
@@ -67,5 +70,11 @@ public class AssignmentController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAssignment(@PathVariable String id) {
+        assignmentService.deleteAssignment(id);
+        return ResponseEntity.ok(Map.of("message", "Đã xóa bài tập thành công!"));
     }
 }

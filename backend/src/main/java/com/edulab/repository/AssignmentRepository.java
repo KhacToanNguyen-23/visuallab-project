@@ -10,4 +10,6 @@ import java.util.List;
 public interface AssignmentRepository extends JpaRepository<Assignment, String> {
     List<Assignment> findByClassId(String classId);
     List<Assignment> findByTeacherId(String teacherId);
+    boolean existsByClassIdAndLabType(String classId, String labType);
+    boolean existsByClassIdAndTitle(String classId, String title);
 }

@@ -6,23 +6,13 @@ import { EditProfileModal } from '../components/auth/EditProfileModal';
 import { RoleWorkspacePanel } from '../components/dashboard/RoleWorkspacePanel';
 import { PhETFilterBar } from '../components/dashboard/PhETFilterBar';
 import { SimCard, type SimItem } from '../components/dashboard/SimCard';
-import { getLabRoute } from '../utils/labRoutes';
-
-const BUILTIN_SIMULATIONS: SimItem[] = [];
-
-interface ApiTopic {
-  id: string;
-  title: string;
-  gradeLevel: string;
-  subjectArea: string;
-  description: string;
-}
+import { labService, type PublicLabItem } from '../services/labService';
 
 export const DashboardPage: React.FC = () => {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
-  const [apiTopics, setApiTopics] = useState<ApiTopic[]>([]);
+  const [labs, setLabs] = useState<PublicLabItem[]>([]);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
   // Filter States
@@ -40,31 +30,21 @@ export const DashboardPage: React.FC = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/curriculum/topics')
-      .then(res => res.json())
-      .then(data => setApiTopics(data))
-      .catch(err => console.error(err));
+    labService.getAllLabs().then(setLabs);
   }, []);
 
   const allSimulations = useMemo<SimItem[]>(() => {
-    const apiSims: SimItem[] = apiTopics.map((t, index) => ({
-      id: `api-topic-${t.id || index}`,
-      title: t.title,
-      gradeLevel: 'THPT',
-      subjectArea: t.subjectArea || 'Điện Học',
-      description: t.description || 'Bài thí nghiệm mô phỏng tương tác theo chuẩn chương trình GDPT 2018.',
-      route: getLabRoute(t.id, t.title),
-      isPopular: index % 2 === 0,
+    return labs.map((l, index) => ({
+      id: l.id,
+      title: l.title,
+      gradeLevel: l.grade || 'THPT',
+      subjectArea: l.domain || 'Vật Lý',
+      description: l.description,
+      thumbnail: l.thumbnail,
+      route: l.route,
+      isPopular: index < 4,
     }));
-
-    const combined = [...BUILTIN_SIMULATIONS];
-    apiSims.forEach(sim => {
-      if (!combined.some(c => c.title.toLowerCase() === sim.title.toLowerCase())) {
-        combined.push(sim);
-      }
-    });
-    return combined;
-  }, [apiTopics]);
+  }, [labs]);
 
   const filteredSimulations = useMemo(() => {
     return allSimulations.filter(sim => {
