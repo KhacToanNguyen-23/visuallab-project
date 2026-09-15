@@ -17,7 +17,7 @@ public class StudentLabSnapshot {
     private String labId;
     private String labTitle;
 
-    @Column(length = 500)
+    @Column(columnDefinition = "TEXT")
     private String screenshotUrl;
 
     private String cloudinaryPublicId;

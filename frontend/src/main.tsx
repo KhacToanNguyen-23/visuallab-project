@@ -27,6 +27,7 @@ import { StudentClassesPage } from './pages/student/StudentClassesPage';
 import { StudentAssignmentsPage } from './pages/student/StudentAssignmentsPage';
 import { StudentHistoryPage } from './pages/student/StudentHistoryPage';
 import { StudentStoragePage } from './pages/student/StudentStoragePage';
+import { StudentLabAssignmentWorkbenchPage } from './pages/student/StudentLabAssignmentWorkbenchPage';
 import { UniversalWorkbenchPage } from './pages/UniversalWorkbenchPage';
 
 // Simulation Engine Components (Lazy Loaded for Bundle Optimization)
@@ -117,7 +118,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route
                   path="/student"
                   element={
-                    <ProtectedRoute allowedRoles={['STUDENT', 'TEACHER', 'ADMIN']}>
+                    <ProtectedRoute allowedRoles={['STUDENT']}>
                       <StudentLayout />
                     </ProtectedRoute>
                   }
@@ -128,6 +129,18 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                   <Route path="history" element={<StudentHistoryPage />} />
                   <Route path="storage" element={<StudentStoragePage />} />
                 </Route>
+
+                {/* Student Full Lab Workbench Route */}
+                <Route
+                  path="/student/assignment/:assignmentId/lab"
+                  element={
+                    <ProtectedRoute allowedRoles={['STUDENT']}>
+                      <LabErrorBoundary>
+                        <StudentLabAssignmentWorkbenchPage />
+                      </LabErrorBoundary>
+                    </ProtectedRoute>
+                  }
+                />
 
                 {/* Universal Workbench Route */}
                 <Route path="/workbench" element={<LabErrorBoundary><UniversalWorkbenchPage /></LabErrorBoundary>} />

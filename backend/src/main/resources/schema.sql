@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS student_lab_snapshots (
     student_id VARCHAR(255),
     lab_id VARCHAR(255),
     lab_title VARCHAR(255),
-    screenshot_url VARCHAR(500),
+    screenshot_url TEXT,
     cloudinary_public_id VARCHAR(255),
     caption VARCHAR(2000),
     difficulty VARCHAR(50) DEFAULT 'MEDIUM',

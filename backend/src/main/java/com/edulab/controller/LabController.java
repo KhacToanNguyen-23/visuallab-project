@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/labs")
-@CrossOrigin(origins = "*")
 public class LabController {
 
     private final LabRepository labRepository;

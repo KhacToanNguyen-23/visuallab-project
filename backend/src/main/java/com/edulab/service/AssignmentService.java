@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface AssignmentService {
     Assignment createAssignment(String classId, String title, String description, String labType, String paramBoundsJson, String targetFormula, double tolerancePercent, String teacherId);
+    Assignment createAssignment(String classId, String title, String description, String labType, String paramBoundsJson, String targetFormula, double tolerancePercent, String teacherId, java.time.LocalDateTime dueDate);
     List<Assignment> getAssignmentsByClass(String classId);
     Optional<Assignment> getAssignmentById(String id);
     StudentAssignmentInstance getOrCreateStudentInstance(String assignmentId, String studentId);

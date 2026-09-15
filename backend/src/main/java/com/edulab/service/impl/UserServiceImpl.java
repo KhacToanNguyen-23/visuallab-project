@@ -142,6 +142,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> getUserById(String userId) {
+        if (userId == null || userId.isBlank()) {
+            return Optional.empty();
+        }
+        return userRepository.findById(userId);
+    }
+
+    @Override
     public User updateProfile(String userId, String fullName, String school) {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {

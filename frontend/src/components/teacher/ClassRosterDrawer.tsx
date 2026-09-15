@@ -5,6 +5,7 @@ import { assignmentService } from '../../services/assignmentService';
 import { getLabRoute } from '../../utils/labRoutes';
 import type { ClassEnrollment } from '../../types/class';
 import type { Assignment } from '../../types/assignment';
+import { getDeadlineInfo } from '../../utils/deadlineUtils';
 
 interface ClassRosterDrawerProps {
   isOpen: boolean;
@@ -553,6 +554,17 @@ export const ClassRosterDrawer: React.FC<ClassRosterDrawerProps> = ({
                             </span>
                           </div>
                         )}
+                        {(() => {
+                          const dl = getDeadlineInfo(asg.dueDate, asg.createdAt);
+                          return (
+                            <div className="flex items-center justify-between">
+                              <span className="opacity-60">Hạn nộp (Deadline):</span>
+                              <span className={`font-mono font-bold px-2 py-0.5 rounded text-[10px] border ${dl.bgBadgeClass}`}>
+                                {dl.formattedDateTime} ({dl.timeRemainingText})
+                              </span>
+                            </div>
+                          );
+                        })()}
                       </div>
 
                       {/* Actions */}

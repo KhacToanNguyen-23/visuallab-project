@@ -28,10 +28,15 @@ public class Assignment {
     private double tolerancePercent; // default 3.0
     private String teacherId;
     private LocalDateTime createdAt;
+    private LocalDateTime dueDate;
 
     public Assignment() {}
 
     public Assignment(String id, String classId, String title, String description, String labType, String paramBoundsJson, String targetFormula, double tolerancePercent, String teacherId) {
+        this(id, classId, title, description, labType, paramBoundsJson, targetFormula, tolerancePercent, teacherId, null);
+    }
+
+    public Assignment(String id, String classId, String title, String description, String labType, String paramBoundsJson, String targetFormula, double tolerancePercent, String teacherId, LocalDateTime dueDate) {
         this.id = id;
         this.classId = classId;
         this.title = title;
@@ -42,6 +47,7 @@ public class Assignment {
         this.tolerancePercent = tolerancePercent > 0 ? tolerancePercent : 3.0;
         this.teacherId = teacherId;
         this.createdAt = LocalDateTime.now();
+        this.dueDate = dueDate != null ? dueDate : this.createdAt.plusDays(7);
     }
 
     public String getId() {
@@ -122,5 +128,13 @@ public class Assignment {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDateTime dueDate) {
+        this.dueDate = dueDate;
     }
 }

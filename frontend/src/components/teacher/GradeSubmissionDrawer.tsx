@@ -9,6 +9,11 @@ export interface SubmissionData {
   status: 'COMPLETED' | 'IN_PROGRESS' | 'NOT_STARTED';
   score: string;
   feedback?: string;
+  submittedAnswersJson?: string;
+  explanation?: string;
+  mathScore?: number;
+  aiReasoningScore?: number;
+  aiFeedbackJson?: string;
 }
 
 interface GradeSubmissionDrawerProps {
@@ -46,9 +51,17 @@ export const GradeSubmissionDrawer: React.FC<GradeSubmissionDrawerProps> = ({
 
   if (!isOpen || !submission) return null;
 
+  let parsedAnswers: Record<string, any> = {};
+  if (submission.submittedAnswersJson) {
+    try {
+      parsedAnswers = JSON.parse(submission.submittedAnswersJson);
+    } catch (_) {}
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const numScore = parseFloat(scoreInput);
+    const cleanStr = String(scoreInput).replace(',', '.').trim();
+    const numScore = parseFloat(cleanStr);
     if (isNaN(numScore) || numScore < 0 || numScore > 10) {
       setErrorMsg('Vui lòng nhập thang điểm hợp lệ từ 0 đến 10!');
       return;
@@ -161,7 +174,7 @@ export const GradeSubmissionDrawer: React.FC<GradeSubmissionDrawerProps> = ({
               </div>
             </div>
 
-            {/* Simulated Lab Output Details */}
+            {/* Lab Output Details */}
             <div
               className="p-4 rounded-xl border space-y-2.5"
               style={{
@@ -173,11 +186,22 @@ export const GradeSubmissionDrawer: React.FC<GradeSubmissionDrawerProps> = ({
                 Chi Tiết Báo Cáo Thí Nghiệm Học Sinh
               </h5>
               <div className="font-mono text-[11px] space-y-1.5 p-3 rounded-lg border bg-slate-900 text-slate-100 border-slate-800">
-                <div>[Thí nghiệm ID]: {submission.id}</div>
-                <div>[Dòng điện I]: 0.45 A</div>
-                <div>[Hiệu điện thế U]: 9.00 V</div>
-                <div>[Điện trở R = U/I]: 20.00 Ohm (Sai số 0.1%)</div>
-                <div>[Kết luận học sinh]: Tuân theo chính xác Định luật Ohm.</div>
+                <div>[Mã bài nộp]: {submission.id}</div>
+                {Object.keys(parsedAnswers).length > 0 ? (
+                  Object.entries(parsedAnswers).map(([k, v]) => (
+                    <div key={k}>
+                      <span className="text-cyan-400">[{k}]:</span> {String(v)}
+                    </div>
+                  ))
+                ) : (
+                  <div>[Dữ liệu đo]: Đã ghi nhận số liệu thực nghiệm</div>
+                )}
+                {submission.explanation && (
+                  <div className="pt-2 mt-2 border-t border-slate-800 text-slate-300 font-sans text-xs">
+                    <span className="font-bold text-slate-400 block mb-1">Lời giải / Giải thích:</span>
+                    <p className="leading-relaxed bg-slate-950 p-2 rounded border border-slate-800/80">{submission.explanation}</p>
+                  </div>
+                )}
               </div>
             </div>
 

@@ -8,10 +8,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
 @SpringBootApplication
+@EnableScheduling
 public class EduLabApplication {
     public static void main(String[] args) {
         SpringApplication.run(EduLabApplication.class, args);
@@ -19,8 +23,16 @@ public class EduLabApplication {
 
     @Bean
     @org.springframework.transaction.annotation.Transactional
-    public CommandLineRunner initDefaultAccounts(UserRepository userRepository, LabRepository labRepository) {
+    public CommandLineRunner initDefaultAccounts(UserRepository userRepository, LabRepository labRepository, JdbcTemplate jdbcTemplate) {
         return args -> {
+            // Ensure screenshot_url and text columns have TEXT type in PostgreSQL
+            try {
+                jdbcTemplate.execute("ALTER TABLE student_lab_snapshots ALTER COLUMN screenshot_url TYPE TEXT");
+                jdbcTemplate.execute("ALTER TABLE student_lab_snapshots ALTER COLUMN caption TYPE TEXT");
+            } catch (Exception e) {
+                // Table might not exist or already migrated
+            }
+
             // Seed Admin Account
             if (userRepository.findByEmail("admin@edulab.vn").isEmpty()) {
                 User admin = new User(

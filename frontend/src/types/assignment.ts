@@ -9,6 +9,7 @@ export interface Assignment {
   tolerancePercent: number;
   teacherId: string;
   createdAt: string;
+  dueDate?: string;
 }
 
 export interface StudentAssignmentInstance {

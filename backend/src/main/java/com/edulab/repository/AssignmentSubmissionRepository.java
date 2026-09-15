@@ -12,4 +12,5 @@ public interface AssignmentSubmissionRepository extends JpaRepository<Assignment
     Optional<AssignmentSubmission> findByInstanceId(String instanceId);
     Optional<AssignmentSubmission> findByAssignmentIdAndStudentId(String assignmentId, String studentId);
     List<AssignmentSubmission> findByAssignmentId(String assignmentId);
+    List<AssignmentSubmission> findByAssignmentIdIn(List<String> assignmentIds);
 }

@@ -24,7 +24,7 @@ export const TeacherSidebar: React.FC<TeacherSidebarProps> = ({
   isMobileOpen,
   onCloseMobile,
   classCount,
-  labCount = 15,
+  labCount,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
