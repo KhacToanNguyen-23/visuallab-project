@@ -22,6 +22,17 @@ export const StudentClassesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  const handleCopyCode = (code: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    navigator.clipboard?.writeText(code);
+    setCopiedCode(code);
+    showToast(`Đã sao chép mã tham gia: ${code}`);
+    setTimeout(() => {
+      setCopiedCode(prev => (prev === code ? null : prev));
+    }, 2000);
+  };
 
   const fetchClasses = async () => {
     if (!user?.id) return;
@@ -182,16 +193,33 @@ export const StudentClassesPage: React.FC = () => {
                   </td>
                   <td className="p-3.5 font-medium opacity-80">{cls.teacherName}</td>
                   <td className="p-3.5">
-                    <span
-                      className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-md border"
+                    <button
+                      type="button"
+                      onClick={(e) => handleCopyCode(cls.code, e)}
+                      title="Nhấp để sao chép mã tham gia"
+                      className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 rounded-md border transition-all hover:opacity-85 active:scale-95 cursor-pointer group"
                       style={{
                         backgroundColor: 'var(--bg-panel)',
-                        borderColor: 'var(--border-color)',
-                        color: 'var(--accent-primary)',
+                        borderColor: copiedCode === cls.code ? '#10b981' : 'var(--border-color)',
+                        color: copiedCode === cls.code ? '#10b981' : 'var(--accent-primary)',
                       }}
                     >
-                      {cls.code}
-                    </span>
+                      <span>{cls.code}</span>
+                      {copiedCode === cls.code ? (
+                        <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <svg
+                          className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      )}
+                    </button>
                   </td>
                   <td className="p-3.5 font-bold">{cls.studentsCount} học sinh</td>
                   <td className="p-3.5 opacity-75 font-mono text-[11px]">{cls.joinedDate}</td>

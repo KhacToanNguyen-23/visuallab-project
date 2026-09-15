@@ -29,7 +29,17 @@ export const assignmentService = {
   async getAssignmentsByClass(classId: string): Promise<Assignment[]> {
     const res = await fetch(`${API_BASE}/assignments/class/${classId}`);
     if (!res.ok) return [];
-    return res.json();
+    const list: Assignment[] = await res.json();
+    return Array.from(
+      new Map(list.map(a => [(a.labType && a.labType.trim()) || a.title, a])).values()
+    );
+  },
+
+  async deleteAssignment(id: string): Promise<boolean> {
+    const res = await fetch(`${API_BASE}/assignments/${id}`, {
+      method: 'DELETE',
+    });
+    return res.ok;
   },
 
   async getStudentInstance(assignmentId: string, studentId: string): Promise<StudentAssignmentInstance> {

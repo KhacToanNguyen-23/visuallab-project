@@ -11,4 +11,5 @@ public interface AssignmentService {
     List<Assignment> getAssignmentsByClass(String classId);
     Optional<Assignment> getAssignmentById(String id);
     StudentAssignmentInstance getOrCreateStudentInstance(String assignmentId, String studentId);
+    void deleteAssignment(String id);
 }

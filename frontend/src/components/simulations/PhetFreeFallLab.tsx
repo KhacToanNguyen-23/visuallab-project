@@ -457,11 +457,10 @@ export const PhetFreeFallLab: React.FC = () => {
                     setSelectedObj(obj);
                     handleReset();
                   }}
-                  className={`p-2.5 rounded-xl text-left border transition-all flex items-center gap-2 ${
-                    selectedObj.id === obj.id
+                  className={`p-2.5 rounded-xl text-left border transition-all flex items-center gap-2 ${selectedObj.id === obj.id
                       ? 'border-indigo-500 bg-indigo-600/20 text-white shadow-lg shadow-indigo-500/20 font-bold'
                       : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700'
-                  }`}
+                    }`}
                 >
                   <span className="text-lg">{obj.emoji}</span>
                   <div className="text-xs truncate">{obj.name}</div>
@@ -482,11 +481,10 @@ export const PhetFreeFallLab: React.FC = () => {
                   setVacuumMode(!vacuumMode);
                   handleReset();
                 }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all ${
-                  vacuumMode
+                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all ${vacuumMode
                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                     : 'bg-red-500/20 text-red-400 border border-red-500/40'
-                }`}
+                  }`}
               >
                 {vacuumMode ? '✨ CHÂN KHÔNG (ON)' : '💨 CÓ KHÔNG KHÍ (OFF)'}
               </button>
@@ -503,9 +501,8 @@ export const PhetFreeFallLab: React.FC = () => {
                   <button
                     key={s.label}
                     onClick={() => setTimeScale(s.val)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all ${
-                      timeScale === s.val ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'
-                    }`}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all ${timeScale === s.val ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'
+                      }`}
                   >
                     {s.label}
                   </button>
@@ -615,11 +612,10 @@ export const PhetFreeFallLab: React.FC = () => {
                     engineRef.current.setGravity(p.value);
                     handleReset();
                   }}
-                  className={`p-2.5 rounded-xl text-left border transition-all ${
-                    gravity === p.value
+                  className={`p-2.5 rounded-xl text-left border transition-all ${gravity === p.value
                       ? 'border-blue-500 bg-blue-600/20 text-white shadow-lg shadow-blue-500/20'
                       : 'border-slate-800 bg-slate-950/50 text-slate-400 hover:border-slate-700'
-                  }`}
+                    }`}
                 >
                   <div className="text-xs font-bold">{p.label}</div>
                   <div className="text-[10px] text-slate-500">{p.desc}</div>

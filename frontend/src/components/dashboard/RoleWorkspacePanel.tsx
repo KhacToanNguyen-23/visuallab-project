@@ -758,9 +758,18 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
                         <tr key={cls.id}>
                           <td className="p-3 font-bold text-sm" style={{ color: 'var(--text-main)' }}>{cls.name}</td>
                           <td className="p-3">
-                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)', color: 'var(--accent-primary)' }}>
-                              [MÃ: {cls.code}]
-                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard?.writeText(cls.code);
+                                alert(`Đã sao chép mã tham gia: ${cls.code}`);
+                              }}
+                              title="Nhấp để sao chép mã tham gia"
+                              className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border cursor-pointer hover:opacity-80 active:scale-95 transition-all"
+                              style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)', color: 'var(--accent-primary)' }}
+                            >
+                              [MÃ: {cls.code}] 📋
+                            </button>
                           </td>
                           <td className="p-3 opacity-80">{cls.students} học sinh</td>
                           <td className="p-3 opacity-80">{cls.assignments} bài</td>

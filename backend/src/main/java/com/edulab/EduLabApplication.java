@@ -18,6 +18,7 @@ public class EduLabApplication {
     }
 
     @Bean
+    @org.springframework.transaction.annotation.Transactional
     public CommandLineRunner initDefaultAccounts(UserRepository userRepository, LabRepository labRepository) {
         return args -> {
             // Seed Admin Account
@@ -31,7 +32,7 @@ public class EduLabApplication {
                     "Hệ Thống Quản Lý EduLab",
                     "LOCAL"
                 );
-                userRepository.save(admin);
+                userRepository.saveAndFlush(admin);
                 System.out.println("✅ Seeded default Admin account: admin@edulab.vn / 123456");
             }
 
@@ -46,7 +47,8 @@ public class EduLabApplication {
                     "THPT Chuyên Hà Nội - Amsterdam",
                     "LOCAL"
                 );
-                userRepository.save(teacher);
+                userRepository.saveAndFlush(teacher);
+                System.out.println("✅ Seeded default Teacher account: teacher@edulab.vn / 123456");
             }
 
             // Seed Demo Student Account
@@ -60,7 +62,8 @@ public class EduLabApplication {
                     "THCS Lê Quý Đôn",
                     "LOCAL"
                 );
-                userRepository.save(student);
+                userRepository.saveAndFlush(student);
+                System.out.println("✅ Seeded default Student account: student@edulab.vn / 123456");
             }
 
             // Seed 14 Core Physics Labs SGK GDPT 2018
@@ -297,7 +300,7 @@ public class EduLabApplication {
                         "u-admin"
                     )
                 );
-                labRepository.saveAll(defaultLabs);
+                labRepository.saveAllAndFlush(defaultLabs);
                 System.out.println("✅ Seeded 14 SGK GDPT 2018 physics labs into database table with dedicated routes");
             }
         };

@@ -291,17 +291,24 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Right Column: Card with Pop-Out contrast */}
-          <div className="lg:col-span-5 border rounded-xl p-6 space-y-4 shadow-md transition-colors" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
+          <div 
+            onClick={() => navigate('/lab/spring-mass')}
+            className="lg:col-span-5 border rounded-xl p-6 space-y-4 shadow-md transition-all cursor-pointer hover:border-blue-500/60 hover:shadow-lg group" 
+            style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}
+            title="Nhấn để mở bài thí nghiệm Con lắc lò xo"
+          >
             <div className="flex items-center justify-between text-xs pb-3 border-b" style={{ borderColor: 'var(--border-color)' }}>
               <span className="font-bold flex items-center gap-2" style={{ color: 'var(--accent-primary)' }}>
                 <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
                 Xem Trước Mô Phỏng Trực Tiếp
               </span>
-              <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Con lắc lò xo dao động</span>
+              <span className="text-[10px] px-2 py-0.5 rounded font-medium bg-blue-500/10 text-blue-500 border border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white transition">
+                Vào Thí Nghiệm →
+              </span>
             </div>
 
             {/* Inner Simulation Canvas View */}
-            <div className="h-44 rounded-lg border relative flex items-center justify-center overflow-hidden shadow-inner" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
+            <div className="h-44 rounded-lg border relative flex items-center justify-center overflow-hidden shadow-inner group-hover:scale-[1.01] transition duration-200" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
               <div className="flex flex-col items-center justify-center">
                 <svg width="36" height="55" viewBox="0 0 40 70" className="stroke-cyan-500 fill-none stroke-2">
                   <path d="M20 0 L20 10 L30 15 L10 25 L30 35 L10 45 L30 55 L20 60 L20 70" />
@@ -361,15 +368,30 @@ export const LandingPage: React.FC = () => {
               return (
                 <div 
                   key={lab.id} 
-                  className="border rounded-xl overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md transition-all"
+                  className="border rounded-xl overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer group hover:border-blue-500/50 hover:scale-[1.01]"
                   style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}
+                  onClick={() => navigate(lab.route)}
                 >
                   {/* Visual Thumbnail */}
-                  <div className="p-4 border-b h-36 flex items-center justify-center relative" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
-                    <ThumbnailRenderer />
-                    <span className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded border" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)', color: 'var(--accent-primary)' }}>
+                  <div className="p-4 border-b h-36 flex items-center justify-center relative overflow-hidden bg-slate-900/10 dark:bg-black/30" style={{ borderColor: 'var(--border-color)' }}>
+                    {lab.thumbnail ? (
+                      <img 
+                        src={lab.thumbnail} 
+                        alt={lab.title} 
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-85 group-hover:opacity-100" 
+                      />
+                    ) : (
+                      <ThumbnailRenderer />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                    <span className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded border bg-slate-900/80 text-white backdrop-blur-xs shadow-xs" style={{ borderColor: 'var(--border-color)' }}>
                       {lab.subject}
                     </span>
+                    {lab.grade && (
+                      <span className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded border bg-blue-900/80 text-blue-200 backdrop-blur-xs shadow-xs border-blue-500/30">
+                        {lab.grade}
+                      </span>
+                    )}
                   </div>
 
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
@@ -377,14 +399,14 @@ export const LandingPage: React.FC = () => {
                       <div className="text-[11px] font-semibold mb-1" style={{ color: 'var(--text-muted)' }}>
                         {lab.chapter}
                       </div>
-                      <h3 className="text-base font-bold mb-1.5" style={{ color: 'var(--text-main)' }}>
+                      <h3 className="text-base font-bold mb-1.5 group-hover:text-blue-500 transition-colors" style={{ color: 'var(--text-main)' }}>
                         {lab.title}
                       </h3>
                       <p className="text-xs leading-relaxed line-clamp-2" style={{ color: 'var(--text-muted)' }}>
                         {lab.description}
                       </p>
                       <div className="flex flex-wrap gap-1.5 mt-3">
-                        {lab.tags.map((tag, idx) => (
+                        {lab.tags?.map((tag, idx) => (
                           <span 
                             key={idx} 
                             className="text-[10px] px-2 py-0.5 rounded font-medium border"
@@ -397,13 +419,19 @@ export const LandingPage: React.FC = () => {
                     </div>
 
                     <div className="pt-3 border-t flex items-center justify-between" style={{ borderColor: 'var(--border-color)' }}>
-                      <span className="text-xs font-semibold text-emerald-500">Sẵn sàng</span>
+                      <span className="text-xs font-semibold text-emerald-500 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Sẵn sàng
+                      </span>
                       <button 
-                        onClick={() => navigate(lab.route)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(lab.route);
+                        }}
                         className="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-white transition-opacity hover:opacity-90 shadow-xs cursor-pointer"
                         style={{ backgroundColor: 'var(--accent-primary)' }}
                       >
-                        Thực hành
+                        Thực hành →
                       </button>
                     </div>
                   </div>

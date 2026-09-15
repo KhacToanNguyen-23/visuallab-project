@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { CreateClassDrawer, type ClassFormData } from '../../components/teacher/CreateClassDrawer';
+import { ClassRosterDrawer } from '../../components/teacher/ClassRosterDrawer';
 import { classService } from '../../services/classService';
 import { assignmentService } from '../../services/assignmentService';
 import { useAuth } from '../../context/AuthContext';
@@ -17,13 +18,18 @@ export interface ClassItem {
 
 export const TeacherClassesPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedClassForRoster, setSelectedClassForRoster] = useState<ClassItem | null>(null);
+  const [isRosterDrawerOpen, setIsRosterDrawerOpen] = useState(false);
+  const [activeDrawerTab, setActiveDrawerTab] = useState<'students' | 'assignments'>('students');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadClasses = () => {
     if (user?.id) {
       classService.getTeacherClasses(user.id).then(async data => {
         const formatted = await Promise.all(
@@ -44,7 +50,22 @@ export const TeacherClassesPage: React.FC = () => {
         setClasses(formatted);
       }).catch(err => console.error("Failed to load classes:", err));
     }
+  };
+
+  useEffect(() => {
+    loadClasses();
   }, [user]);
+
+  useEffect(() => {
+    if (classes.length > 0 && location.state?.openClassId) {
+      const targetClass = classes.find(c => c.id === location.state.openClassId);
+      if (targetClass) {
+        setSelectedClassForRoster(targetClass);
+        setActiveDrawerTab(location.state.tab || 'assignments');
+        setIsRosterDrawerOpen(true);
+      }
+    }
+  }, [classes, location.state]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -77,10 +98,26 @@ export const TeacherClassesPage: React.FC = () => {
     }
   };
 
+  const handleCopyCode = (code: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    navigator.clipboard?.writeText(code);
+    setCopiedCode(code);
+    showToast(`Đã sao chép mã tham gia: ${code}`);
+    setTimeout(() => {
+      setCopiedCode(prev => (prev === code ? null : prev));
+    }, 2000);
+  };
+
   const handleCopyInviteLink = (code: string) => {
     const inviteLink = `https://visuallab.edu.vn/join?code=${code}`;
     navigator.clipboard?.writeText(inviteLink);
     showToast(`Đã sao chép link mời: ${inviteLink}`);
+  };
+
+  const handleOpenRoster = (cls: ClassItem, tab: 'students' | 'assignments' = 'students') => {
+    setSelectedClassForRoster(cls);
+    setActiveDrawerTab(tab);
+    setIsRosterDrawerOpen(true);
   };
 
   const filteredClasses = classes.filter(cls =>
@@ -196,24 +233,77 @@ export const TeacherClassesPage: React.FC = () => {
                   style={{ backgroundColor: 'var(--bg-main)' }}
                 >
                   <td className="p-3.5 pl-4 font-bold text-xs" style={{ color: 'var(--text-main)' }}>
-                    {cls.name}
+                    <button
+                      type="button"
+                      onClick={() => handleOpenRoster(cls)}
+                      className="font-bold hover:underline cursor-pointer text-left"
+                      title="Nhấp để xem danh sách học sinh trong lớp"
+                    >
+                      {cls.name}
+                    </button>
                   </td>
                   <td className="p-3.5">
-                    <span
-                      className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-md border"
+                    <button
+                      type="button"
+                      onClick={(e) => handleCopyCode(cls.code, e)}
+                      title="Nhấp để sao chép mã tham gia"
+                      className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 rounded-md border transition-all hover:opacity-85 active:scale-95 cursor-pointer group"
                       style={{
                         backgroundColor: 'var(--bg-panel)',
-                        borderColor: 'var(--border-color)',
-                        color: 'var(--accent-primary)',
+                        borderColor: copiedCode === cls.code ? '#10b981' : 'var(--border-color)',
+                        color: copiedCode === cls.code ? '#10b981' : 'var(--accent-primary)',
                       }}
                     >
-                      {cls.code}
-                    </span>
+                      <span>{cls.code}</span>
+                      {copiedCode === cls.code ? (
+                        <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <svg
+                          className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      )}
+                    </button>
                   </td>
                   <td className="p-3.5 font-medium opacity-80">{cls.gradeLevel}</td>
-                  <td className="p-3.5 font-bold">{cls.students} học sinh</td>
-                  <td className="p-3.5 opacity-80">{cls.assignments} bài</td>
+                  <td className="p-3.5 font-bold">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenRoster(cls)}
+                      className="font-bold text-xs hover:underline cursor-pointer inline-flex items-center gap-1.5 transition-opacity hover:opacity-80"
+                      style={{ color: 'var(--text-main)' }}
+                      title="Nhấp để xem danh sách học sinh"
+                    >
+                      <span>{cls.students} học sinh</span>
+                      <span className="text-[10px] opacity-60">👥</span>
+                    </button>
+                  </td>
+                  <td className="p-3.5 opacity-80">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenRoster(cls, 'assignments')}
+                      className="font-bold text-xs hover:underline cursor-pointer inline-flex items-center gap-1.5 transition-opacity hover:opacity-80"
+                      style={{ color: 'var(--text-main)' }}
+                      title="Nhấp để xem các bài thực hành đã giao cho lớp này"
+                    >
+                      <span>{cls.assignments} bài</span>
+                      <span className="text-[10px] opacity-60">📝</span>
+                    </button>
+                  </td>
                   <td className="p-3.5 text-right pr-4 whitespace-nowrap space-x-2">
+                    <button
+                      onClick={() => handleOpenRoster(cls, 'students')}
+                      className="px-2.5 py-1 text-xs font-semibold hover:underline cursor-pointer"
+                      style={{ color: 'var(--accent-primary)' }}
+                    >
+                      Danh Sách Học Sinh
+                    </button>
                     <button
                       onClick={() => handleCopyInviteLink(cls.code)}
                       className="px-3 py-1 text-xs font-semibold hover:underline cursor-pointer"
@@ -250,6 +340,17 @@ export const TeacherClassesPage: React.FC = () => {
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         onSubmit={handleCreateClass}
+      />
+
+      {/* Class Roster Slide-over Drawer */}
+      <ClassRosterDrawer
+        isOpen={isRosterDrawerOpen}
+        onClose={() => setIsRosterDrawerOpen(false)}
+        classItem={selectedClassForRoster}
+        initialTab={activeDrawerTab}
+        onCopyInviteLink={handleCopyInviteLink}
+        onCopyCode={handleCopyCode}
+        onAssignmentDeleted={loadClasses}
       />
     </div>
   );

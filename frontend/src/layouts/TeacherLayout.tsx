@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { TeacherSidebar } from '../components/teacher/TeacherSidebar';
 import { TeacherHeader } from '../components/teacher/TeacherHeader';
 import { EditProfileModal } from '../components/auth/EditProfileModal';
+import { useAuth } from '../context/AuthContext';
+import { classService } from '../services/classService';
 
 export const TeacherLayout: React.FC = () => {
+  const { user } = useAuth();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [classCount, setClassCount] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (user?.id) {
+      classService.getTeacherClasses(user.id).then(classes => {
+        setClassCount(classes ? classes.length : 0);
+      }).catch(() => {
+        setClassCount(0);
+      });
+    }
+  }, [user]);
 
   return (
     <div
@@ -20,6 +34,8 @@ export const TeacherLayout: React.FC = () => {
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         isMobileOpen={isMobileSidebarOpen}
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
+        classCount={classCount}
+        labCount={15}
       />
 
       {/* Main Content Area */}
