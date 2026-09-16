@@ -44,6 +44,13 @@ public class MathVerificationEngineImpl implements MathVerificationEngine {
     }
 
     private MathCheckResult verifySpeed(JsonNode params, JsonNode answers, double tolerancePercent) {
+        // 0. Check if structured lab auto-grader already computed a verified totalScore
+        if (answers != null && answers.has("totalScore") && answers.get("totalScore").asDouble() > 0) {
+            double labScore = answers.get("totalScore").asDouble();
+            double studentSpeed = extractAnswer(answers, "measuredResult", "measuredValue", "speed", "v", "studentAvgV");
+            return new MathCheckResult(labScore >= 5.0, studentSpeed, studentSpeed, 0.0, labScore);
+        }
+
         // 1. Check if student submitted structured table rows
         if (answers != null && answers.has("rows") && answers.get("rows").isArray() && answers.get("rows").size() > 0) {
             JsonNode rows = answers.get("rows");

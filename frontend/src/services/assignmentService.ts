@@ -28,6 +28,12 @@ export const assignmentService = {
     return res.json();
   },
 
+  async getAssignmentById(id: string): Promise<Assignment | null> {
+    const res = await fetchWithAuth(`${API_BASE}/assignments/${id}`);
+    if (!res.ok) return null;
+    return res.json();
+  },
+
   async getAssignmentsByClass(classId: string): Promise<Assignment[]> {
     const res = await fetchWithAuth(`${API_BASE}/assignments/class/${classId}`);
     if (!res.ok) return [];

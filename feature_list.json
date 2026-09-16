@@ -558,5 +558,95 @@
     "evidence": "AssignmentServiceImpl & SubmissionServiceImpl dynamic routing verified",
     "notes": "",
     "priority": "P1"
+  },
+  {
+    "id": "boyle-mariotte-3d-workbench-studio",
+    "title": "3D Three.js Parameter Studio for Boyle-Mariotte Isothermal Gas Law",
+    "user_visible_behavior": "Students manipulate interactive 3D transparent cylinder, piston, digital/Bourdon pressure gauge, and view real-time Brownian gas particle collisions",
+    "verification_command": "Launching /lab/boyle-mariotte renders 3D studio with smooth orbit controls, piston compression, and dynamic pressure reading",
+    "status": "passing",
+    "evidence": "BoyleWorkbench3D & BoyleWorkbenchHudDock built and verified with Three.js WebGL rendering",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "boyle-mariotte-wizard-worksheet-grading",
+    "title": "3-Step Wizard Worksheet with 3-Tier Auto-Grading (3-4-3) for Boyle-Mariotte",
+    "user_visible_behavior": "Students complete 3-step wizard with equipment check, data collection & error processing, p-V hyperbole and p-(1/V) linear graphs, 3-question quiz, and get 10-scale score",
+    "verification_command": "Recording 4+ trials produces valid p*V average, absolute/relative error, unlocks quiz, and outputs 30% Operation + 40% Accuracy + 30% Quiz score",
+    "status": "passing",
+    "evidence": "BoyleLabWizardWorksheet with 3-step wizard and 3-tier grading engine built and verified",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "boyle-mariotte-drawer-submission-sync",
+    "title": "1-Click Submission Drawer synchronization for Boyle-Mariotte lab assignment",
+    "user_visible_behavior": "Evaluated lab result badge automatically populates into FloatingAssignmentDrawer for 1-click student assignment submission",
+    "verification_command": "Opening assignment drawer from Boyle lab loads edulab_boyle_grade_result and submits successfully to backend",
+    "status": "passing",
+    "evidence": "FloatingAssignmentDrawer and worksheetSchemas updated to support sim-boyle-mariotte",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "latent-heat-3d-workbench-studio",
+    "title": "3D Three.js Studio for Latent Heat of Fusion Measurement (Ice Melting)",
+    "user_visible_behavior": "Students interact with 3D calorimeter, warm water, ice cubes melting dynamically, stirrer, and digital thermometer",
+    "verification_command": "Launching /lab/latent-heat renders 3D calorimeter with melting ice animation, temperature sensor reading",
+    "status": "passing",
+    "evidence": "LatentHeatWorkbench3D and LatentHeatWorkbenchHudDock implemented with Three.js rendering calorimeter, ice cubes melting animation, stirrer and HUD controls",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "latent-heat-wizard-worksheet-grading",
+    "title": "3-Step Wizard Worksheet with 3-Tier Auto-Grading (3-4-3) for Latent Heat",
+    "user_visible_behavior": "Students complete 3-step wizard with 3 ice mass missions, calculate specific latent heat lambda and error, enter observation, complete quiz, and get 10-scale score",
+    "verification_command": "Recording 3 missions calculates valid lambda ~3.34e5 J/kg, error, unlocks quiz, and outputs 30% Operation + 40% Accuracy + 30% Quiz score",
+    "status": "passing",
+    "evidence": "LatentHeatLabWizardWorksheet implemented with 3 ice mass missions, lambda & error calculations, observation chips, 3 SGK GDPT 2018 quiz questions, and 3-tier scoring",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "latent-heat-drawer-submission-sync",
+    "title": "Assignment Drawer synchronization for Latent Heat lab assignment",
+    "user_visible_behavior": "Evaluated latent heat grade result syncs into FloatingAssignmentDrawer for 1-click submission",
+    "verification_command": "Opening assignment drawer from Latent Heat lab loads edulab_latent_heat_grade_result and submits successfully",
+    "status": "passing",
+    "evidence": "FloatingAssignmentDrawer and worksheetSchemas updated to support sim-latent-heat and edulab_latent_heat_grade_result sync",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "induction-3d-workbench-studio",
+    "title": "3D Three.js Studio for Electromagnetic Induction with Draggable Magnet and Hybrid Meters",
+    "user_visible_behavior": "Students interact with 3D solenoid coil, draggable bar magnet, magnetic field lines, LED bulb, and galvanometer + digital LED meter",
+    "verification_command": "Launching /lab/induction renders 3D studio with solenoid, draggable magnet, field lines, and real-time needle deflection",
+    "status": "passing",
+    "evidence": "InductionWorkbench3D and InductionWorkbenchHudDock implemented with draggable 3D magnet, solenoid, galvanometer needle, LED bulb and field lines",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "induction-wizard-worksheet-grading",
+    "title": "3-Step Wizard Worksheet with 3-Tier Auto-Grading (3-4-3) for Induction Lab",
+    "user_visible_behavior": "Students complete 3 missions (N pole, speed effect, pole reversal), record Faraday/Lenz data, write observations, complete quiz, and get 10-scale score",
+    "verification_command": "Recording 3 missions calculates e_c and direction, verifies Faraday/Lenz, unlocks quiz, and outputs 30% Operation + 40% Accuracy + 30% Quiz score",
+    "status": "passing",
+    "evidence": "InductionLabWizardWorksheet implemented with 3 missions, data table, Faraday/Lenz verification, observation chips, SGK quiz, and 3-tier scoring",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "induction-drawer-submission-sync",
+    "title": "Assignment Drawer synchronization for Induction lab assignment",
+    "user_visible_behavior": "Evaluated induction grade result syncs into FloatingAssignmentDrawer for 1-click submission",
+    "verification_command": "Opening assignment drawer from Induction lab loads edulab_induction_grade_result and submits successfully",
+    "status": "passing",
+    "evidence": "FloatingAssignmentDrawer and worksheetSchemas updated to support sim-induction and edulab_induction_grade_result sync",
+    "notes": "",
+    "priority": "P1"
   }
 ]

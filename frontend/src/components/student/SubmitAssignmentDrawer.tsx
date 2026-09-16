@@ -12,6 +12,8 @@ export interface StudentAssignmentItem {
   route: string;
   instructions?: string;
   rawAssignment?: Assignment;
+  score?: number;
+  submittedAt?: string;
 }
 
 interface SubmitAssignmentDrawerProps {

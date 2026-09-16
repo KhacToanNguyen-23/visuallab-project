@@ -4,7 +4,8 @@ import { SpeedWorkbench3D } from './SpeedWorkbench3D';
 import type { SpeedWorkbench3DHandle } from './SpeedWorkbench3D';
 import { SpeedWorkbenchHudDock } from './SpeedWorkbenchHudDock';
 import { SpeedLabWizardWorksheet } from './SpeedLabWizardWorksheet';
-import { generateSimulatedMeasurement } from './speedLabEngine';
+import { generateSimulatedMeasurement, type AutoGradeResult } from './speedLabEngine';
+import type { SpeedLabSubmissionDetails } from './SpeedLabWizardWorksheet';
 import { ScreenshotCaptureModal } from '../../common/ScreenshotCaptureModal';
 
 interface LabTaskTarget {
@@ -16,7 +17,11 @@ interface LabTaskTarget {
   description: string;
 }
 
-export const SpeedMeasurementLab: React.FC = () => {
+export interface SpeedMeasurementLabProps {
+  onGraded?: (result: AutoGradeResult, details?: SpeedLabSubmissionDetails) => void;
+}
+
+export const SpeedMeasurementLab: React.FC<SpeedMeasurementLabProps> = ({ onGraded }) => {
   const navigate = useNavigate();
 
   // Lab Operational Mode
@@ -326,6 +331,7 @@ export const SpeedMeasurementLab: React.FC = () => {
               isCorrectAssembly={isAssemblyValid}
               totalTrialsCount={totalTrialsCount}
               currentTimerReading={displayTimeSec}
+              onGraded={onGraded}
             />
           </div>
         </div>

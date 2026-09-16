@@ -40,11 +40,36 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public AssignmentSubmission submitAssignment(String instanceId, String studentId, String studentName, String submittedAnswersJson, String explanation) {
-        StudentAssignmentInstance instance = instanceRepository.findById(instanceId)
-                .orElseThrow(() -> new IllegalArgumentException("Assignment instance not found: " + instanceId));
+        StudentAssignmentInstance instance = instanceRepository.findById(instanceId).orElse(null);
 
-        Assignment assignment = assignmentRepository.findById(instance.getAssignmentId())
-                .orElseThrow(() -> new IllegalArgumentException("Assignment not found: " + instance.getAssignmentId()));
+        Assignment assignment = null;
+        String generatedParamsJson = "{}";
+
+        if (instance != null) {
+            generatedParamsJson = instance.getGeneratedParamsJson();
+            assignment = assignmentRepository.findById(instance.getAssignmentId()).orElse(null);
+        }
+
+        if (assignment == null) {
+            // Check if instanceId format is inst-assignmentId-studentId
+            if (instanceId.startsWith("inst-")) {
+                String potentialAsgId = instanceId.replace("inst-", "").split("-")[0];
+                assignment = assignmentRepository.findById(potentialAsgId).orElse(null);
+            }
+        }
+
+        if (assignment == null && submittedAnswersJson != null) {
+            try {
+                JsonNode parsed = objectMapper.readTree(submittedAnswersJson);
+                if (parsed.has("assignmentId")) {
+                    assignment = assignmentRepository.findById(parsed.get("assignmentId").asText()).orElse(null);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        if (assignment == null) {
+            throw new IllegalArgumentException("Không tìm thấy thông tin bài tập tương ứng với instance: " + instanceId);
+        }
 
         String labType = assignment.getLabType() != null && !assignment.getLabType().isBlank()
                 ? assignment.getLabType()
@@ -52,7 +77,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         MathVerificationEngine.MathCheckResult mathResult = mathEngine.verifySubmission(
                 labType,
-                instance.getGeneratedParamsJson(),
+                generatedParamsJson,
                 submittedAnswersJson,
                 assignment.getTolerancePercent()
         );
@@ -60,7 +85,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         String aiFeedbackJson = groqAIService.generatePedagogicalFeedback(
                 assignment.getTitle(),
-                instance.getGeneratedParamsJson(),
+                generatedParamsJson,
                 submittedAnswersJson,
                 explanation,
                 mathScore10,
@@ -77,12 +102,29 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         double totalScore = Math.min(10.0, Math.max(0.0, Math.round((mathScore10 * 0.7 + aiScore10 * 0.3) * 10.0) / 10.0));
 
-        String id = "sub_" + UUID.randomUUID().toString().substring(0, 8);
-        AssignmentSubmission submission = new AssignmentSubmission(
-                id, instanceId, assignment.getId(), studentId, studentName,
-                submittedAnswersJson, explanation, mathScore10,
-                aiScore10, totalScore, aiFeedbackJson
-        );
+        // Check if student already has a submission for this assignment
+        Optional<AssignmentSubmission> existingSubOpt = submissionRepository.findFirstByAssignmentIdAndStudentIdOrderBySubmittedAtDesc(assignment.getId(), studentId);
+        AssignmentSubmission submission;
+
+        if (existingSubOpt.isPresent()) {
+            submission = existingSubOpt.get();
+            submission.setInstanceId(instanceId);
+            submission.setStudentName(studentName);
+            submission.setSubmittedAnswersJson(submittedAnswersJson);
+            submission.setExplanation(explanation);
+            submission.setMathScore(mathScore10);
+            submission.setAiReasoningScore(aiScore10);
+            submission.setTotalScore(totalScore);
+            submission.setAiFeedbackJson(aiFeedbackJson);
+            submission.setSubmittedAt(java.time.LocalDateTime.now());
+        } else {
+            String id = "sub_" + UUID.randomUUID().toString().substring(0, 8);
+            submission = new AssignmentSubmission(
+                    id, instanceId, assignment.getId(), studentId, studentName,
+                    submittedAnswersJson, explanation, mathScore10,
+                    aiScore10, totalScore, aiFeedbackJson
+            );
+        }
 
         return submissionRepository.save(submission);
     }
@@ -102,7 +144,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public Optional<AssignmentSubmission> getStudentSubmissionForAssignment(String assignmentId, String studentId) {
-        return submissionRepository.findByAssignmentIdAndStudentId(assignmentId, studentId);
+        return submissionRepository.findFirstByAssignmentIdAndStudentIdOrderBySubmittedAtDesc(assignmentId, studentId);
     }
 
     @Override
