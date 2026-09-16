@@ -476,7 +476,7 @@ export const PhetSpringLab: React.FC = () => {
   const freqF = 1 / periodT;
 
   return (
-    <div className="h-screen w-screen overflow-hidden flex flex-col font-sans transition-colors duration-200" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
+    <div className="w-full min-h-full flex-1 flex flex-col font-sans transition-colors duration-200 relative" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
       <ScreenshotCaptureModal
         isOpen={isScreenshotOpen}
         onClose={() => setIsScreenshotOpen(false)}

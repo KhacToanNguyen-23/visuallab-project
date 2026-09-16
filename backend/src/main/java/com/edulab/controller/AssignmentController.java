@@ -12,7 +12,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/assignments")
-@CrossOrigin(origins = "*")
 public class AssignmentController {
 
     @Autowired
@@ -33,6 +32,20 @@ public class AssignmentController {
             tolerancePercent = Double.parseDouble(body.get("tolerancePercent").toString());
         }
 
+        java.time.LocalDateTime dueDateTime = null;
+        if (body.get("dueDate") != null && !body.get("dueDate").toString().isBlank()) {
+            String dueStr = body.get("dueDate").toString().trim();
+            try {
+                if (dueStr.length() == 10) { // YYYY-MM-DD
+                    dueDateTime = java.time.LocalDate.parse(dueStr).atTime(23, 59, 59);
+                } else {
+                    dueDateTime = java.time.LocalDateTime.parse(dueStr.replace("Z", ""));
+                }
+            } catch (Exception ignored) {
+                dueDateTime = java.time.LocalDateTime.now().plusDays(7);
+            }
+        }
+
         if (classId == null || title == null || teacherId == null) {
             return ResponseEntity.badRequest().body(Map.of("message", "Mã lớp, tiêu đề và mã giáo viên không được để trống!"));
         }
@@ -40,7 +53,7 @@ public class AssignmentController {
         try {
             Assignment assignment = assignmentService.createAssignment(
                     classId, title, description, labType != null ? labType : "PENDULUM",
-                    paramBoundsJson, targetFormula, tolerancePercent, teacherId
+                    paramBoundsJson, targetFormula, tolerancePercent, teacherId, dueDateTime
             );
             return ResponseEntity.ok(assignment);
         } catch (IllegalArgumentException e) {

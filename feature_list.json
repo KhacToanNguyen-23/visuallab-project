@@ -528,5 +528,85 @@
     "evidence": "5-Trial measurement worksheet, statistical summary, 3-question quiz, and 30/40/30 auto-grading engine verified via npm run build",
     "notes": "",
     "priority": "P1"
+  },
+  {
+    "id": "auth-session-in-memory-httponly-cookie",
+    "title": "In-memory Access Token with HttpOnly Refresh Token cookie session management",
+    "user_visible_behavior": "Login session stays active across page reloads securely without storing credentials in localStorage",
+    "verification_command": "Access token stored in RAM, edulab_refresh_token stored in HttpOnly cookie, F5 reload triggers silent refresh",
+    "status": "passing",
+    "evidence": "In-memory token management in AuthContext, apiClient with silent refresh and credentials: include, and npm run build verified",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "auth-session-logout-current-device",
+    "title": "Secure logout for current device revoking token in PostgreSQL",
+    "user_visible_behavior": "Logging out clears memory token and expires HttpOnly cookie while marking token revoked on backend",
+    "verification_command": "Calling /api/auth/logout sets Max-Age=0 on cookie and updates DB revoked=true",
+    "status": "passing",
+    "evidence": "AuthController /logout endpoint revokes refresh token in PostgreSQL and sets Max-Age=0 cookie, verified via unit tests and build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "auth-session-logout-all-devices",
+    "title": "Logout all devices revoking all active refresh tokens for the account",
+    "user_visible_behavior": "Single action to terminate all active sessions across all devices for the account",
+    "verification_command": "Calling /api/auth/logout-all revokes all user refresh tokens in PostgreSQL",
+    "status": "passing",
+    "evidence": "AuthController /logout-all revokes all active tokens for userId in PostgreSQL, verified via unit tests and build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "auth-session-token-rotation-reuse-detection",
+    "title": "Token rotation with reuse detection for high security",
+    "user_visible_behavior": "Each refresh rotates token; replaying an old token invalidates all user sessions",
+    "verification_command": "Calling /refresh with already rotated token triggers immediate revocation of all user tokens",
+    "status": "passing",
+    "evidence": "RefreshTokenServiceTest verified 100% pass on token rotation and token reuse detection revoking all sessions",
+    "notes": "",
+    "priority": "P2"
+  },
+  {
+    "id": "student-full-lab-assignment-workbench",
+    "title": "Full interactive Lab Workbench experience for student assignments with slide-over submission drawer",
+    "user_visible_behavior": "Students launching an assignment are immersed into the full-screen interactive 60 FPS physics lab with customized parameters, measurement tools, and slide-over report submission drawer",
+    "verification_command": "Launching assignment opens full lab workbench at /student/assignment/:assignmentId/lab, allowing full tool interaction and direct AI report submission",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "dynamic-lab-worksheet-schemas-and-autosync",
+    "title": "Dynamic SGK GDPT 2018 lab worksheet tables with 1-click Auto-Sync from workbench telemetry",
+    "user_visible_behavior": "Students open assignment worksheet with data tables custom-tailored to that specific physics lab and can auto-sync measured trials directly from the active lab session",
+    "verification_command": "Opening worksheet for speed measurement shows s, t, v columns; clicking Auto-Sync populates measured trials from simulation state",
+    "status": "passing",
+    "evidence": "worksheetSchemas.ts & FloatingAssignmentDrawer.tsx with 1-click auto-sync tested & built",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "backend-multi-formula-math-verification",
+    "title": "Backend multi-formula math verification engine for all 14 SGK GDPT 2018 physics labs",
+    "user_visible_behavior": "Automated deterministic mathematical scoring based on the specific physics formulas of the assigned lab",
+    "verification_command": "MathVerificationEngine verifies speed, free fall, friction, hooke, pendulum, sound resonance with appropriate tolerance thresholds",
+    "status": "passing",
+    "evidence": "MathVerificationEngineTest passed 100% across all 14 unit test scenarios",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "teacher-lab-specific-assignment-generator",
+    "title": "Teacher assignment creation with lab-specific parameter bounds and hybrid Groq AI grading",
+    "user_visible_behavior": "Teacher generates assignments with realistic parameter bounds for any lab; students receive hybrid 70% Math + 30% AI pedagogical feedback",
+    "verification_command": "Assignment creation generates lab-specific parameters; submissions return combined math score and Groq AI reasoning feedback",
+    "status": "passing",
+    "evidence": "AssignmentServiceImpl & SubmissionServiceImpl dynamic routing verified",
+    "notes": "",
+    "priority": "P1"
   }
 ]

@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/storage")
-@CrossOrigin(origins = "*")
 public class StorageController {
 
     private final StudentLabSnapshotRepository snapshotRepository;
@@ -63,7 +62,10 @@ public class StorageController {
         );
 
         StudentLabSnapshot saved = snapshotRepository.save(snapshot);
-        System.out.println("📸 Saved student lab snapshot to PostgreSQL: " + saved.getId() + " | Cloudinary URL: " + saved.getScreenshotUrl());
+        String urlPreview = saved.getScreenshotUrl() != null && saved.getScreenshotUrl().length() > 60
+                ? saved.getScreenshotUrl().substring(0, 60) + "... [" + saved.getScreenshotUrl().length() + " chars]"
+                : saved.getScreenshotUrl();
+        System.out.println("📸 Saved student lab snapshot to PostgreSQL: " + saved.getId() + " | Image: " + urlPreview);
 
         return ResponseEntity.ok(saved);
     }

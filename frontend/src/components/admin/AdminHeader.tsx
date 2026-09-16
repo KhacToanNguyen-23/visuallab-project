@@ -163,16 +163,6 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                 </button>
               )}
 
-              <button
-                onClick={() => {
-                  setIsProfileMenuOpen(false);
-                  navigate('/dashboard');
-                }}
-                className="w-full text-left px-3 py-2 hover:bg-slate-500/10 font-semibold cursor-pointer flex items-center gap-2"
-              >
-                <span>Chuyển qua Học Sinh/GV View</span>
-              </button>
-
               <div
                 className="border-t my-1"
                 style={{ borderColor: 'var(--border-color)' }}

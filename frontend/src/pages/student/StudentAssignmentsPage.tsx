@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SubmitAssignmentDrawer, type StudentAssignmentItem } from '../../components/student/SubmitAssignmentDrawer';
-import { StudentLabAssignmentView } from '../../components/assignment/StudentLabAssignmentView';
 import { classService } from '../../services/classService';
 import { assignmentService } from '../../services/assignmentService';
 import { useAuth } from '../../context/AuthContext';
 import type { Assignment } from '../../types/assignment';
 import { getLabRoute } from '../../utils/labRoutes';
+import { getDeadlineInfo } from '../../utils/deadlineUtils';
 
 export const StudentAssignmentsPage: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [assignments, setAssignments] = useState<StudentAssignmentItem[]>([]);
   const [selectedAssignment, setSelectedAssignment] = useState<StudentAssignmentItem | null>(null);
-  const [activeAssignment, setActiveAssignment] = useState<Assignment | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -32,12 +33,13 @@ export const StudentAssignmentsPage: React.FC = () => {
           const className = clsDetails?.name || enr.className || `Lớp ${enr.classId}`;
 
           asgs.forEach(a => {
+            const dl = getDeadlineInfo(a.dueDate, a.createdAt);
             allAsgs.push({
               id: a.id,
               labTitle: a.title,
               className: className,
               teacherName: teacherName,
-              dueDate: 'Sắp tới',
+              dueDate: dl.fullBadgeText,
               status: 'NOT_STARTED',
               route: getLabRoute(a.labType || a.id, a.title),
               instructions: a.description || 'Hoàn thành bài thí nghiệm theo đúng thông số được giao.',
@@ -65,27 +67,13 @@ export const StudentAssignmentsPage: React.FC = () => {
   };
 
   const handleStartAssignment = (rawAssignment: Assignment) => {
-    setActiveAssignment(rawAssignment);
+    navigate(`/student/assignment/${rawAssignment.id}/lab`);
   };
 
   const handleSubmitReport = (id: string) => {
     setAssignments(prev => prev.map(asg => (asg.id === id ? { ...asg, status: 'SUBMITTED' } : asg)));
     showToast('Đã gửi báo cáo thực hành thành công cho Giáo viên!');
   };
-
-  if (activeAssignment) {
-    return (
-      <StudentLabAssignmentView
-        assignment={activeAssignment}
-        studentId={user?.id || 's1'}
-        studentName={user?.fullName || 'Học sinh'}
-        onBack={() => {
-          setActiveAssignment(null);
-          fetchAssignments();
-        }}
-      />
-    );
-  }
 
   const filteredAssignments = assignments.filter(asg =>
     !searchQuery ||
@@ -174,7 +162,19 @@ export const StudentAssignmentsPage: React.FC = () => {
                   </td>
                   <td className="p-3.5 font-medium opacity-80">{asg.className}</td>
                   <td className="p-3.5 opacity-80">{asg.teacherName}</td>
-                  <td className="p-3.5 font-mono font-bold text-rose-500 text-[11px]">{asg.dueDate}</td>
+                  <td className="p-3.5">
+                    {(() => {
+                      const dl = getDeadlineInfo(asg.rawAssignment?.dueDate, asg.rawAssignment?.createdAt);
+                      return (
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold border ${dl.bgBadgeClass}`}
+                        >
+                          <span>{dl.formattedDateTime}</span>
+                          <span className="text-[10px] font-sans opacity-90">({dl.timeRemainingText})</span>
+                        </span>
+                      );
+                    })()}
+                  </td>
                   <td className="p-3.5">
                     <span
                       className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${

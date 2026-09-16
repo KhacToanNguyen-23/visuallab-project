@@ -38,5 +38,7 @@ public interface MathVerificationEngine {
         }
     }
 
+    MathCheckResult verifySubmission(String labType, String generatedParamsJson, String submittedAnswersJson, double tolerancePercent);
+
     MathCheckResult verifyPendulumPeriod(double lengthMeters, double studentPeriodSec, double tolerancePercent);
 }

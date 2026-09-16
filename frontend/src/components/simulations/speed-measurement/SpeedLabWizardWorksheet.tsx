@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { AutoGradeResult } from './speedLabEngine';
 import { evaluateStudentSubmission } from './speedLabEngine';
+import { telemetryStore } from '../../../services/telemetryStore';
 
 interface SpeedLabWizardWorksheetProps {
   mode: 'AVERAGE_SPEED' | 'INSTANTANEOUS_SPEED';
@@ -40,13 +41,50 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
       : ballDiameterCm;
 
   // 5 rows data
-  const [rows, setRows] = useState<MeasurementRowData[]>([
-    { id: 1, distCm: null, angleDeg: null, timeSec: '' },
-    { id: 2, distCm: null, angleDeg: null, timeSec: '' },
-    { id: 3, distCm: null, angleDeg: null, timeSec: '' },
-    { id: 4, distCm: null, angleDeg: null, timeSec: '' },
-    { id: 5, distCm: null, angleDeg: null, timeSec: '' },
-  ]);
+  const [rows, setRows] = useState<MeasurementRowData[]>(() => {
+    try {
+      const saved = localStorage.getItem('edulab_speed_trials_raw');
+      if (saved) return JSON.parse(saved);
+    } catch (_) {}
+    return [
+      { id: 1, distCm: null, angleDeg: null, timeSec: '' },
+      { id: 2, distCm: null, angleDeg: null, timeSec: '' },
+      { id: 3, distCm: null, angleDeg: null, timeSec: '' },
+      { id: 4, distCm: null, angleDeg: null, timeSec: '' },
+      { id: 5, distCm: null, angleDeg: null, timeSec: '' },
+    ];
+  });
+
+  // Sync to telemetryStore & localStorage on change
+  useEffect(() => {
+    try {
+      localStorage.setItem('edulab_speed_trials_raw', JSON.stringify(rows));
+      const valid = rows
+        .map(r => {
+          const t = parseFloat(r.timeSec.replace(',', '.'));
+          const distM = (r.distCm ?? currentDistanceCm) / 100;
+          return {
+            distM,
+            angle: r.angleDeg ?? trackAngleDeg,
+            timeSec: t,
+            speed: t > 0 ? distM / t : 0,
+          };
+        })
+        .filter(r => !isNaN(r.timeSec) && r.timeSec > 0);
+
+      if (valid.length > 0) {
+        localStorage.setItem('edulab_speed_trials', JSON.stringify(valid));
+        valid.forEach(v => {
+          telemetryStore.logTrial('sim-speed-measurement', {
+            distance: v.distM,
+            angle: v.angle,
+            timeSec: v.timeSec,
+            speed: v.speed,
+          });
+        });
+      }
+    } catch (_) {}
+  }, [rows, currentDistanceCm, trackAngleDeg]);
 
   // Student manual calculation inputs
   const [studentAvgT, setStudentAvgT] = useState<string>('');

@@ -10,4 +10,6 @@ public interface SubmissionService {
     Optional<AssignmentSubmission> getSubmissionByInstance(String instanceId);
     List<AssignmentSubmission> getSubmissionsByAssignment(String assignmentId);
     Optional<AssignmentSubmission> getStudentSubmissionForAssignment(String assignmentId, String studentId);
+    List<AssignmentSubmission> getSubmissionsByTeacher(String teacherId);
+    AssignmentSubmission updateGrade(String submissionId, double totalScore, String feedback);
 }

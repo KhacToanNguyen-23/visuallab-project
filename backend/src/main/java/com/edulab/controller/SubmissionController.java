@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/submissions")
-@CrossOrigin(origins = "*")
 public class SubmissionController {
 
     @Autowired
@@ -51,5 +50,24 @@ public class SubmissionController {
         return submissionService.getStudentSubmissionForAssignment(assignmentId, studentId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/teacher/{teacherId}")
+    public ResponseEntity<List<AssignmentSubmission>> getSubmissionsByTeacher(@PathVariable String teacherId) {
+        return ResponseEntity.ok(submissionService.getSubmissionsByTeacher(teacherId));
+    }
+
+    @PutMapping("/{id}/grade")
+    public ResponseEntity<?> gradeSubmission(
+            @PathVariable String id,
+            @RequestBody Map<String, Object> body) {
+        try {
+            double totalScore = Double.parseDouble(body.get("totalScore").toString());
+            String feedback = body.get("feedback") != null ? body.get("feedback").toString() : "";
+            AssignmentSubmission updated = submissionService.updateGrade(id, totalScore, feedback);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 }

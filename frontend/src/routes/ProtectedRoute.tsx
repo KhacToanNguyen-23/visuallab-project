@@ -8,7 +8,34 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
-  const { token, user } = useAuth();
+  const { token, user, isInitializing } = useAuth();
+
+  if (isInitializing) {
+    return (
+      <div style={{
+        display: 'flex',
+        minHeight: '100vh',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--bg-primary, #0B1120)',
+        color: 'var(--text-secondary, #94A3B8)',
+        fontSize: '14px',
+        fontWeight: 500,
+        gap: '12px'
+      }}>
+        <div style={{
+          width: '24px',
+          height: '24px',
+          border: '2px solid rgba(255,255,255,0.1)',
+          borderTopColor: '#3B82F6',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite'
+        }} />
+        <span>Đang kiểm tra phiên đăng nhập...</span>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -25,4 +52,3 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
 
   return <>{children}</>;
 };
-

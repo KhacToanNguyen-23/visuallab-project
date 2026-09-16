@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { Assignment } from '../../types/assignment';
+import { getDeadlineInfo } from '../../utils/deadlineUtils';
 
 export interface StudentAssignmentItem {
   id: string;
@@ -111,7 +112,14 @@ export const SubmitAssignmentDrawer: React.FC<SubmitAssignmentDrawerProps> = ({
               </div>
               <div className="flex justify-between items-center text-xs">
                 <span className="opacity-60">Hạn nộp (Deadline):</span>
-                <span className="font-mono font-bold text-rose-500">{assignment.dueDate}</span>
+                {(() => {
+                  const dl = getDeadlineInfo(assignment.rawAssignment?.dueDate, assignment.rawAssignment?.createdAt);
+                  return (
+                    <span className={`font-mono font-bold px-2 py-0.5 rounded border ${dl.bgBadgeClass}`}>
+                      {dl.formattedDateTime} ({dl.timeRemainingText})
+                    </span>
+                  );
+                })()}
               </div>
             </div>
 

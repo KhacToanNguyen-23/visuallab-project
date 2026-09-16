@@ -270,6 +270,7 @@ export const TeacherAssignPage: React.FC = () => {
         targetFormula: selectedLabItem.targetFormula,
         tolerancePercent: selectedLabItem.tolerance,
         teacherId: user?.id || 't1',
+        dueDate: dueDate,
       });
 
       setToastMessage('Đã giao bài thực hành thành công cho lớp học!');

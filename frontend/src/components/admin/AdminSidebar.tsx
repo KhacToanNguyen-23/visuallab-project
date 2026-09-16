@@ -23,8 +23,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   onToggleCollapse,
   isMobileOpen,
   onCloseMobile,
-  userCount = 4,
-  labCount = 6,
+  userCount,
+  labCount,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();

@@ -23,8 +23,8 @@ export const StudentSidebar: React.FC<StudentSidebarProps> = ({
   onToggleCollapse,
   isMobileOpen,
   onCloseMobile,
-  classCount = 1,
-  assignmentCount = 2,
+  classCount,
+  assignmentCount,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();

@@ -35,7 +35,6 @@ export const TeacherLayout: React.FC = () => {
         isMobileOpen={isMobileSidebarOpen}
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
         classCount={classCount}
-        labCount={15}
       />
 
       {/* Main Content Area */}

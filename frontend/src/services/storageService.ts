@@ -34,7 +34,12 @@ export const storageService = {
     });
 
     if (!response.ok) {
-      throw new Error('Không thể tải ảnh màn hình lên kho lưu trữ');
+      let errMsg = 'Không thể tải ảnh màn hình lên kho lưu trữ';
+      try {
+        const errJson = await response.json();
+        if (errJson.message) errMsg = errJson.message;
+      } catch (_) {}
+      throw new Error(errMsg);
     }
 
     return await response.json();

@@ -140,16 +140,6 @@ export const TeacherHeader: React.FC<TeacherHeaderProps> = ({
                 </button>
               )}
 
-              <button
-                onClick={() => {
-                  setIsProfileMenuOpen(false);
-                  navigate('/dashboard');
-                }}
-                className="w-full text-left px-3 py-2 hover:bg-slate-500/10 font-semibold cursor-pointer"
-              >
-                <span>Chuyển qua Học Sinh View</span>
-              </button>
-
               <div
                 className="border-t my-1"
                 style={{ borderColor: 'var(--border-color)' }}
