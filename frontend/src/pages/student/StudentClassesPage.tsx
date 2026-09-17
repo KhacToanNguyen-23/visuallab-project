@@ -19,6 +19,8 @@ export const StudentClassesPage: React.FC = () => {
   const { user } = useAuth();
   const [classes, setClasses] = useState<EnrolledClassItem[]>([]);
   const [totalAssignmentsCount, setTotalAssignmentsCount] = useState<number>(0);
+  const [submittedAssignmentsCount, setSubmittedAssignmentsCount] = useState<number>(0);
+  const [avgScore, setAvgScore] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -39,6 +41,9 @@ export const StudentClassesPage: React.FC = () => {
     try {
       const data = await classService.getStudentEnrollments(user.id);
       let asgSum = 0;
+      let subCount = 0;
+      let totalScoreSum = 0;
+
       const formatted: EnrolledClassItem[] = await Promise.all(
         data.map(async e => {
           const [roster, asgs, clsDetails] = await Promise.all([
@@ -47,6 +52,19 @@ export const StudentClassesPage: React.FC = () => {
             classService.getClassDetails(e.classId),
           ]);
           asgSum += asgs ? asgs.length : 0;
+
+          if (asgs && asgs.length > 0) {
+            for (const a of asgs) {
+              try {
+                const sub = await assignmentService.getStudentSubmission(a.id, user.id);
+                if (sub) {
+                  subCount++;
+                  totalScoreSum += sub.totalScore;
+                }
+              } catch (_) {}
+            }
+          }
+
           return {
             id: e.id,
             name: clsDetails?.name || e.className || `Lớp học (${e.classCode || e.classId})`,
@@ -59,6 +77,8 @@ export const StudentClassesPage: React.FC = () => {
       );
       setClasses(formatted);
       setTotalAssignmentsCount(asgSum);
+      setSubmittedAssignmentsCount(subCount);
+      setAvgScore(subCount > 0 ? Math.round((totalScoreSum / subCount) * 10) / 10 : null);
     } catch (err) {
       console.error(err);
     }
@@ -126,11 +146,13 @@ export const StudentClassesPage: React.FC = () => {
         </div>
         <div className="border rounded-xl p-4 shadow-xs flex flex-col justify-between" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
           <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Bài Đã Nộp</span>
-          <div className="text-2xl font-black mt-2 text-emerald-500">0 Bài</div>
+          <div className="text-2xl font-black mt-2 text-emerald-500">{submittedAssignmentsCount} Bài</div>
         </div>
         <div className="border rounded-xl p-4 shadow-xs flex flex-col justify-between" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
           <span className="text-[11px] font-semibold opacity-70" style={{ color: 'var(--text-muted)' }}>Điểm TB Thực Hành</span>
-          <div className="text-2xl font-black mt-2 text-cyan-500">— / 10</div>
+          <div className="text-2xl font-black mt-2 text-cyan-500">
+            {avgScore !== null ? `${avgScore.toFixed(1)} / 10` : '— / 10'}
+          </div>
         </div>
       </div>
 

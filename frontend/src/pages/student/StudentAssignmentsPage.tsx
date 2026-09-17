@@ -32,20 +32,27 @@ export const StudentAssignmentsPage: React.FC = () => {
           const teacherName = clsDetails?.teacherName || enr.teacherName || 'Giáo viên';
           const className = clsDetails?.name || enr.className || `Lớp ${enr.classId}`;
 
-          asgs.forEach(a => {
+          for (const a of asgs) {
             const dl = getDeadlineInfo(a.dueDate, a.createdAt);
+            let sub = null;
+            try {
+              sub = await assignmentService.getStudentSubmission(a.id, user.id);
+            } catch (_) {}
+
             allAsgs.push({
               id: a.id,
               labTitle: a.title,
               className: className,
               teacherName: teacherName,
               dueDate: dl.fullBadgeText,
-              status: 'NOT_STARTED',
+              status: sub ? 'SUBMITTED' : 'NOT_STARTED',
               route: getLabRoute(a.labType || a.id, a.title),
               instructions: a.description || 'Hoàn thành bài thí nghiệm theo đúng thông số được giao.',
               rawAssignment: a,
+              score: sub?.totalScore,
+              submittedAt: sub?.submittedAt,
             });
-          });
+          }
         }
         setAssignments(allAsgs);
       })
@@ -186,7 +193,7 @@ export const StudentAssignmentsPage: React.FC = () => {
                       }`}
                     >
                       {asg.status === 'SUBMITTED'
-                        ? 'ĐÃ NỘP BÀI'
+                        ? `✓ ĐÃ NỘP BÀI${asg.score !== undefined ? ` (${asg.score.toFixed(0)}/10)` : ''}`
                         : asg.status === 'IN_PROGRESS'
                         ? 'ĐANG THỰC HIỆN'
                         : 'CHƯA BẮT ĐẦU'}

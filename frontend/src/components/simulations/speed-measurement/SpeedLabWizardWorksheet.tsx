@@ -3,6 +3,17 @@ import type { AutoGradeResult } from './speedLabEngine';
 import { evaluateStudentSubmission } from './speedLabEngine';
 import { telemetryStore } from '../../../services/telemetryStore';
 
+export interface SpeedLabSubmissionDetails {
+  rows: Array<{ distanceCm: number; timeSec: number }>;
+  mode: 'AVERAGE_SPEED' | 'INSTANTANEOUS_SPEED';
+  trackAngleDeg: number;
+  studentAvgT: string;
+  studentAvgV: number;
+  studentDeltaV: string;
+  quizAnswers: { q1: string; q2: string; q3: string };
+  gradeResult: AutoGradeResult;
+}
+
 interface SpeedLabWizardWorksheetProps {
   mode: 'AVERAGE_SPEED' | 'INSTANTANEOUS_SPEED';
   trackAngleDeg: number;
@@ -12,7 +23,7 @@ interface SpeedLabWizardWorksheetProps {
   isCorrectAssembly: boolean;
   totalTrialsCount: number;
   currentTimerReading: number | null;
-  onGraded?: (result: AutoGradeResult) => void;
+  onGraded?: (result: AutoGradeResult, details?: SpeedLabSubmissionDetails) => void;
 }
 
 interface MeasurementRowData {
@@ -99,7 +110,16 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
   });
 
   // Evaluation state
-  const [gradeResult, setGradeResult] = useState<AutoGradeResult | null>(null);
+  const [gradeResult, setGradeResult] = useState<AutoGradeResult | null>(() => {
+    try {
+      const saved = localStorage.getItem('edulab_speed_grade_result');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return parsed.result || parsed;
+      }
+    } catch (_) {}
+    return null;
+  });
 
   const handleTimeChange = (index: number, val: string) => {
     const updated = [...rows];
@@ -189,7 +209,23 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
     );
 
     setGradeResult(result);
-    if (onGraded) onGraded(result);
+
+    const details: SpeedLabSubmissionDetails = {
+      rows: validTrials,
+      mode,
+      trackAngleDeg,
+      studentAvgT,
+      studentAvgV: isNaN(parsedAvgV) ? 0 : parsedAvgV,
+      studentDeltaV,
+      quizAnswers,
+      gradeResult: result,
+    };
+
+    try {
+      localStorage.setItem('edulab_speed_grade_result', JSON.stringify({ result, details }));
+    } catch (_) {}
+
+    if (onGraded) onGraded(result, details);
   };
 
   return (

@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { classService } from '../../services/classService';
+import { assignmentService } from '../../services/assignmentService';
 
 export interface StudentHistoryItem {
   id: string;
@@ -10,8 +13,39 @@ export interface StudentHistoryItem {
 }
 
 export const StudentHistoryPage: React.FC = () => {
-  const [history] = useState<StudentHistoryItem[]>([]);
+  const { user } = useAuth();
+  const [history, setHistory] = useState<StudentHistoryItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    if (!user?.id) return;
+    classService.getStudentEnrollments(user.id).then(async enrollments => {
+      const items: StudentHistoryItem[] = [];
+      for (const enr of enrollments) {
+        const [asgs, clsDetails] = await Promise.all([
+          assignmentService.getAssignmentsByClass(enr.classId),
+          classService.getClassDetails(enr.classId),
+        ]);
+        const className = clsDetails?.name || enr.className || `Lớp ${enr.classId}`;
+        for (const a of asgs) {
+          try {
+            const sub = await assignmentService.getStudentSubmission(a.id, user.id);
+            if (sub) {
+              items.push({
+                id: sub.id,
+                labTitle: a.title,
+                className,
+                submittedDate: sub.submittedAt ? new Date(sub.submittedAt).toLocaleDateString('vi-VN') : 'Đã nộp',
+                score: `${sub.totalScore.toFixed(1)} / 10`,
+                teacherFeedback: sub.aiFeedbackJson ? 'Đã hoàn thành báo cáo đạt chuẩn SGK' : 'Đã nộp thành công',
+              });
+            }
+          } catch (_) {}
+        }
+      }
+      setHistory(items);
+    }).catch(console.error);
+  }, [user?.id]);
 
   const filteredHistory = history.filter(item =>
     !searchQuery ||

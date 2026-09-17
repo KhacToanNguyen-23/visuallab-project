@@ -56,10 +56,10 @@ export const StudentLabAssignmentWorkbenchPage: React.FC = () => {
     const loadData = async () => {
       setLoading(true);
       try {
-        // First try to find assignment by searching user's classes or direct fetch
-        let foundAsg: Assignment | null = null;
+        // Fetch assignment directly by ID
+        let foundAsg: Assignment | null = await assignmentService.getAssignmentById(assignmentId);
 
-        if (user?.id) {
+        if (!foundAsg && user?.id) {
           const enrollments = await classService.getStudentEnrollments(user.id);
           for (const enr of enrollments) {
             const classAsgs = await assignmentService.getAssignmentsByClass(enr.classId);
@@ -72,19 +72,9 @@ export const StudentLabAssignmentWorkbenchPage: React.FC = () => {
         }
 
         if (!foundAsg) {
-          // Fallback mock assignment object if direct search didn't locate
-          foundAsg = {
-            id: assignmentId,
-            classId: 'c1',
-            teacherId: 't1',
-            title: 'Bài Thí Nghiệm Thực Hành',
-            description: 'Tiến hành thao tác và đo đạc trên mô phỏng thí nghiệm để nộp báo cáo.',
-            labType: 'sim-speed-measurement',
-            paramBoundsJson: JSON.stringify({ distanceMin: 0.3, distanceMax: 0.8 }),
-            targetFormula: 'v = s / t',
-            tolerancePercent: 3.0,
-            createdAt: new Date().toISOString(),
-          };
+          setError('Không tìm thấy bài tập được giao.');
+          setLoading(false);
+          return;
         }
         setAssignment(foundAsg);
 
@@ -118,7 +108,10 @@ export const StudentLabAssignmentWorkbenchPage: React.FC = () => {
   };
 
   const handleSubmitted = (submission: AssignmentSubmission) => {
-    showToast(`Đã nộp bài thành công! Điểm tổng kết: ${submission.totalScore.toFixed(1)}/10`);
+    showToast(`Đã nộp bài thành công! Điểm tổng kết: ${submission.totalScore.toFixed(0)}/10. Đang quay lại trang bài tập...`);
+    setTimeout(() => {
+      navigate('/student/assignments');
+    }, 1200);
   };
 
   const handleExit = () => {
