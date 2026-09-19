@@ -9,11 +9,13 @@ import {
 } from './inductionLabEngine';
 
 interface InductionLabProps {
+  assignmentId?: string;
   onOpenSubmissionDrawer?: () => void;
   onGraded?: (result: InductionGradingResult, details?: InductionSubmissionDetails) => void;
 }
 
 export const InductionLab: React.FC<InductionLabProps> = ({
+  assignmentId,
   onOpenSubmissionDrawer,
   onGraded,
 }) => {
@@ -27,12 +29,23 @@ export const InductionLab: React.FC<InductionLabProps> = ({
   const [instantEmfMv, setInstantEmfMv] = useState<number>(0);
   const [instantCurrentMa, setInstantCurrentMa] = useState<number>(0);
   const [isAutoMoving, setIsAutoMoving] = useState<boolean>(false);
+  const [notification, setNotification] = useState<string | null>(null);
 
-  // Peak EMF registered during current motion session
+  // Peak EMF & Last Motion Info registered during current motion session
   const peakSessionEmfRef = useRef<number>(0);
+  const lastMotionRef = useRef<{
+    direction: 'IN' | 'OUT';
+    speed: number;
+    pole: 'N-S' | 'S-N';
+  } | null>(null);
 
   // Recorded Trials State
   const [trials, setTrials] = useState<RawInductionTrial[]>([]);
+
+  const showNotification = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 4500);
+  };
 
   // Update position & compute EMF during drag
   const handleMagnetXChange = useCallback((newX: number, velocity: number) => {
@@ -40,6 +53,17 @@ export const InductionLab: React.FC<InductionLabProps> = ({
     const { emfMv, currentMa } = computeInductionEmf(newX, velocity, pole, turnCountN, true);
     setInstantEmfMv(emfMv);
     setInstantCurrentMa(currentMa);
+
+    if (Math.abs(velocity) > 0.05) {
+      // For magnet starting at left (x < 0), velocity > 0 means moving IN towards coil
+      const direction: 'IN' | 'OUT' = velocity > 0 ? 'IN' : 'OUT';
+      const speed = Math.abs(velocity);
+      lastMotionRef.current = {
+        direction,
+        speed,
+        pole,
+      };
+    }
 
     if (Math.abs(emfMv) > Math.abs(peakSessionEmfRef.current)) {
       peakSessionEmfRef.current = emfMv;
@@ -49,17 +73,29 @@ export const InductionLab: React.FC<InductionLabProps> = ({
   // Flip pole
   const handleFlipPole = useCallback(() => {
     if (isAutoMoving) return;
-    setPole(prev => (prev === 'N-S' ? 'S-N' : 'N-S'));
+    setPole(prev => {
+      const next = prev === 'N-S' ? 'S-N' : 'N-S';
+      if (lastMotionRef.current) {
+        lastMotionRef.current.pole = next;
+      }
+      return next;
+    });
     setInstantEmfMv(0);
     setInstantCurrentMa(0);
     peakSessionEmfRef.current = 0;
-  }, [isAutoMoving]);
+    showNotification(`🔄 Đã đổi sang Cực ${pole === 'N-S' ? 'Nam (S)' : 'Bắc (N)'}.`);
+  }, [isAutoMoving, pole]);
 
   // Step motion: Move In Slow (v = 0.5 m/s)
   const handleMoveInSlow = useCallback(() => {
     if (isAutoMoving) return;
     setIsAutoMoving(true);
     peakSessionEmfRef.current = 0;
+    lastMotionRef.current = {
+      direction: 'IN',
+      speed: 0.5,
+      pole,
+    };
 
     const startX = -2.8;
     const targetX = 0.0;
@@ -88,6 +124,7 @@ export const InductionLab: React.FC<InductionLabProps> = ({
         setIsAutoMoving(false);
         setInstantEmfMv(0);
         setInstantCurrentMa(0);
+        showNotification('✓ Đã đưa nam châm vào chậm! Hãy bấm "+ Ghi Số Liệu" để lưu kết quả.');
       }
     };
 
@@ -99,6 +136,11 @@ export const InductionLab: React.FC<InductionLabProps> = ({
     if (isAutoMoving) return;
     setIsAutoMoving(true);
     peakSessionEmfRef.current = 0;
+    lastMotionRef.current = {
+      direction: 'IN',
+      speed: 1.5,
+      pole,
+    };
 
     const startX = -2.8;
     const targetX = 0.0;
@@ -127,6 +169,7 @@ export const InductionLab: React.FC<InductionLabProps> = ({
         setIsAutoMoving(false);
         setInstantEmfMv(0);
         setInstantCurrentMa(0);
+        showNotification('✓ Đã đưa nam châm vào nhanh! Hãy bấm "+ Ghi Số Liệu" để lưu kết quả.');
       }
     };
 
@@ -138,6 +181,11 @@ export const InductionLab: React.FC<InductionLabProps> = ({
     if (isAutoMoving) return;
     setIsAutoMoving(true);
     peakSessionEmfRef.current = 0;
+    lastMotionRef.current = {
+      direction: 'OUT',
+      speed: 1.0,
+      pole,
+    };
 
     const startX = magnetX;
     const targetX = -2.8;
@@ -166,6 +214,7 @@ export const InductionLab: React.FC<InductionLabProps> = ({
         setIsAutoMoving(false);
         setInstantEmfMv(0);
         setInstantCurrentMa(0);
+        showNotification('✓ Đã rút nam châm ra! Hãy bấm "+ Ghi Số Liệu" để lưu kết quả.');
       }
     };
 
@@ -179,25 +228,30 @@ export const InductionLab: React.FC<InductionLabProps> = ({
     setInstantEmfMv(0);
     setInstantCurrentMa(0);
     peakSessionEmfRef.current = 0;
+    lastMotionRef.current = null;
   }, []);
 
   // Record trial from HUD button
   const handleRecordTrial = useCallback(() => {
-    const recordedEmf = peakSessionEmfRef.current !== 0 ? peakSessionEmfRef.current : (instantEmfMv || -18.5);
-    const speed = Math.abs(recordedEmf) > 30 ? 1.5 : 0.5;
-    const direction: 'IN' | 'OUT' = recordedEmf < 0 ? 'IN' : 'OUT';
+    const recordedEmf = peakSessionEmfRef.current !== 0 ? peakSessionEmfRef.current : instantEmfMv;
+    if (Math.abs(recordedEmf) < 0.5 || !lastMotionRef.current) {
+      showNotification('⚠️ Bạn chưa di chuyển nam châm! Vui lòng kéo thanh nam châm hoặc bấm nút đưa vào/rút ra để tạo suất điện động trước khi ghi số liệu.');
+      return;
+    }
+
+    const { direction, speed, pole: currentPole } = lastMotionRef.current;
 
     let matchedMissionId: number | undefined;
-    if (pole === 'N-S' && direction === 'IN' && speed <= 0.8) matchedMissionId = 1;
-    else if (pole === 'N-S' && direction === 'IN' && speed > 0.8) matchedMissionId = 2;
-    else if (pole === 'S-N' || direction === 'OUT') matchedMissionId = 3;
+    if (currentPole === 'N-S' && direction === 'IN' && speed <= 0.8) matchedMissionId = 1;
+    else if (currentPole === 'N-S' && direction === 'IN' && speed > 0.8) matchedMissionId = 2;
+    else if (currentPole === 'S-N' || direction === 'OUT') matchedMissionId = 3;
 
     setTrials(prev => {
       const filtered = matchedMissionId ? prev.filter(t => t.missionId !== matchedMissionId) : prev;
       return [
         ...filtered,
         {
-          pole,
+          pole: currentPole,
           direction,
           speedMps: speed,
           turnCountN,
@@ -206,75 +260,53 @@ export const InductionLab: React.FC<InductionLabProps> = ({
         },
       ];
     });
-  }, [pole, turnCountN, instantEmfMv]);
+
+    if (matchedMissionId) {
+      showNotification(`✓ Đã ghi nhận số liệu và hoàn thành Nhiệm vụ ${matchedMissionId}!`);
+    } else {
+      showNotification('✓ Đã ghi lại lần đo vào bảng số liệu.');
+    }
+  }, [turnCountN, instantEmfMv]);
 
   // Record trial specifically for mission
   const handleRecordTrialForMission = useCallback((missionId: number) => {
-    if (missionId === 1) {
-      setPole('N-S');
-      setTurnCountN(200);
-      handleMoveInSlow();
-      // Record trial 1
-      setTimeout(() => {
-        setTrials(prev => {
-          const filtered = prev.filter(t => t.missionId !== 1);
-          return [
-            ...filtered,
-            {
-              pole: 'N-S',
-              direction: 'IN',
-              speedMps: 0.5,
-              turnCountN: 200,
-              peakEmfMv: -18.6,
-              missionId: 1,
-            },
-          ];
-        });
-      }, 1200);
-    } else if (missionId === 2) {
-      setPole('N-S');
-      setTurnCountN(200);
-      handleMoveInFast();
-      // Record trial 2
-      setTimeout(() => {
-        setTrials(prev => {
-          const filtered = prev.filter(t => t.missionId !== 2);
-          return [
-            ...filtered,
-            {
-              pole: 'N-S',
-              direction: 'IN',
-              speedMps: 1.5,
-              turnCountN: 200,
-              peakEmfMv: -45.2,
-              missionId: 2,
-            },
-          ];
-        });
-      }, 900);
-    } else if (missionId === 3) {
-      setPole('S-N');
-      setTurnCountN(200);
-      handleMoveInSlow();
-      // Record trial 3
-      setTimeout(() => {
-        setTrials(prev => {
-          const filtered = prev.filter(t => t.missionId !== 3);
-          return [
-            ...filtered,
-            {
-              pole: 'S-N',
-              direction: 'IN',
-              speedMps: 0.5,
-              turnCountN: 200,
-              peakEmfMv: 18.4,
-              missionId: 3,
-            },
-          ];
-        });
-      }, 1200);
+    const recordedEmf = peakSessionEmfRef.current !== 0 ? peakSessionEmfRef.current : instantEmfMv;
+    if (Math.abs(recordedEmf) < 0.5 || !lastMotionRef.current) {
+      showNotification(`⚠️ Vui lòng thực hiện thao tác theo yêu cầu của Nhiệm vụ ${missionId} (di chuyển nam châm) trước khi ghi số liệu!`);
+      return;
     }
-  }, [handleMoveInSlow, handleMoveInFast]);
+
+    const { direction, speed, pole: currentPole } = lastMotionRef.current;
+
+    let isMatch = false;
+    if (missionId === 1 && currentPole === 'N-S' && direction === 'IN' && speed <= 0.8) isMatch = true;
+    else if (missionId === 2 && currentPole === 'N-S' && direction === 'IN' && speed > 0.8) isMatch = true;
+    else if (missionId === 3 && (currentPole === 'S-N' || direction === 'OUT')) isMatch = true;
+
+    if (!isMatch) {
+      if (missionId === 1) showNotification('⚠️ Lần đo vừa rồi chưa khớp Nhiệm vụ 1: Cần chọn Cực Bắc (N) và đưa vào với tốc độ chậm.');
+      else if (missionId === 2) showNotification('⚠️ Lần đo vừa rồi chưa khớp Nhiệm vụ 2: Cần chọn Cực Bắc (N) và đưa vào với tốc độ nhanh.');
+      else if (missionId === 3) showNotification('⚠️ Lần đo vừa rồi chưa khớp Nhiệm vụ 3: Cần đổi Cực Nam (S) hoặc rút nam châm ra.');
+      return;
+    }
+
+    setTrials(prev => {
+      const filtered = prev.filter(t => t.missionId !== missionId);
+      return [
+        ...filtered,
+        {
+          pole: currentPole,
+          direction,
+          speedMps: speed,
+          turnCountN,
+          peakEmfMv: recordedEmf,
+          missionId,
+        },
+      ];
+    });
+
+    showNotification(`✓ Đã xác nhận hoàn thành Nhiệm vụ ${missionId}!`);
+  }, [turnCountN, instantEmfMv]);
 
   // Remove specific trial
   const handleRemoveTrial = useCallback((index: number) => {
@@ -310,7 +342,7 @@ export const InductionLab: React.FC<InductionLabProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-slate-400">
-              Khảo sát từ thông biến thiên, suất điện động cảm ứng e_c & dòng điện cảm ứng I_c
+              Học sinh tự điều chỉnh số vòng N, đảo cực, di chuyển nam châm và ghi nhận suất điện động e_c
             </p>
           </div>
         </div>
@@ -322,6 +354,13 @@ export const InductionLab: React.FC<InductionLabProps> = ({
           </span>
         </div>
       </div>
+
+      {/* Toast Notification */}
+      {notification && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-cyan-500/40 text-cyan-200 px-4 py-2 rounded-xl shadow-2xl text-xs font-medium backdrop-blur-md animate-fade-in flex items-center space-x-2">
+          <span>{notification}</span>
+        </div>
+      )}
 
       {/* Main Content Workspace (2 Columns) */}
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden p-4 gap-4">
@@ -367,6 +406,7 @@ export const InductionLab: React.FC<InductionLabProps> = ({
             instantEmfMv={instantEmfMv}
             instantCurrentMa={instantCurrentMa}
             trials={trials}
+            assignmentId={assignmentId}
             onAddTrialForMission={handleRecordTrialForMission}
             onRemoveTrial={handleRemoveTrial}
             onClearTrials={handleClearTrials}

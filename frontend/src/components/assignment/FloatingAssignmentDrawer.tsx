@@ -35,60 +35,97 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
     return getWorksheetSchema(assignment?.labType || assignment?.title);
   }, [assignment?.labType, assignment?.title]);
 
-  // Read recorded & evaluated lab results from localStorage (only for matching lab)
-  const [labGradeData, setLabGradeData] = useState<{ result: any; details: any } | null>(() => {
-    try {
-      if (schema.labId === 'sim-speed-measurement') {
-        const saved = localStorage.getItem('edulab_speed_grade_result');
-        if (saved) return JSON.parse(saved);
-      } else if (schema.labId === 'sim-boyle-mariotte') {
-        const saved = localStorage.getItem('edulab_boyle_grade_result');
-        if (saved) return JSON.parse(saved);
-      }
-    } catch (_) {}
-    return null;
-  });
+  // Read recorded & evaluated lab results (initialized to null to prevent stale data pollution)
+  const [labGradeData, setLabGradeData] = useState<{ result: any; details: any } | null>(null);
 
-  // Re-check localStorage and submissions when drawer opens or assignment changes
+  // Re-check localStorage and submissions when drawer opens, assignment changes, or draft updates occur
   useEffect(() => {
-    if (!isOpen || !assignment?.id) return;
+    if (!assignment?.id) return;
 
-    // Reset previous lab state
-    if (schema.labId === 'sim-speed-measurement') {
+    const loadDraftOrSubmission = () => {
+      // 1. First check unified draft key: edulab_draft_${assignmentId}_${labSlug}
+      const draftKey = `edulab_draft_${assignment.id}_${schema.labId}`;
       try {
-        const saved = localStorage.getItem('edulab_speed_grade_result');
-        if (saved) setLabGradeData(JSON.parse(saved));
-        else setLabGradeData(null);
-      } catch (_) {
-        setLabGradeData(null);
+        const rawDraft = localStorage.getItem(draftKey);
+        if (rawDraft) {
+          const parsedDraft = JSON.parse(rawDraft);
+          if (parsedDraft?.assignmentId === assignment.id) {
+            if (parsedDraft.gradeResult) {
+              setLabGradeData({
+                result: parsedDraft.gradeResult,
+                details: {
+                  rows: parsedDraft.rows || [],
+                  quizAnswers: parsedDraft.quizAnswers || {},
+                  studentObservation: parsedDraft.studentObservation || '',
+                },
+              });
+              return;
+            }
+          }
+        }
+      } catch (_) {}
+
+      // 2. Check legacy lab specific key
+      const getStorageKey = () => {
+        switch (schema.labId) {
+          case 'sim-speed-measurement': return 'edulab_speed_grade_result';
+          case 'sim-boyle-mariotte': return 'edulab_boyle_grade_result';
+          case 'sim-latent-heat': return 'edulab_latent_heat_grade_result';
+          case 'sim-induction': return 'edulab_induction_grade_result';
+          case 'sim-momentum-collision': return 'edulab_momentum_grade_result';
+          case 'sim-refraction': return 'edulab_refraction_grade_result';
+          case 'sim-sliding-friction': return 'edulab_sliding_friction_grade_result';
+          case 'sim-specific-heat': return 'edulab_specific_heat_grade_result';
+          case 'sim-emf-internal-r': return 'edulab_emf_internal_r_grade_result';
+          default: return null;
+        }
+      };
+
+      const storageKey = getStorageKey();
+      if (storageKey) {
+        try {
+          const raw = localStorage.getItem(storageKey);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed?.assignmentId === assignment.id) {
+              setLabGradeData(parsed);
+              return;
+            }
+          }
+        } catch (_) {}
       }
-    } else if (schema.labId === 'sim-boyle-mariotte') {
-      try {
-        const saved = localStorage.getItem('edulab_boyle_grade_result');
-        if (saved) setLabGradeData(JSON.parse(saved));
-        else setLabGradeData(null);
-      } catch (_) {
-        setLabGradeData(null);
-      }
-    } else if (schema.labId === 'sim-latent-heat') {
-      try {
-        const saved = localStorage.getItem('edulab_latent_heat_grade_result');
-        if (saved) setLabGradeData(JSON.parse(saved));
-        else setLabGradeData(null);
-      } catch (_) {
-        setLabGradeData(null);
-      }
-    } else if (schema.labId === 'sim-induction') {
-      try {
-        const saved = localStorage.getItem('edulab_induction_grade_result');
-        if (saved) setLabGradeData(JSON.parse(saved));
-        else setLabGradeData(null);
-      } catch (_) {
-        setLabGradeData(null);
-      }
-    } else {
+
       setLabGradeData(null);
-    }
+    };
+
+    loadDraftOrSubmission();
+
+    // Listen to real-time custom event bus
+    const handleDraftUpdated = (e: Event) => {
+      const customEvt = e as CustomEvent;
+      if (customEvt.detail?.assignmentId === assignment.id) {
+        if (customEvt.detail.gradeResult) {
+          setLabGradeData({
+            result: customEvt.detail.gradeResult,
+            details: {
+              rows: customEvt.detail.rows || [],
+              quizAnswers: customEvt.detail.quizAnswers || {},
+              studentObservation: customEvt.detail.studentObservation || '',
+            },
+          });
+        }
+      }
+    };
+
+    const handleDraftCleared = (e: Event) => {
+      const customEvt = e as CustomEvent;
+      if (customEvt.detail?.assignmentId === assignment.id) {
+        setLabGradeData(null);
+      }
+    };
+
+    window.addEventListener('edulab_draft_updated', handleDraftUpdated);
+    window.addEventListener('edulab_draft_cleared', handleDraftCleared);
 
     if (studentId) {
       assignmentService.getStudentSubmission(assignment.id, studentId)
@@ -100,9 +137,9 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
               const answers = JSON.parse(sub.submittedAnswersJson);
               const parsedGradeResult = answers.gradeResult || {
                 totalScore: answers.totalScore ?? sub.totalScore,
-                operationScore: answers.operationScore ?? 3,
-                accuracyScore: answers.accuracyScore ?? 4,
-                quizScore: answers.quizScore ?? 3,
+                operationScore: answers.operationScore ?? Math.round(sub.totalScore * 0.3),
+                accuracyScore: answers.accuracyScore ?? Math.round(sub.totalScore * 0.4),
+                quizScore: answers.quizScore ?? Math.round(sub.totalScore * 0.3),
                 isPass: answers.isPass ?? (sub.totalScore >= 5.0),
                 calculatedAvgV: answers.studentAvgV ?? answers.measuredResult ?? 0,
               };
@@ -114,9 +151,9 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
               setLabGradeData({
                 result: {
                   totalScore: sub.totalScore,
-                  operationScore: 3,
-                  accuracyScore: 4,
-                  quizScore: 3,
+                  operationScore: Math.round(sub.totalScore * 0.3),
+                  accuracyScore: Math.round(sub.totalScore * 0.4),
+                  quizScore: Math.round(sub.totalScore * 0.3),
                   isPass: sub.totalScore >= 5.0,
                   calculatedAvgV: 0,
                 },
@@ -125,13 +162,17 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
             }
           } else {
             setSubmissionResult(null);
-            setExplanation('');
           }
         })
         .catch(() => {
           setSubmissionResult(null);
         });
     }
+
+    return () => {
+      window.removeEventListener('edulab_draft_updated', handleDraftUpdated);
+      window.removeEventListener('edulab_draft_cleared', handleDraftCleared);
+    };
   }, [isOpen, assignment?.id, schema.labId, studentId]);
 
   if (!isOpen || !assignment) return null;
@@ -202,12 +243,13 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
     }
   };
 
+  const hasActualResult = (labResult !== null && labResult !== undefined) || (submissionResult !== null && submissionResult !== undefined);
   const effectiveScore = labResult?.totalScore !== undefined
     ? Number(labResult.totalScore).toFixed(0)
-    : (submissionResult?.totalScore !== undefined ? Number(submissionResult.totalScore).toFixed(0) : '10');
+    : (submissionResult?.totalScore !== undefined ? Number(submissionResult.totalScore).toFixed(0) : null);
   const isPass = labResult?.isPass !== undefined
     ? labResult.isPass
-    : (submissionResult?.totalScore !== undefined ? submissionResult.totalScore >= 5.0 : true);
+    : (submissionResult?.totalScore !== undefined ? submissionResult.totalScore >= 5.0 : false);
 
   return (
     <div className="fixed inset-0 z-60 overflow-hidden font-sans">
@@ -313,7 +355,7 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
               </div>
             )}
 
-            {/* Evaluated Lab Results Section (No repetitive table) */}
+            {/* Evaluated Lab Results Section */}
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-xs flex items-center gap-1.5">
@@ -327,19 +369,19 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
                 )}
               </div>
 
-              {labResult || submissionResult ? (
+              {hasActualResult && effectiveScore !== null ? (
                 <div
                   className="p-4 rounded-xl border space-y-3 animate-in fade-in"
                   style={{
                     backgroundColor: 'var(--bg-main)',
-                    borderColor: '#10B981',
+                    borderColor: isPass ? '#10B981' : '#F59E0B',
                   }}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-emerald-400 flex items-center gap-1.5 text-sm">
+                    <span className={`font-bold flex items-center gap-1.5 text-sm ${isPass ? 'text-emerald-400' : 'text-amber-400'}`}>
                       {isPass ? '✓ ĐẠT YÊU CẦU' : 'CẦN KIỂM TRA LẠI'}
                     </span>
-                    <span className="text-2xl font-black text-emerald-400 font-mono">
+                    <span className={`text-2xl font-black font-mono ${isPass ? 'text-emerald-400' : 'text-amber-400'}`}>
                       {effectiveScore}/10
                     </span>
                   </div>
@@ -351,16 +393,16 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
                     >
                       <span className="text-[10px] opacity-60 block">Thao tác</span>
                       <span className="font-mono font-bold text-xs text-cyan-400">
-                        {labResult?.operationScore ?? 3}/3
+                        {labResult?.operationScore ?? 0}/3
                       </span>
                     </div>
                     <div
                       className="p-2 rounded-lg border text-center"
                       style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}
                     >
-                      <span className="text-[10px] opacity-60 block">Sai số</span>
+                      <span className="text-[10px] opacity-60 block">Sai số / Đồ thị</span>
                       <span className="font-mono font-bold text-xs text-emerald-400">
-                        {labResult?.accuracyScore ?? 4}/4
+                        {labResult?.accuracyScore ?? 0}/4
                       </span>
                     </div>
                     <div
@@ -369,17 +411,17 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
                     >
                       <span className="text-[10px] opacity-60 block">Trắc nghiệm</span>
                       <span className="font-mono font-bold text-xs text-purple-400">
-                        {labResult?.quizScore ?? 3}/3
+                        {labResult?.quizScore ?? 0}/3
                       </span>
                     </div>
                   </div>
 
-                  {labDetails && (
+                  {labDetails?.studentAvgV !== undefined && (
                     <div
                       className="pt-2 border-t flex items-center justify-between text-[11px] font-mono opacity-80"
                       style={{ borderColor: 'var(--border-color)' }}
                     >
-                      <span>Vận tốc v_tb: <strong className="text-white">{labDetails.studentAvgV ?? labResult?.calculatedAvgV} m/s</strong></span>
+                      <span>Vận tốc v_tb: <strong className="text-white">{labDetails.studentAvgV} m/s</strong></span>
                       {labDetails.studentDeltaV && (
                         <span>Sai số Δv: <strong className="text-white">±{labDetails.studentDeltaV} m/s</strong></span>
                       )}
@@ -396,7 +438,7 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
                 >
                   <p className="font-bold text-amber-400 text-xs">⏳ Chưa có kết quả thực hành</p>
                   <p className="text-[11px] leading-relaxed">
-                    Bạn hãy thực hiện các thao tác đo đạc, tính sai số và bấm <strong>"🏆 Nộp Báo Cáo & Chấm Điểm"</strong> trực tiếp trên bảng thực hành ảo. Kết quả sẽ tự động hiển thị tại đây.
+                    Bạn hãy hoàn thành các nhiệm vụ đo đạc, trả lời trắc nghiệm và bấm <strong>"🏆 Nộp Báo Cáo & Chấm Điểm"</strong> trực tiếp trên bảng thực hành ảo. Kết quả sẽ tự động hiển thị tại đây để bạn xác nhận nộp bài.
                   </p>
                 </div>
               )}

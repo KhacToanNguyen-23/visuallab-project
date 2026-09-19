@@ -17,11 +17,13 @@ export interface RawLatentHeatTrial {
 }
 
 interface LatentHeatLabProps {
+  assignmentId?: string;
   onOpenSubmissionDrawer?: () => void;
   onGraded?: (result: LatentHeatGradingResult, details?: LatentHeatSubmissionDetails) => void;
 }
 
 export const LatentHeatLab: React.FC<LatentHeatLabProps> = ({
+  assignmentId,
   onOpenSubmissionDrawer,
   onGraded,
 }) => {
@@ -91,12 +93,12 @@ export const LatentHeatLab: React.FC<LatentHeatLabProps> = ({
 
   // Record trial from HUD button
   const handleRecordTrial = useCallback(() => {
-    if (currentTemp >= initialWaterTemp) return;
+    if (currentTemp >= initialWaterTemp || isMelting) return;
 
     let matchedMissionId: number | undefined;
-    if (Math.abs(iceMassG - 20) <= 1.0) matchedMissionId = 1;
-    else if (Math.abs(iceMassG - 35) <= 1.0) matchedMissionId = 2;
-    else if (Math.abs(iceMassG - 50) <= 1.0) matchedMissionId = 3;
+    if (Math.abs(iceMassG - 20) <= 2.0) matchedMissionId = 1;
+    else if (Math.abs(iceMassG - 35) <= 2.0) matchedMissionId = 2;
+    else if (Math.abs(iceMassG - 50) <= 2.0) matchedMissionId = 3;
 
     setTrials(prev => {
       const filtered = matchedMissionId ? prev.filter(t => t.missionId !== matchedMissionId) : prev;
@@ -111,28 +113,32 @@ export const LatentHeatLab: React.FC<LatentHeatLabProps> = ({
         },
       ];
     });
-  }, [currentTemp, initialWaterTemp, iceMassG, waterMassKg]);
+  }, [currentTemp, initialWaterTemp, isMelting, iceMassG, waterMassKg]);
 
   // Record trial specifically for a mission step
   const handleRecordTrialForMission = useCallback((missionId: number, targetIceMassG: number) => {
-    // If current ice mass does not match mission, we adjust and compute equilibrium
-    const iceMassKg = targetIceMassG / 1000;
-    const tcb = computeEquilibriumTemp(waterMassKg, iceMassKg, initialWaterTemp, true);
+    if (currentTemp >= initialWaterTemp || isMelting) {
+      // Prompt student to adjust mass and melt first
+      return;
+    }
+
+    const isMassMatch = Math.abs(iceMassG - targetIceMassG) <= 2.0;
+    const assignedMissionId = isMassMatch ? missionId : undefined;
 
     setTrials(prev => {
-      const filtered = prev.filter(t => t.missionId !== missionId);
+      const filtered = assignedMissionId ? prev.filter(t => t.missionId !== assignedMissionId) : prev;
       return [
         ...filtered,
         {
           waterMassKg,
-          iceMassKg,
+          iceMassKg: iceMassG / 1000,
           initialWaterTemp,
-          equilibriumTemp: tcb,
-          missionId,
+          equilibriumTemp: currentTemp,
+          missionId: assignedMissionId,
         },
       ];
     });
-  }, [waterMassKg, initialWaterTemp]);
+  }, [currentTemp, initialWaterTemp, isMelting, iceMassG, waterMassKg]);
 
   // Remove specific trial
   const handleRemoveTrial = useCallback((index: number) => {
@@ -218,6 +224,7 @@ export const LatentHeatLab: React.FC<LatentHeatLabProps> = ({
             initialWaterTemp={initialWaterTemp}
             equilibriumTemp={currentTemp}
             trials={trials}
+            assignmentId={assignmentId}
             onAddTrialForMission={handleRecordTrialForMission}
             onRemoveTrial={handleRemoveTrial}
             onClearTrials={handleClearTrials}

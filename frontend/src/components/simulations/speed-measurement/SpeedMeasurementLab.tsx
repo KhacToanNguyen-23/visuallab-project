@@ -18,10 +18,16 @@ interface LabTaskTarget {
 }
 
 export interface SpeedMeasurementLabProps {
+  assignmentId?: string;
+  onOpenSubmissionDrawer?: () => void;
   onGraded?: (result: AutoGradeResult, details?: SpeedLabSubmissionDetails) => void;
 }
 
-export const SpeedMeasurementLab: React.FC<SpeedMeasurementLabProps> = ({ onGraded }) => {
+export const SpeedMeasurementLab: React.FC<SpeedMeasurementLabProps> = ({
+  assignmentId,
+  onOpenSubmissionDrawer,
+  onGraded,
+}) => {
   const navigate = useNavigate();
 
   // Lab Operational Mode
@@ -331,6 +337,8 @@ export const SpeedMeasurementLab: React.FC<SpeedMeasurementLabProps> = ({ onGrad
               isCorrectAssembly={isAssemblyValid}
               totalTrialsCount={totalTrialsCount}
               currentTimerReading={displayTimeSec}
+              assignmentId={assignmentId}
+              onOpenSubmissionDrawer={onOpenSubmissionDrawer}
               onGraded={onGraded}
             />
           </div>

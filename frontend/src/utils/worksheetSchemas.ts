@@ -326,6 +326,49 @@ export const LAB_WORKSHEET_REGISTRY: Record<string, LabWorksheetSchema> = {
       return { measuredResult: Math.round(maxEmf * 10) / 10 };
     },
   },
+
+  // LỚP 10 - BÀI 18, 19: KHẢO SÁT VA CHẠM & BẢO TOÀN ĐỘNG LƯỢNG
+  'sim-momentum-collision': {
+    labId: 'sim-momentum-collision',
+    labType: 'LAB_MOMENTUM_COLLISION',
+    title: '[LỚP 10] Bài 18: Khảo Sát Va Chạm & Bảo Toàn Động Lượng',
+    grade: 'Lớp 10',
+    targetFormula: 'p_trước = p_sau ⇔ m₁v₁ + m₂v₂ = m₁v₁\' + m₂v₂\'',
+    formulaDescription: 'Tổng động lượng của hệ kín trước và sau va chạm được bảo toàn',
+    columns: [
+      { id: 'collisionType', label: 'Kiểu va chạm', unit: '', isMeasured: true, isCalculated: false },
+      { id: 'm1Kg', label: 'Khối lượng m₁', unit: 'kg', isMeasured: true, isCalculated: false },
+      { id: 'm2Kg', label: 'Khối lượng m₂', unit: 'kg', isMeasured: true, isCalculated: false },
+      { id: 'v1Mps', label: 'Vận tốc v₁', unit: 'm/s', isMeasured: true, isCalculated: false },
+      { id: 'v1PrimeMps', label: 'Vận tốc v₁\'', unit: 'm/s', isMeasured: true, isCalculated: false },
+      { id: 'v2PrimeMps', label: 'Vận tốc v₂\'', unit: 'm/s', isMeasured: true, isCalculated: false },
+      { id: 'pBeforeKgmS', label: 'Động lượng p_trước', unit: 'kg·m/s', isMeasured: false, isCalculated: true, formulaHint: 'm₁·v₁' },
+      { id: 'pAfterKgmS', label: 'Động lượng p_sau', unit: 'kg·m/s', isMeasured: false, isCalculated: true, formulaHint: 'm₁·v₁\' + m₂·v₂\'' },
+      { id: 'relativeErrorPercent', label: 'Sai số δp', unit: '%', isMeasured: false, isCalculated: true, formulaHint: '|p_sau - p_trước|/p_trước' },
+    ],
+    defaultRowsCount: 3,
+    defaultParamBounds: {
+      m1: { min: 0.1, max: 0.3, label: 'Khối lượng xe 1', unit: 'kg' },
+      m2: { min: 0.1, max: 0.3, label: 'Khối lượng xe 2', unit: 'kg' },
+      v0: { min: 0.5, max: 2.0, label: 'Vận tốc phóng', unit: 'm/s' },
+    },
+    telemetryFieldMapping: {
+      collisionType: 'collisionType',
+      m1Kg: 'm1Kg',
+      m2Kg: 'm2Kg',
+      v1Mps: 'v1Mps',
+      v1PrimeMps: 'v1PrimeMps',
+      v2PrimeMps: 'v2PrimeMps',
+      pBeforeKgmS: 'pBeforeKgmS',
+      pAfterKgmS: 'pAfterKgmS',
+      relativeErrorPercent: 'relativeErrorPercent',
+    },
+    calculateSummary: (rows) => {
+      const validErr = rows.map(r => r.relativeErrorPercent).filter(v => v !== undefined && !isNaN(v));
+      const meanErr = validErr.length ? validErr.reduce((a, b) => a + b, 0) / validErr.length : 0;
+      return { measuredResult: Math.round(meanErr * 10) / 10 };
+    },
+  },
 };
 
 /**
@@ -341,6 +384,9 @@ export const getWorksheetSchema = (labIdOrType?: string): LabWorksheetSchema => 
 
   const norm = labIdOrType.toUpperCase();
 
+  if (norm.includes('MOMENTUM') || norm.includes('COLLISION') || norm.includes('VA CHẠM') || norm.includes('ĐỘNG LƯỢNG')) {
+    return LAB_WORKSHEET_REGISTRY['sim-momentum-collision'];
+  }
   if (norm.includes('INDUCTION') || norm.includes('CẢM ỨNG') || norm.includes('FARADAY') || norm.includes('LENZ')) {
     return LAB_WORKSHEET_REGISTRY['sim-induction'];
   }

@@ -6,6 +6,7 @@ import {
   setOnTokenExpired,
   fetchWithAuth,
 } from '../services/apiClient';
+import { subscribeAuthEvent, broadcastAuthEvent } from '../utils/authSync';
 
 export interface User {
   id: string;
@@ -14,6 +15,15 @@ export interface User {
   role: 'TEACHER' | 'STUDENT' | 'ADMIN';
   school: string;
   provider?: string;
+  status?: string;
+  onboardingCompleted?: boolean;
+}
+
+export interface GoogleAuthResult {
+  status: 'SUCCESS' | 'PENDING_VERIFICATION' | 'ERROR';
+  email?: string;
+  message?: string;
+  onboardingCompleted?: boolean;
 }
 
 interface AuthContextType {
@@ -21,8 +31,12 @@ interface AuthContextType {
   token: string | null;
   login: (email: string, pass: string) => Promise<boolean>;
   register: (email: string, pass: string, fullName: string, role: string, school: string) => Promise<boolean>;
-  loginWithGoogle: (email: string, fullName: string, role: string, googleToken?: string) => Promise<boolean>;
+  loginWithGoogle: (email: string, fullName: string, role: string, googleToken?: string) => Promise<GoogleAuthResult>;
+  verifyRegistration: (token: string) => Promise<{ success: boolean; message?: string; onboardingCompleted?: boolean }>;
+  resendVerification: (email: string) => Promise<{ success: boolean; message?: string; cooldownSeconds?: number }>;
+  completeOnboarding: (school: string) => Promise<boolean>;
   updateProfile: (fullName: string, school: string) => Promise<boolean>;
+  checkSession: () => Promise<User | null>;
   logout: () => Promise<void>;
   logoutAll: () => Promise<void>;
   isLoading: boolean;
@@ -43,7 +57,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTokenState(newToken);
   };
 
-  // Initial session restoration on mount (Silent Refresh)
+  const checkSession = React.useCallback(async (): Promise<User | null> => {
+    try {
+      const session = await refreshSession();
+      if (session && session.token && session.user) {
+        updateToken(session.token);
+        setUser(session.user);
+        return session.user;
+      } else {
+        updateToken(null);
+        setUser(null);
+        return null;
+      }
+    } catch (err) {
+      updateToken(null);
+      setUser(null);
+      return null;
+    }
+  }, []);
+
+  // Initial session restoration on mount (Silent Refresh) & Cross-Tab Listener
   useEffect(() => {
     // Cleanup any legacy localStorage tokens for security
     localStorage.removeItem('edulab_token');
@@ -56,24 +89,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const initAuth = async () => {
       try {
-        const session = await refreshSession();
-        if (session && session.token && session.user) {
-          updateToken(session.token);
-          setUser(session.user);
-        } else {
-          updateToken(null);
-          setUser(null);
-        }
-      } catch (err) {
-        updateToken(null);
-        setUser(null);
+        await checkSession();
       } finally {
         setIsInitializing(false);
       }
     };
 
     initAuth();
-  }, []);
+
+    // Cross-tab synchronization
+    const unsubscribe = subscribeAuthEvent(async (event) => {
+      if (event.type === 'LOGOUT') {
+        updateToken(null);
+        setUser(null);
+      } else {
+        await checkSession();
+      }
+    });
+
+    return unsubscribe;
+  }, [checkSession]);
 
   const login = async (email: string, pass: string): Promise<boolean> => {
     setIsLoading(true);
@@ -136,7 +171,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fullName: string,
     role: string,
     googleToken?: string
-  ): Promise<boolean> => {
+  ): Promise<GoogleAuthResult> => {
     setIsLoading(true);
     try {
       const res = await fetch(`${API_BASE_URL}/auth/google`, {
@@ -150,19 +185,130 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           googleIdToken: googleToken || 'google_auth_token_mock',
         }),
       });
+
+      const data = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || 'Đăng nhập/Đăng ký Google thất bại');
+        return {
+          status: 'ERROR',
+          message: data.message || 'Đăng nhập/Đăng ký Google thất bại',
+        };
       }
-      const data = await res.json();
+
+      if (data.status === 'PENDING_VERIFICATION' || !data.user) {
+        return {
+          status: 'PENDING_VERIFICATION',
+          email: data.email || email,
+          message: data.message || 'Vui lòng kiểm tra hộp thư để xác thực email.',
+          onboardingCompleted: false,
+        };
+      }
+
       updateToken(data.token);
       setUser(data.user);
-      return true;
-    } catch (err) {
+      return {
+        status: 'SUCCESS',
+        email: data.user.email,
+        message: data.message,
+        onboardingCompleted: data.onboardingCompleted ?? data.user.onboardingCompleted,
+      };
+    } catch (err: any) {
       console.error('Google login error:', err);
-      return false;
+      return {
+        status: 'ERROR',
+        message: err.message || 'Không thể kết nối đến máy chủ',
+      };
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const verifyRegistration = React.useCallback(async (
+    tokenString: string
+  ): Promise<{ success: boolean; message?: string; onboardingCompleted?: boolean }> => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/verify-registration?token=${encodeURIComponent(tokenString)}`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        return {
+          success: false,
+          message: data.message || 'Liên kết xác thực không hợp lệ hoặc đã hết hạn.',
+        };
+      }
+
+      if (data.token && data.user) {
+        updateToken(data.token);
+        setUser(data.user);
+        broadcastAuthEvent({ type: 'VERIFY_SUCCESS', email: data.user.email, onboardingCompleted: data.onboardingCompleted });
+      }
+      return {
+        success: true,
+        message: data.message,
+        onboardingCompleted: data.onboardingCompleted ?? data.user?.onboardingCompleted ?? false,
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.message || 'Lỗi mạng khi xác thực tài khoản.',
+      };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const resendVerification = React.useCallback(async (
+    recipientEmail: string
+  ): Promise<{ success: boolean; message?: string; cooldownSeconds?: number }> => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/resend-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: recipientEmail }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        return {
+          success: false,
+          message: data.message || 'Gửi lại email xác thực thất bại.',
+        };
+      }
+      return {
+        success: true,
+        message: data.message || 'Email xác thực mới đã được gửi thành công!',
+        cooldownSeconds: data.cooldownSeconds || 60,
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.message || 'Lỗi mạng khi yêu cầu gửi lại email.',
+      };
+    }
+  }, []);
+
+  const completeOnboarding = async (school: string): Promise<boolean> => {
+    try {
+      const res = await fetchWithAuth(`/auth/onboarding`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ school }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Hoàn tất thông tin thất bại');
+      }
+      const data = await res.json();
+      if (data.user) {
+        setUser(data.user);
+        broadcastAuthEvent({ type: 'ONBOARDING_COMPLETED', email: data.user.email, onboardingCompleted: true });
+      }
+      return true;
+    } catch (err) {
+      console.error('Onboarding error:', err);
+      throw err;
     }
   };
 
@@ -237,7 +383,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         loginWithGoogle,
+        verifyRegistration,
+        resendVerification,
+        completeOnboarding,
         updateProfile,
+        checkSession,
         logout,
         logoutAll,
         isLoading,

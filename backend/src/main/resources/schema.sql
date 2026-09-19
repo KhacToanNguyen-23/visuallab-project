@@ -8,7 +8,10 @@ CREATE TABLE IF NOT EXISTS users (
     full_name VARCHAR(255),
     role VARCHAR(50) DEFAULT 'STUDENT',
     school VARCHAR(255),
-    provider VARCHAR(50) DEFAULT 'LOCAL'
+    provider VARCHAR(50) DEFAULT 'LOCAL',
+    google_id VARCHAR(255) UNIQUE,
+    status VARCHAR(50) DEFAULT 'ACTIVE',
+    onboarding_completed BOOLEAN DEFAULT false
 );
 
 CREATE TABLE IF NOT EXISTS labs (

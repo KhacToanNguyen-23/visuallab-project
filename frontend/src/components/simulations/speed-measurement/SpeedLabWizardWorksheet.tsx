@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { AutoGradeResult } from './speedLabEngine';
 import { evaluateStudentSubmission } from './speedLabEngine';
 import { telemetryStore } from '../../../services/telemetryStore';
+import { useLabPersistence } from '../../../hooks/useLabPersistence';
 
 export interface SpeedLabSubmissionDetails {
   rows: Array<{ distanceCm: number; timeSec: number }>;
@@ -23,6 +24,8 @@ interface SpeedLabWizardWorksheetProps {
   isCorrectAssembly: boolean;
   totalTrialsCount: number;
   currentTimerReading: number | null;
+  assignmentId?: string;
+  onOpenSubmissionDrawer?: () => void;
   onGraded?: (result: AutoGradeResult, details?: SpeedLabSubmissionDetails) => void;
 }
 
@@ -42,6 +45,8 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
   isCorrectAssembly,
   totalTrialsCount,
   currentTimerReading,
+  assignmentId,
+  onOpenSubmissionDrawer,
   onGraded,
 }) => {
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
@@ -51,20 +56,30 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
       ? Math.abs(gateFPosCm - gateEPosCm)
       : ballDiameterCm;
 
-  // 5 rows data
-  const [rows, setRows] = useState<MeasurementRowData[]>(() => {
-    try {
-      const saved = localStorage.getItem('edulab_speed_trials_raw');
-      if (saved) return JSON.parse(saved);
-    } catch (_) {}
-    return [
-      { id: 1, distCm: null, angleDeg: null, timeSec: '' },
-      { id: 2, distCm: null, angleDeg: null, timeSec: '' },
-      { id: 3, distCm: null, angleDeg: null, timeSec: '' },
-      { id: 4, distCm: null, angleDeg: null, timeSec: '' },
-      { id: 5, distCm: null, angleDeg: null, timeSec: '' },
-    ];
+  const initialDefaultRows: MeasurementRowData[] = [
+    { id: 1, distCm: null, angleDeg: null, timeSec: '' },
+    { id: 2, distCm: null, angleDeg: null, timeSec: '' },
+    { id: 3, distCm: null, angleDeg: null, timeSec: '' },
+    { id: 4, distCm: null, angleDeg: null, timeSec: '' },
+    { id: 5, distCm: null, angleDeg: null, timeSec: '' },
+  ];
+
+  const {
+    isAssignmentMode,
+    saveDraft,
+    savedRows,
+    savedQuiz,
+    savedObservation,
+    savedGradeResult,
+  } = useLabPersistence<MeasurementRowData, { q1: string; q2: string; q3: string }>({
+    labSlug: 'sim-speed-measurement',
+    assignmentId,
+    initialRows: initialDefaultRows,
+    initialQuiz: { q1: '', q2: '', q3: '' },
   });
+
+  // Rows state restored from draft if available
+  const [rows, setRows] = useState<MeasurementRowData[]>(savedRows || initialDefaultRows);
 
   // Sync to telemetryStore & localStorage on change
   useEffect(() => {
@@ -95,31 +110,28 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
         });
       }
     } catch (_) {}
-  }, [rows, currentDistanceCm, trackAngleDeg]);
+
+    if (isAssignmentMode) {
+      saveDraft({ rows });
+    }
+  }, [rows, currentDistanceCm, trackAngleDeg, isAssignmentMode, saveDraft]);
 
   // Student manual calculation inputs
-  const [studentAvgT, setStudentAvgT] = useState<string>('');
+  const [studentAvgT, setStudentAvgT] = useState<string>(savedObservation || '');
   const [studentAvgV, setStudentAvgV] = useState<string>('');
   const [studentDeltaV, setStudentDeltaV] = useState<string>('');
 
   // Post-lab quiz answers
-  const [quizAnswers, setQuizAnswers] = useState<{ q1: string; q2: string; q3: string }>({
-    q1: '',
-    q2: '',
-    q3: '',
-  });
+  const [quizAnswers, setQuizAnswers] = useState<{ q1: string; q2: string; q3: string }>(
+    savedQuiz || {
+      q1: '',
+      q2: '',
+      q3: '',
+    }
+  );
 
   // Evaluation state
-  const [gradeResult, setGradeResult] = useState<AutoGradeResult | null>(() => {
-    try {
-      const saved = localStorage.getItem('edulab_speed_grade_result');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        return parsed.result || parsed;
-      }
-    } catch (_) {}
-    return null;
-  });
+  const [gradeResult, setGradeResult] = useState<AutoGradeResult | null>(savedGradeResult || null);
 
   const handleTimeChange = (index: number, val: string) => {
     const updated = [...rows];
@@ -133,12 +145,14 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
   // Auto-fill latest timer reading along with CURRENT distance & angle adjusted by student
   const handleAutoFillFromTimer = () => {
     if (currentTimerReading === null || currentTimerReading <= 0) return;
-    const firstEmptyIndex = rows.findIndex(r => !r.timeSec || parseFloat(r.timeSec.replace(',', '.')) <= 0);
-    const targetIdx = firstEmptyIndex !== -1 ? firstEmptyIndex : 0;
+
+    // Find first empty row or update row matching current count
+    const emptyIndex = rows.findIndex(r => !r.timeSec || r.timeSec.trim() === '');
+    const targetIndex = emptyIndex !== -1 ? emptyIndex : 0;
 
     const updated = [...rows];
-    updated[targetIdx] = {
-      id: targetIdx + 1,
+    updated[targetIndex] = {
+      ...updated[targetIndex],
       distCm: currentDistanceCm,
       angleDeg: trackAngleDeg,
       timeSec: currentTimerReading.toFixed(3),
@@ -222,10 +236,30 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
     };
 
     try {
-      localStorage.setItem('edulab_speed_grade_result', JSON.stringify({ result, details }));
+      localStorage.setItem(
+        'edulab_speed_grade_result',
+        JSON.stringify({
+          assignmentId,
+          result,
+          details,
+        })
+      );
     } catch (_) {}
 
+    if (isAssignmentMode) {
+      saveDraft({
+        rows,
+        quizAnswers,
+        studentObservation: studentAvgT,
+        gradeResult: result,
+      });
+    }
+
     if (onGraded) onGraded(result, details);
+
+    if (onOpenSubmissionDrawer) {
+      onOpenSubmissionDrawer();
+    }
   };
 
   return (

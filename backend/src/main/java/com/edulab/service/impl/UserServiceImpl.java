@@ -3,13 +3,17 @@ package com.edulab.service.impl;
 import com.edulab.auth.JwtTokenProvider;
 import com.edulab.auth.dto.AuthRequest;
 import com.edulab.auth.dto.AuthResponse;
+import com.edulab.auth.dto.PendingRegistration;
 import com.edulab.model.User;
-import com.edulab.repository.UserRepository;
-import com.edulab.service.GoogleAuthService;
-import com.edulab.service.UserService;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.edulab.repository.ClassEnrollmentRepository;
 import com.edulab.repository.ClassroomRepository;
+import com.edulab.repository.UserRepository;
+import com.edulab.service.EmailService;
+import com.edulab.service.GoogleAuthService;
+import com.edulab.service.RegistrationStagingService;
+import com.edulab.service.UserService;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,21 +25,30 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final GoogleAuthService googleAuthService;
+    private final RegistrationStagingService stagingService;
+    private final EmailService emailService;
     private final ClassroomRepository classroomRepository;
     private final ClassEnrollmentRepository enrollmentRepository;
+    private final String frontendUrl;
 
     public UserServiceImpl(
             UserRepository userRepository,
             JwtTokenProvider jwtTokenProvider,
             GoogleAuthService googleAuthService,
+            RegistrationStagingService stagingService,
+            EmailService emailService,
             ClassroomRepository classroomRepository,
-            ClassEnrollmentRepository enrollmentRepository
+            ClassEnrollmentRepository enrollmentRepository,
+            @Value("${app.frontend-url:http://localhost:5173}") String frontendUrl
     ) {
         this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.googleAuthService = googleAuthService;
+        this.stagingService = stagingService;
+        this.emailService = emailService;
         this.classroomRepository = classroomRepository;
         this.enrollmentRepository = enrollmentRepository;
+        this.frontendUrl = frontendUrl;
     }
 
     @Override
@@ -55,12 +68,15 @@ public class UserServiceImpl implements UserService {
             request.fullName() != null ? request.fullName() : "Học viên EduLab",
             request.role() != null ? request.role() : "STUDENT",
             request.school() != null ? request.school() : "Trường THPT EduLab",
-            "LOCAL"
+            "LOCAL",
+            null,
+            "ACTIVE",
+            true
         );
 
         userRepository.save(newUser);
         String token = jwtTokenProvider.generateToken(newUser.getId(), newUser.getEmail());
-        return new AuthResponse(token, newUser, "Đăng ký tài khoản thành công!");
+        return new AuthResponse(token, newUser, "Đăng ký tài khoản thành công!", newUser.getStatus(), newUser.getEmail(), newUser.isOnboardingCompleted());
     }
 
     @Override
@@ -75,20 +91,26 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userOpt.get();
+        if (!"ACTIVE".equalsIgnoreCase(user.getStatus())) {
+            throw new IllegalArgumentException("Tài khoản của bạn đang ở trạng thái: " + user.getStatus() + ". Vui lòng liên hệ quản trị viên.");
+        }
+
         String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
-        return new AuthResponse(token, user, "Đăng nhập thành công!");
+        return new AuthResponse(token, user, "Đăng nhập thành công!", user.getStatus(), user.getEmail(), user.isOnboardingCompleted());
     }
 
     @Override
     public AuthResponse loginWithGoogle(AuthRequest request) {
         String email = request.email();
         String fullName = request.fullName();
+        String googleId = null;
 
         // If ID Token is present, verify with Google Auth Service
         if (request.googleIdToken() != null && !request.googleIdToken().isBlank()) {
             GoogleIdToken.Payload payload = googleAuthService.verifyToken(request.googleIdToken());
             if (payload != null && payload.getEmail() != null) {
                 email = payload.getEmail();
+                googleId = payload.getSubject();
                 if (fullName == null || fullName.isBlank()) {
                     fullName = (String) payload.get("name");
                 }
@@ -99,37 +121,133 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Thông tin Google Token không hợp lệ!");
         }
 
-        email = email.toLowerCase();
+        email = email.toLowerCase().trim();
         Optional<User> userOpt = userRepository.findByEmail(email);
 
-        User user;
         if (userOpt.isPresent()) {
-            user = userOpt.get();
-            // Preserve existing user's custom fullName and school if already present in database
-            if (request.role() != null) user.setRole(request.role());
-            if ((user.getSchool() == null || user.getSchool().isBlank() || user.getSchool().startsWith("Chưa cập nhật")) && request.school() != null && !request.school().isBlank()) {
-                user.setSchool(request.school());
+            User user = userOpt.get();
+            if (!"ACTIVE".equalsIgnoreCase(user.getStatus())) {
+                throw new IllegalArgumentException("Tài khoản của bạn đang ở trạng thái: " + user.getStatus() + ". Vui lòng liên hệ quản trị viên.");
             }
-            if ((user.getFullName() == null || user.getFullName().isBlank()) && fullName != null && !fullName.isBlank()) {
-                user.setFullName(fullName);
+
+            if (googleId != null && (user.getGoogleId() == null || user.getGoogleId().isBlank())) {
+                user.setGoogleId(googleId);
+                userRepository.save(user);
             }
-            userRepository.save(user);
-        } else {
-            // Auto-create new account via Google Login
-            user = new User(
-                "gg-" + UUID.randomUUID().toString().substring(0, 8),
-                email,
-                "google_authenticated_oauth_secret",
-                fullName != null ? fullName : "Người dùng Google",
-                request.role() != null ? request.role() : "STUDENT",
-                request.school() != null ? request.school() : "Chưa cập nhật trường học",
-                "GOOGLE"
-            );
-            userRepository.save(user);
+
+            String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
+            return new AuthResponse(token, user, "Đăng nhập Google thành công!", user.getStatus(), user.getEmail(), user.isOnboardingCompleted());
         }
 
-        String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
-        return new AuthResponse(token, user, "Đăng nhập Google thành công!");
+        // Unregistered user -> Stage pending registration in Redis and send verification email
+        PendingRegistration pendingData = new PendingRegistration(
+                email,
+                googleId != null ? googleId : ("mock-gid-" + UUID.randomUUID().toString().substring(0, 8)),
+                fullName != null ? fullName : "Học sinh EduLab",
+                null,
+                System.currentTimeMillis()
+        );
+
+        String stagingToken = stagingService.stageRegistration(pendingData);
+        String verificationUrl = frontendUrl + "/verify-registration?token=" + stagingToken;
+        emailService.sendVerificationEmail(email, fullName, verificationUrl);
+
+        return new AuthResponse(
+                null,
+                null,
+                "Email của bạn chưa được xác thực. Vui lòng kiểm tra hộp thư để kích hoạt tài khoản.",
+                "PENDING_VERIFICATION",
+                email,
+                false
+        );
+    }
+
+    @Override
+    public AuthResponse verifyRegistration(String token) {
+        if (token == null || token.isBlank()) {
+            throw new IllegalArgumentException("Mã xác thực không hợp lệ!");
+        }
+
+        PendingRegistration reg = stagingService.getAndValidateToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Liên kết xác thực không hợp lệ hoặc đã hết hạn!"));
+
+        String email = reg.getEmail().toLowerCase().trim();
+        Optional<User> existingUserOpt = userRepository.findByEmail(email);
+
+        User user;
+        if (existingUserOpt.isPresent()) {
+            user = existingUserOpt.get();
+            if (!"ACTIVE".equalsIgnoreCase(user.getStatus())) {
+                throw new IllegalArgumentException("Tài khoản đang bị khóa hoặc vô hiệu hóa.");
+            }
+        } else {
+            // Create official active Student user in PostgreSQL
+            user = new User(
+                    "gg-" + UUID.randomUUID().toString().substring(0, 8),
+                    email,
+                    "google_authenticated_oauth_secret",
+                    reg.getFullName() != null && !reg.getFullName().isBlank() ? reg.getFullName() : "Học sinh EduLab",
+                    "STUDENT", // Role strictly enforced
+                    "Chưa cập nhật trường học",
+                    "GOOGLE",
+                    reg.getGoogleId(),
+                    "ACTIVE",
+                    false // Needs onboarding
+            );
+            user = userRepository.save(user);
+        }
+
+        // Clean up Redis staging keys
+        stagingService.invalidate(token, email);
+
+        String jwtToken = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
+        return new AuthResponse(
+                jwtToken,
+                user,
+                "Xác thực email thành công! Chào mừng bạn đến với EduLab.",
+                user.getStatus(),
+                user.getEmail(),
+                user.isOnboardingCompleted()
+        );
+    }
+
+    @Override
+    public void resendVerification(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email không được để trống!");
+        }
+
+        String normalizedEmail = email.toLowerCase().trim();
+        Optional<User> existingUser = userRepository.findByEmail(normalizedEmail);
+        if (existingUser.isPresent() && "ACTIVE".equalsIgnoreCase(existingUser.get().getStatus())) {
+            throw new IllegalArgumentException("Tài khoản này đã được kích hoạt. Bạn có thể đăng nhập ngay.");
+        }
+
+        String newToken = stagingService.resendRegistration(normalizedEmail);
+        String verificationUrl = frontendUrl + "/verify-registration?token=" + newToken;
+        emailService.sendVerificationEmail(normalizedEmail, null, verificationUrl);
+    }
+
+    @Override
+    public User completeOnboarding(String userId, String school) {
+        if (userId == null || userId.isBlank()) {
+            throw new IllegalArgumentException("User ID không hợp lệ!");
+        }
+
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            userOpt = userRepository.findByEmail(userId.toLowerCase().trim());
+        }
+        if (userOpt.isEmpty()) {
+            throw new IllegalArgumentException("Người dùng không tồn tại!");
+        }
+
+        User user = userOpt.get();
+        if (school != null && !school.isBlank()) {
+            user.setSchool(school.trim());
+        }
+        user.setOnboardingCompleted(true);
+        return userRepository.save(user);
     }
 
     @Override
@@ -147,6 +265,12 @@ public class UserServiceImpl implements UserService {
             return Optional.empty();
         }
         return userRepository.findById(userId);
+    }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        if (email == null || email.isBlank()) return Optional.empty();
+        return userRepository.findByEmail(email.toLowerCase().trim());
     }
 
     @Override

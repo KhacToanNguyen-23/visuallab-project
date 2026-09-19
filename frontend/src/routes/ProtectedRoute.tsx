@@ -5,9 +5,14 @@ import { useAuth } from '../context/AuthContext';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   allowedRoles?: ('ADMIN' | 'TEACHER' | 'STUDENT')[];
+  allowUnonboarded?: boolean;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  allowedRoles,
+  allowUnonboarded = false,
+}) => {
   const { token, user, isInitializing } = useAuth();
 
   if (isInitializing) {
@@ -39,6 +44,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
 
   if (!token) {
     return <Navigate to="/login" replace />;
+  }
+
+  // If user hasn't completed onboarding and route doesn't explicitly allow un-onboarded, redirect to /onboarding
+  if (!allowUnonboarded && user?.onboardingCompleted === false) {
+    return <Navigate to="/onboarding" replace />;
   }
 
   if (allowedRoles && allowedRoles.length > 0 && user) {

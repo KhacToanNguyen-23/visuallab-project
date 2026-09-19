@@ -1,5 +1,125 @@
 [
   {
+    "id": "dual-mode-auto-save-draft",
+    "title": "Dual-mode persistence hook with assignment draft auto-save and F5 reload recovery",
+    "user_visible_behavior": "Student assignment lab sessions auto-save empirical measurements, observation notes, and quiz selections under edulab_draft_${assignmentId}_${labSlug} so page refreshes never wipe work",
+    "verification_command": "useLabPersistence restores rows, quizAnswers, observation and gradeResult on mount in assignment mode",
+    "status": "passing",
+    "evidence": "useLabPersistence hook created and integrated with Refraction, Speed, Induction, Momentum, Latent Heat, Boyle, Sliding Friction, Specific Heat, EMF labs",
+    "notes": "",
+    "priority": "P0"
+  },
+  {
+    "id": "dual-mode-direct-submission-sync",
+    "title": "Bidirectional real-time sync between simulation worksheets and floating assignment submission drawer",
+    "user_visible_behavior": "Grading in simulation worksheet immediately updates FloatingAssignmentDrawer via custom event bus and enables 1-click submission without stale data leaks",
+    "verification_command": "edulab_draft_updated and edulab_draft_cleared window event bus triggers live drawer updates and clears draft upon successful submit",
+    "status": "passing",
+    "evidence": "FloatingAssignmentDrawer and simulation worksheets wired with event listeners and payload namespaces",
+    "notes": "",
+    "priority": "P0"
+  },
+  {
+    "id": "dual-mode-sandbox-isolation",
+    "title": "Sandbox mode clean isolation for library visitors and teacher demonstrations",
+    "user_visible_behavior": "When opening /lab/:labSlug standalone without assignmentId, lab runs in pure client-side sandbox mode without writing or polluting assignment drafts",
+    "verification_command": "isAssignmentMode is false and storageKey is null when assignmentId is undefined",
+    "status": "passing",
+    "evidence": "useLabPersistence isolates storageKey strictly to assignmentId sessions",
+    "notes": "",
+    "priority": "P0"
+  },
+  {
+    "id": "refraction-3d-workbench-engine",
+    "title": "3D Semi-Cylinder optics studio and Snell-Descartes ray engine for Refraction lab",
+    "user_visible_behavior": "Student can observe 3D semi-cylindrical glass block on circular protractor, rotate laser source, and view Fresnel rays",
+    "verification_command": "Snell engine computes r = asin(n1/n2*sin(i)) and TIR when n1 > n2 and i >= i_gh",
+    "status": "passing",
+    "evidence": "RefractionWorkbench3D and refractionEngine implemented and verified with Three.js optics studio and Fresnel rays",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "refraction-gdpt2018-missions",
+    "title": "3 GDPT 2018 missions for Refraction, TIR, and Mystery Medium identification",
+    "user_visible_behavior": "Students complete 3 structured missions and record empirical (i, r, sin i, sin r) measurements",
+    "verification_command": "Record data buttons validate medium type, direction, angle range and mission completion",
+    "status": "passing",
+    "evidence": "3 GDPT 2018 missions with card validation, TIR detection, and mystery medium X integrated",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "refraction-linear-regression-worksheet",
+    "title": "3-tab wizard worksheet with sin i - sin r linear scatter plot and auto-grading",
+    "user_visible_behavior": "Students view sin i vs sin r plot with slope n21, complete quiz, and submit report",
+    "verification_command": "Linear regression computes n21, R^2 with 30/40/30 auto-grading report storage",
+    "status": "passing",
+    "evidence": "RefractionLabWizardWorksheet with 3-tab layout, sin i - sin r scatter plot, and 3-tier auto-grading passing build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "emf-internal-r-3d-workbench-engine",
+    "title": "3D Circuit workbench and Ohm law physics engine for EMF & Internal Resistance lab",
+    "user_visible_behavior": "Student can manipulate battery box, rheostat slider, knife switch, and dual-mode analog/digital meters in 3D",
+    "verification_command": "Circuit state computes I = E/(R+r), U = I*R with glowing current animation",
+    "status": "passing",
+    "evidence": "EmfInternalRWorkbench3D and emfInternalREngine built and verified with Three.js circuit workbench and dual meters",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "emf-internal-r-gdpt2018-missions",
+    "title": "3 GDPT 2018 missions for Single Cell, 2-Cell Series, and High Internal R Source",
+    "user_visible_behavior": "Students complete 3 structured missions and record empirical (R, I, U) measurements",
+    "verification_command": "Record data buttons validate source type, switch state, and resistance variance",
+    "status": "passing",
+    "evidence": "3 GDPT 2018 missions with card validation and status badges integrated",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "emf-internal-r-linear-regression-worksheet",
+    "title": "3-tab wizard worksheet with U-I linear regression extrapolation plot and auto-grading",
+    "user_visible_behavior": "Students view U-I plot with slope (-r) and intercept (E), complete quiz, and submit report",
+    "verification_command": "Linear regression computes E, r, R^2 with auto-grading report storage",
+    "status": "passing",
+    "evidence": "EmfInternalRLabWizardWorksheet with 3-tab layout, linear regression solver, and 3-tier auto-grading passing build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "specific-heat-3d-workbench-engine",
+    "title": "3D Calorimeter studio and heating physics engine for Specific Heat lab",
+    "user_visible_behavior": "Student can observe double-layer calorimeter, dynamic glowing heating coil, rotating stirrer, and boil safety auto-shutoff",
+    "verification_command": "Heating liquid updates instant temperature based on Q = P*t = m*c*deltaT with noise and boil detection",
+    "status": "passing",
+    "evidence": "SpecificHeatWorkbench3D and specificHeatEngine implemented and verified via build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "specific-heat-gdpt2018-missions",
+    "title": "3 GDPT 2018 missions for Water, Power/Mass variance, and Ethanol/Oil comparison",
+    "user_visible_behavior": "Students complete 3 structured missions and record valid empirical data",
+    "verification_command": "Record data buttons validate liquid type, mass, power and time before completing mission cards",
+    "status": "passing",
+    "evidence": "3 GDPT 2018 missions with card validation and status badges integrated",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "specific-heat-wizard-worksheet-submission",
+    "title": "3-tab wizard worksheet with temperature-time curve and auto-grading report",
+    "user_visible_behavior": "Students inspect measurements, view T(t) chart, complete quiz, and submit report to EduLab",
+    "verification_command": "Auto-grading evaluates Operation (3.0), Accuracy (4.0), and Quiz (3.0) with report storage",
+    "status": "passing",
+    "evidence": "SpecificHeatLabWizardWorksheet with 3-tab layout, quiz bank, and auto-grading passing build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
     "id": "admin-layout-sidebar-routing",
     "title": "Full-width Admin layout with collapsible left sidebar and route-based navigation",
     "user_visible_behavior": "Navigate between user management, system labs, and audit logs with maximum screen space and dedicated URLs",
@@ -648,5 +768,115 @@
     "evidence": "FloatingAssignmentDrawer and worksheetSchemas updated to support sim-induction and edulab_induction_grade_result sync",
     "notes": "",
     "priority": "P1"
+  },
+  {
+    "id": "momentum-collision-3d-workbench-studio",
+    "title": "3D Three.js Studio for Momentum & Collisions with Air Track, Spring Launcher, and 3D Digital Timer",
+    "user_visible_behavior": "Students interact with 3D air track, 2 gliders with weights, spring launcher slider, photogates, and tabletop 3D digital timer",
+    "verification_command": "Launching /lab/momentum-collision renders 3D air track, gliders, spring launcher, photogates, and digital timer readout",
+    "status": "passing",
+    "evidence": "MomentumWorkbench3D and MomentumWorkbenchHudDock implemented with air track, gliders, spring launcher slider, photogates, and tabletop 3D digital timer",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "momentum-collision-wizard-worksheet-grading",
+    "title": "3-Step Wizard Worksheet with 3-Tier Auto-Grading (3-4-3) for Momentum Collision Lab",
+    "user_visible_behavior": "Students complete 3 missions (equal mass elastic, unequal mass elastic, inelastic), record p_before & p_after, write observations, complete quiz, and get 10-scale score",
+    "verification_command": "Recording 3 missions calculates p_before, p_after, delta_p%, unlocks quiz, and outputs 30% Operation + 40% Accuracy + 30% Quiz score",
+    "status": "passing",
+    "evidence": "MomentumLabWizardWorksheet implemented with 3 missions, data table, conservation error calculation, observation chips, SGK quiz, and 3-tier scoring",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "momentum-collision-drawer-submission-sync",
+    "title": "Assignment Drawer synchronization for Momentum Collision lab assignment",
+    "user_visible_behavior": "Evaluated momentum collision grade result syncs into FloatingAssignmentDrawer for 1-click submission",
+    "verification_command": "Opening assignment drawer from Momentum Collision lab loads edulab_momentum_grade_result and submits successfully",
+    "status": "passing",
+    "evidence": "FloatingAssignmentDrawer and worksheetSchemas updated to support sim-momentum-collision and edulab_momentum_grade_result sync",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "dual-mode-auto-save-draft",
+    "title": "Auto-Save Draft & Persistence for Student Assignment Mode",
+    "user_visible_behavior": "Students doing assigned lab have their empirical trials and quiz answers auto-saved per assignmentId; F5 restores 100% data",
+    "verification_command": "Reloading /student/assignment/:assignmentId/lab restores draft measurements and selected answers from edulab_draft_${assignmentId}",
+    "status": "active",
+    "evidence": "useLabPersistence hook created with edulab_draft_${assignmentId}_${labSlug} namespace and event bus",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "dual-mode-direct-submission-sync",
+    "title": "Direct Submission Sync from Lab Workbench to Teacher Backend and Drawer",
+    "user_visible_behavior": "Grading inside lab workbench immediately syncs to FloatingAssignmentDrawer and submits to backend without double-step friction",
+    "verification_command": "Clicking submit in lab worksheet triggers backend submission API and updates drawer status to 'Đã nộp bài'",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "dual-mode-sandbox-isolation",
+    "title": "Sandbox Mode Isolation for Free Library Users",
+    "user_visible_behavior": "Users opening /lab/:labSlug experience clean fullscreen physics studio with local auto-grading that does not pollute assignment drafts",
+    "verification_command": "Navigating to /lab/:labSlug runs in sandbox mode without assignment banners and without writing assignment drafts",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "",
+    "priority": "P2"
+  },
+  {
+    "id": "google-auth-redis-pending-staging",
+    "title": "Google OAuth Registration with Redis Pending Staging and Email Verification Link",
+    "user_visible_behavior": "As a student registering via Google, I receive a verification email before my permanent account is created, without generating junk PostgreSQL records",
+    "verification_command": "POST /api/auth/google creates pending:registration:{token} in Redis with 15m TTL and dispatches verification email while DB row count remains 0",
+    "status": "passing",
+    "evidence": "UserServiceGoogleAuthTest & RegistrationStagingServiceTest passed; zero DB rows created during staging",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "google-auth-email-activation-auto-login",
+    "title": "Email Verification Landing Page with Auto-Login and Refresh Cookie Setup",
+    "user_visible_behavior": "As a pending student, clicking the email link opens /verify-registration, provisions the active Student account in PostgreSQL, issues auth session, and navigates to Onboarding",
+    "verification_command": "GET /api/auth/verify-registration?token=... creates ACTIVE STUDENT in DB, purges Redis keys, returns tokens, and redirects to /onboarding",
+    "status": "passing",
+    "evidence": "VerifyRegistrationPage and AuthController /verify-registration verified; sets HttpOnly cookie and navigates to /onboarding",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "google-auth-student-onboarding",
+    "title": "Student Profile Onboarding (School & Class) after Email Verification",
+    "user_visible_behavior": "As a newly verified student, I complete my school and profile details on /onboarding before accessing the Student Dashboard",
+    "verification_command": "POST /api/auth/onboarding sets school and marks onboardingCompleted=true, redirecting to /student dashboard",
+    "status": "passing",
+    "evidence": "OnboardingPage and AuthController /onboarding verified; updates school and onboardingCompleted=true in PostgreSQL",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "google-auth-existing-user-status-check",
+    "title": "Existing User Google Login with Strict Account Status Verification",
+    "user_visible_behavior": "As an existing active user, I log in via Google in one click; suspended/inactive accounts are rejected with 403",
+    "verification_command": "POST /api/auth/google returns tokens for ACTIVE users and returns 403 for INACTIVE/SUSPENDED users",
+    "status": "passing",
+    "evidence": "UserServiceGoogleAuthTest verified active fast-path and 403 status rejection for suspended accounts",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "google-auth-resend-token-invalidation",
+    "title": "Resend Verification Email with Rate Limiting and Old Token Invalidation",
+    "user_visible_behavior": "As a pending student, I can resend verification email with a 60s cooldown; older links become immediately invalid",
+    "verification_command": "POST /api/auth/resend-verification enforces 60s cooldown, deletes old Redis token key, and dispatches fresh token",
+    "status": "passing",
+    "evidence": "RegistrationStagingServiceTest and VerificationPendingModal verified 60s cooldown and old token invalidation",
+    "notes": "",
+    "priority": "P2"
   }
 ]

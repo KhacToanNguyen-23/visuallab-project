@@ -5,7 +5,17 @@ import { BoyleWorkbenchHudDock } from './BoyleWorkbenchHudDock';
 import { BoyleLabWizardWorksheet } from './BoyleLabWizardWorksheet';
 import { computeBoylePressure } from './boyleLabEngine';
 
-export const BoyleMariotteLab: React.FC = () => {
+export interface BoyleMariotteLabProps {
+  assignmentId?: string;
+  onOpenSubmissionDrawer?: () => void;
+  onGraded?: (result: any, details?: any) => void;
+}
+
+export const BoyleMariotteLab: React.FC<BoyleMariotteLabProps> = ({
+  assignmentId,
+  onOpenSubmissionDrawer,
+  onGraded,
+}) => {
   const navigate = useNavigate();
   const workbench3DRef = useRef<BoyleWorkbench3DHandle | null>(null);
 
@@ -201,9 +211,12 @@ export const BoyleMariotteLab: React.FC = () => {
             currentVolume={volume}
             currentPressure={pressure}
             trials={trials}
+            assignmentId={assignmentId}
             onAddTrialForMission={handleRecordTrialForMission}
             onRemoveTrial={handleRemoveTrial}
             onClearTrials={handleClearTrials}
+            onGraded={onGraded}
+            onOpenSubmissionDrawer={onOpenSubmissionDrawer}
           />
         </div>
       </div>

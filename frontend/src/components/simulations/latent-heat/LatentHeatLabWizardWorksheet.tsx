@@ -28,6 +28,7 @@ interface LatentHeatLabWizardWorksheetProps {
     equilibriumTemp: number;
     missionId?: number;
   }>;
+  assignmentId?: string;
   onAddTrialForMission: (missionId: number, targetIceMassG: number) => void;
   onRemoveTrial: (index: number) => void;
   onClearTrials: () => void;
@@ -41,6 +42,7 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
   initialWaterTemp: _initialWaterTemp,
   equilibriumTemp: _equilibriumTemp,
   trials,
+  assignmentId,
   onAddTrialForMission,
   onRemoveTrial,
   onClearTrials,
@@ -130,8 +132,22 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
       quizAnswers,
       gradeResult: evaluated,
     };
-    localStorage.setItem('edulab_latent_heat_grade_result', JSON.stringify({ result: evaluated, details }));
+    try {
+      localStorage.setItem(
+        'edulab_latent_heat_grade_result',
+        JSON.stringify({
+          assignmentId,
+          result: evaluated,
+          details,
+        })
+      );
+    } catch (_) {}
+
     if (onGraded) onGraded(evaluated, details);
+
+    if (onOpenSubmissionDrawer) {
+      onOpenSubmissionDrawer();
+    }
   };
 
   const handleResetGrading = () => {

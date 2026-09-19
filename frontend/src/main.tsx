@@ -29,12 +29,15 @@ import { StudentHistoryPage } from './pages/student/StudentHistoryPage';
 import { StudentStoragePage } from './pages/student/StudentStoragePage';
 import { StudentLabAssignmentWorkbenchPage } from './pages/student/StudentLabAssignmentWorkbenchPage';
 import { UniversalWorkbenchPage } from './pages/UniversalWorkbenchPage';
+import { VerifyRegistrationPage } from './pages/VerifyRegistrationPage';
+import { OnboardingPage } from './pages/OnboardingPage';
 
 // Simulation Engine Components (Lazy Loaded for Bundle Optimization)
 const PhetPendulumLab = lazy(() => import('./components/simulations/PhetPendulumLab').then(m => ({ default: m.PhetPendulumLab })));
 const PhetSpringLab = lazy(() => import('./components/simulations/PhetSpringLab').then(m => ({ default: m.PhetSpringLab })));
+const EmfInternalRLab = lazy(() => import('./components/simulations/emf-internal-r/EmfInternalRLab').then(m => ({ default: m.EmfInternalRLab })));
 const PhetEmfLab = lazy(() => import('./components/simulations/PhetEmfLab').then(m => ({ default: m.PhetEmfLab })));
-const PhetRefractionLab = lazy(() => import('./components/simulations/PhetRefractionLab').then(m => ({ default: m.PhetRefractionLab })));
+const RefractionLab = lazy(() => import('./components/simulations/refraction/RefractionLab').then(m => ({ default: m.RefractionLab })));
 const PhetFreeFallLab = lazy(() => import('./components/simulations/PhetFreeFallLab').then(m => ({ default: m.PhetFreeFallLab })));
 const PhetVietnamLabWrapper = lazy(() => import('./components/simulations/PhetVietnamLabWrapper').then(m => ({ default: m.PhetVietnamLabWrapper })));
 const WaveInterferenceLab = lazy(() => import('./components/simulations/WaveInterferenceLab').then(m => ({ default: m.WaveInterferenceLab })));
@@ -71,6 +74,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/thu-vien" element={<CatalogPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/verify-registration" element={<VerifyRegistrationPage />} />
+                <Route
+                  path="/onboarding"
+                  element={
+                    <ProtectedRoute allowUnonboarded={true}>
+                      <OnboardingPage />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="/test-spring" element={<LabErrorBoundary><PhetSpringLab /></LabErrorBoundary>} />
                 <Route path="/test-emf" element={<LabErrorBoundary><PhetEmfLab /></LabErrorBoundary>} />
                 <Route path="/test-pendulum" element={<LabErrorBoundary><PhetPendulumLab /></LabErrorBoundary>} />
@@ -154,8 +166,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route path="/lab/spring-mass" element={<LabErrorBoundary><PhetSpringLab /></LabErrorBoundary>} />
                 <Route path="/lab/simple-pendulum" element={<LabErrorBoundary><PhetPendulumLab /></LabErrorBoundary>} />
                 <Route path="/lab/sound-resonance" element={<LabErrorBoundary><SoundResonanceLab /></LabErrorBoundary>} />
-                <Route path="/lab/emf-internal-r" element={<LabErrorBoundary><PhetEmfLab /></LabErrorBoundary>} />
-                <Route path="/lab/refraction" element={<LabErrorBoundary><PhetRefractionLab /></LabErrorBoundary>} />
+                <Route path="/lab/emf-internal-r" element={<LabErrorBoundary><EmfInternalRLab /></LabErrorBoundary>} />
+                <Route path="/lab/refraction" element={<LabErrorBoundary><RefractionLab /></LabErrorBoundary>} />
                 <Route path="/lab/wave-interference" element={<LabErrorBoundary><WaveInterferenceLab /></LabErrorBoundary>} />
                 <Route path="/lab/specific-heat" element={<LabErrorBoundary><SpecificHeatLab /></LabErrorBoundary>} />
                 <Route path="/lab/latent-heat" element={<LabErrorBoundary><LatentHeatLab /></LabErrorBoundary>} />

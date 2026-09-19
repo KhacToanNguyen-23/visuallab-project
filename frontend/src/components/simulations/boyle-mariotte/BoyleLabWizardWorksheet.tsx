@@ -19,6 +19,7 @@ interface BoyleLabWizardWorksheetProps {
   currentVolume: number;
   currentPressure?: number;
   trials: Array<{ volume: number; pressure: number; missionId?: number }>;
+  assignmentId?: string;
   onAddTrialForMission: (missionId: number, targetV: number) => void;
   onRemoveTrial: (index: number) => void;
   onClearTrials: () => void;
@@ -29,6 +30,7 @@ interface BoyleLabWizardWorksheetProps {
 export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = ({
   currentVolume,
   trials,
+  assignmentId,
   onAddTrialForMission,
   onRemoveTrial,
   onClearTrials,
@@ -43,15 +45,12 @@ export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = (
   const [studentAvgPV, setStudentAvgPV] = useState<string>('');
   const [studentDeltaPV, setStudentDeltaPV] = useState<string>('');
   const [studentObservation, setStudentObservation] = useState<string>('');
-
-  // Quiz answers
   const [quizAnswers, setQuizAnswers] = useState<{ q1: string; q2: string; q3: string }>({
     q1: '',
     q2: '',
     q3: '',
   });
 
-  // Calculate trials table
   const computedTrials: BoyleTrial[] = useMemo(() => {
     const rawPVs = trials.map(t => t.volume * t.pressure);
     const avg = rawPVs.length > 0 ? rawPVs.reduce((a, b) => a + b, 0) / rawPVs.length : 0;
@@ -73,7 +72,6 @@ export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = (
     });
   }, [trials]);
 
-  // Check completion status for 3 missions
   const missionStatuses = useMemo(() => {
     return DEFAULT_BOYLE_MISSIONS.map(m => {
       const matched = trials.find(t => Math.abs(t.volume - m.targetV) <= m.toleranceV);
@@ -106,15 +104,29 @@ export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = (
     setIsSubmitted(true);
 
     const details: BoyleLabSubmissionDetails = {
-      trials: computedTrials,
+      trials: computedTrials as unknown as BoyleTrial[],
       studentAvgPV: parseFloat(studentAvgPV) || evaluated.avgPV,
       studentDeltaPV: parseFloat(studentDeltaPV) || evaluated.meanAbsoluteError,
       studentObservation,
       quizAnswers,
       gradeResult: evaluated,
     };
-    localStorage.setItem('edulab_boyle_grade_result', JSON.stringify({ result: evaluated, details }));
+    try {
+      localStorage.setItem(
+        'edulab_boyle_grade_result',
+        JSON.stringify({
+          assignmentId,
+          result: evaluated,
+          details,
+        })
+      );
+    } catch (_) {}
+
     if (onGraded) onGraded(evaluated, details);
+
+    if (onOpenSubmissionDrawer) {
+      onOpenSubmissionDrawer();
+    }
   };
 
   const handleResetGrading = () => {

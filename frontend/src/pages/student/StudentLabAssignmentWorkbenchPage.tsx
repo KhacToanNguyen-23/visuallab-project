@@ -12,8 +12,8 @@ import { getLabRoute } from '../../utils/labRoutes';
 // Lazy load Simulation Engine Components
 const PhetPendulumLab = lazy(() => import('../../components/simulations/PhetPendulumLab').then(m => ({ default: m.PhetPendulumLab })));
 const PhetSpringLab = lazy(() => import('../../components/simulations/PhetSpringLab').then(m => ({ default: m.PhetSpringLab })));
-const PhetEmfLab = lazy(() => import('../../components/simulations/PhetEmfLab').then(m => ({ default: m.PhetEmfLab })));
-const PhetRefractionLab = lazy(() => import('../../components/simulations/PhetRefractionLab').then(m => ({ default: m.PhetRefractionLab })));
+const EmfInternalRLab = lazy(() => import('../../components/simulations/emf-internal-r/EmfInternalRLab').then(m => ({ default: m.EmfInternalRLab })));
+const RefractionLab = lazy(() => import('../../components/simulations/refraction/RefractionLab').then(m => ({ default: m.RefractionLab })));
 const PhetFreeFallLab = lazy(() => import('../../components/simulations/PhetFreeFallLab').then(m => ({ default: m.PhetFreeFallLab })));
 const PhetVietnamLabWrapper = lazy(() => import('../../components/simulations/PhetVietnamLabWrapper').then(m => ({ default: m.PhetVietnamLabWrapper })));
 const WaveInterferenceLab = lazy(() => import('../../components/simulations/WaveInterferenceLab').then(m => ({ default: m.WaveInterferenceLab })));
@@ -92,6 +92,31 @@ export const StudentLabAssignmentWorkbenchPage: React.FC = () => {
             createdAt: new Date().toISOString(),
           });
         }
+        // Clear obsolete unlinked grade results from previous sessions
+        const keysToPurge = [
+          'edulab_speed_grade_result',
+          'edulab_boyle_grade_result',
+          'edulab_latent_heat_grade_result',
+          'edulab_induction_grade_result',
+          'edulab_momentum_grade_result',
+          'edulab_refraction_grade_result',
+          'edulab_sliding_friction_grade_result',
+          'edulab_specific_heat_grade_result',
+          'edulab_emf_internal_r_grade_result',
+        ];
+        keysToPurge.forEach(k => {
+          try {
+            const val = localStorage.getItem(k);
+            if (val) {
+              const parsed = JSON.parse(val);
+              if (parsed?.assignmentId !== assignmentId) {
+                localStorage.removeItem(k);
+              }
+            }
+          } catch (_) {
+            localStorage.removeItem(k);
+          }
+        });
       } catch (err: any) {
         setError(err.message || 'Không thể tải thông tin bài tập');
       } finally {
@@ -125,13 +150,13 @@ export const StudentLabAssignmentWorkbenchPage: React.FC = () => {
 
     switch (route) {
       case '/lab/speed-measurement':
-        return <SpeedMeasurementLab />;
+        return <SpeedMeasurementLab assignmentId={assignment.id} onOpenSubmissionDrawer={() => setIsDrawerOpen(true)} />;
       case '/lab/free-fall':
         return <PhetFreeFallLab />;
       case '/lab/sliding-friction':
-        return <SlidingFrictionLab />;
+        return <SlidingFrictionLab assignmentId={assignment.id} onOpenSubmissionDrawer={() => setIsDrawerOpen(true)} />;
       case '/lab/momentum-collision':
-        return <MomentumCollisionLab />;
+        return <MomentumCollisionLab assignmentId={assignment.id} onOpenSubmissionDrawer={() => setIsDrawerOpen(true)} />;
       case '/lab/spring-mass':
         return <PhetSpringLab />;
       case '/lab/simple-pendulum':
@@ -139,19 +164,19 @@ export const StudentLabAssignmentWorkbenchPage: React.FC = () => {
       case '/lab/sound-resonance':
         return <SoundResonanceLab />;
       case '/lab/emf-internal-r':
-        return <PhetEmfLab />;
+        return <EmfInternalRLab assignmentId={assignment.id} onOpenSubmissionDrawer={() => setIsDrawerOpen(true)} />;
       case '/lab/refraction':
-        return <PhetRefractionLab />;
+        return <RefractionLab assignmentId={assignment.id} onOpenSubmissionDrawer={() => setIsDrawerOpen(true)} />;
       case '/lab/wave-interference':
         return <WaveInterferenceLab />;
       case '/lab/specific-heat':
-        return <SpecificHeatLab />;
+        return <SpecificHeatLab assignmentId={assignment.id} onOpenSubmissionDrawer={() => setIsDrawerOpen(true)} />;
       case '/lab/latent-heat':
-        return <LatentHeatLab />;
+        return <LatentHeatLab assignmentId={assignment.id} onOpenSubmissionDrawer={() => setIsDrawerOpen(true)} />;
       case '/lab/boyle-mariotte':
-        return <BoyleMariotteLab />;
+        return <BoyleMariotteLab assignmentId={assignment.id} onOpenSubmissionDrawer={() => setIsDrawerOpen(true)} />;
       case '/lab/induction':
-        return <InductionLab />;
+        return <InductionLab assignmentId={assignment.id} onOpenSubmissionDrawer={() => setIsDrawerOpen(true)} />;
       case '/lab/ohm-vietnam':
         return <PhetVietnamLabWrapper />;
       case '/workbench/universal':

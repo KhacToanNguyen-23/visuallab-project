@@ -27,6 +27,11 @@ public class EduLabApplication {
         return args -> {
             // Ensure screenshot_url and text columns have TEXT type in PostgreSQL
             try {
+                jdbcTemplate.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id VARCHAR(255)");
+                jdbcTemplate.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'ACTIVE'");
+                jdbcTemplate.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS onboarding_completed BOOLEAN DEFAULT true");
+                jdbcTemplate.execute("UPDATE users SET status = 'ACTIVE' WHERE status IS NULL");
+                jdbcTemplate.execute("UPDATE users SET onboarding_completed = true WHERE onboarding_completed IS NULL");
                 jdbcTemplate.execute("ALTER TABLE student_lab_snapshots ALTER COLUMN screenshot_url TYPE TEXT");
                 jdbcTemplate.execute("ALTER TABLE student_lab_snapshots ALTER COLUMN caption TYPE TEXT");
             } catch (Exception e) {

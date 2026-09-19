@@ -28,6 +28,7 @@ interface InductionLabWizardWorksheetProps {
   instantEmfMv: number;
   instantCurrentMa: number;
   trials: RawInductionTrial[];
+  assignmentId?: string;
   onAddTrialForMission: (missionId: number) => void;
   onRemoveTrial: (index: number) => void;
   onClearTrials: () => void;
@@ -41,13 +42,14 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
   instantEmfMv: _instantEmfMv,
   instantCurrentMa: _instantCurrentMa,
   trials,
+  assignmentId,
   onAddTrialForMission,
   onRemoveTrial,
   onClearTrials,
   onGraded,
   onOpenSubmissionDrawer,
 }) => {
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
+  const [currentStep, setCurrentStep] = useState<number>(1);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [gradingResultState, setGradingResultState] = useState<InductionGradingResult | null>(null);
 
@@ -86,13 +88,14 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
     const submissionDetails: InductionSubmissionDetails = {
       trials: evaluatedTrials,
       studentObservation,
-      quizAnswers,
+      quizAnswers: quizAnswers as any,
       gradeResult: result,
     };
 
     // Save to localStorage for drawer sync
     try {
       localStorage.setItem('edulab_induction_grade_result', JSON.stringify({
+        assignmentId,
         result,
         details: {
           rows: evaluatedTrials,
@@ -110,6 +113,10 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
 
     if (onGraded) {
       onGraded(result, submissionDetails);
+    }
+
+    if (onOpenSubmissionDrawer) {
+      onOpenSubmissionDrawer();
     }
   };
 
@@ -229,7 +236,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
                           : 'bg-sky-600 hover:bg-sky-500 text-white shadow-md'
                       }`}
                     >
-                      <span>{m.isCompleted ? '↺ Đo Lại Lần Này' : '⚡ Thực Hiện & Ghi'}</span>
+                      <span>{m.isCompleted ? '↺ Cập Nhật Lại' : '📥 Ghi Nhận Số Liệu Hiện Tại'}</span>
                     </button>
                   </div>
                 </div>
