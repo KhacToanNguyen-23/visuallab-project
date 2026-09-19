@@ -67,7 +67,7 @@ export const VietnameseLabWorksheet: React.FC<VietnameseLabWorksheetProps> = ({ 
     <div className="bg-[#0A0E17] border border-cyan-500/30 rounded-3xl p-5 shadow-2xl flex flex-col gap-4 text-slate-100">
       <div className="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 className="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-          <span>📋 Bảng Ghi Chép & Báo Cáo Số Liệu</span>
+          <span>Bảng Ghi Chép & Báo Cáo Số Liệu</span>
         </h3>
         <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 bg-cyan-950 px-2.5 py-0.5 rounded-full border border-cyan-800/40">
           Chương Trình GDPT 2018
@@ -173,7 +173,7 @@ export const VietnameseLabWorksheet: React.FC<VietnameseLabWorksheetProps> = ({ 
           }`}
         >
           <div className="flex items-center justify-between font-bold">
-            <span>{evaluation.pass ? '🎉 ĐẠT KẾT QUẢ THỰC HÀNH' : '❌ CẦN TÍNH TOÁN LẠI SAI SỐ'}</span>
+            <span>{evaluation.pass ? 'ĐẠT KẾT QUẢ THỰC HÀNH' : 'CẦN TÍNH TOÁN LẠI SAI SỐ'}</span>
             <span className="text-sm px-2.5 py-0.5 rounded-full bg-black/40 border border-current">
               {evaluation.score} / 10 ĐIỂM
             </span>

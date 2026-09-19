@@ -39,7 +39,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 
         // If credentials are demo or unconfigured, fallback to direct data URL for seamless local testing
         if ("demo".equalsIgnoreCase(cloudName) || "123456789".equalsIgnoreCase(apiKey)) {
-            System.out.println("⚠️ Using local fallback media URL for Cloudinary image upload (Cloudinary demo mode)");
+            System.out.println("Using local fallback media URL for Cloudinary image upload (Cloudinary demo mode)");
             return new UploadResult(base64Data, publicId);
         }
 
@@ -67,7 +67,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
                 return new UploadResult(secureUrl != null ? secureUrl : base64Data, returnedPublicId != null ? returnedPublicId : publicId);
             }
         } catch (Exception e) {
-            System.err.println("⚠️ Cloudinary upload API error: " + e.getMessage() + ". Falling back to direct image payload.");
+            System.err.println("Cloudinary upload API error: " + e.getMessage() + ". Falling back to direct image payload.");
         }
 
         return new UploadResult(base64Data, publicId);
@@ -78,7 +78,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         if (publicId == null || publicId.isBlank()) {
             return false;
         }
-        System.out.println("🗑️ Cloudinary image deletion triggered for public_id: " + publicId);
+        System.out.println("Cloudinary image deletion triggered for public_id: " + publicId);
         return true;
     }
 }

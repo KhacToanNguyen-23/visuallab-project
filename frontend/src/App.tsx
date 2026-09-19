@@ -243,7 +243,7 @@ export const App: React.FC = () => {
 
           {toastMessage && (
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-full text-xs font-semibold shadow-2xl border border-slate-700 animate-bounce">
-              ✨ {toastMessage}
+              {toastMessage}
             </div>
           )}
         </div>

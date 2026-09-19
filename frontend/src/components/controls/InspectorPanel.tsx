@@ -15,7 +15,7 @@ export const InspectorPanel: React.FC<Props> = ({
   if (!selectedComponent) {
     return (
       <div className="w-72 bg-slate-900 text-slate-400 p-4 border-l border-slate-800 text-sm flex flex-col justify-center items-center text-center gap-2">
-        <span className="text-3xl">👆</span>
+        <span className="text-3xl"></span>
         <p>Nhấp chọn một linh kiện trên sơ đồ để điều chỉnh thông số hoặc xóa.</p>
       </div>
     );

@@ -99,7 +99,7 @@ export const StudentStoragePage: React.FC = () => {
       {/* Toast Notification */}
       {toastMsg && (
         <div className="fixed top-6 right-6 z-50 bg-emerald-950 text-emerald-300 border border-emerald-700/60 px-4 py-2.5 rounded-2xl text-xs font-bold shadow-2xl animate-bounce">
-          ✨ {toastMsg}
+          {toastMsg}
         </div>
       )}
 
@@ -107,7 +107,7 @@ export const StudentStoragePage: React.FC = () => {
       <div className="p-6 rounded-2xl border flex flex-col md:flex-row md:items-center justify-between gap-4" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
         <div>
           <h1 className="text-xl font-black flex items-center gap-2">
-            <span>📸 Kho Lưu Trữ Thí Nghiệm (My Storage)</span>
+            <span>Kho Lưu Trữ Thí Nghiệm (My Storage)</span>
           </h1>
           <p className="text-xs opacity-70 mt-1">
             Nhật ký hình ảnh mô phỏng và báo cáo thí nghiệm cá nhân theo mốc thời gian
@@ -128,10 +128,9 @@ export const StudentStoragePage: React.FC = () => {
         </div>
       ) : snapshots.length === 0 ? (
         <div className="py-20 border border-dashed rounded-2xl flex flex-col items-center justify-center text-center opacity-70 p-6 space-y-3" style={{ borderColor: 'var(--border-color)' }}>
-          <span className="text-3xl">📷</span>
           <h3 className="text-sm font-bold">Kho Lưu Trữ Đang Trống</h3>
           <p className="text-xs max-w-md">
-            Bạn chưa lưu hình ảnh thí nghiệm nào. Hãy vào một bài thực hành bất kỳ và nhấn nút <strong>"📸 Chụp Ảnh & Lưu Kho"</strong> để lưu lại kết quả!
+            Bạn chưa lưu hình ảnh thí nghiệm nào. Hãy vào một bài thực hành bất kỳ và nhấn nút <strong>"Chụp Ảnh & Lưu Kho"</strong> để lưu lại kết quả!
           </p>
         </div>
       ) : (
@@ -166,7 +165,7 @@ export const StudentStoragePage: React.FC = () => {
                         className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1.5">
-                        <span>🔍 Xem Ảnh Full-size</span>
+                        <span>Xem Ảnh Full-size</span>
                       </div>
                       <div className="absolute top-3 left-3">
                         {getDifficultyBadge(snap.difficulty)}
@@ -180,7 +179,7 @@ export const StudentStoragePage: React.FC = () => {
                           {snap.labTitle}
                         </h4>
                         <span className="text-[10px] text-slate-400 font-medium">
-                          🕒 {new Date(snap.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(snap.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                         </span>
 
                         {snap.caption && (
@@ -204,7 +203,7 @@ export const StudentStoragePage: React.FC = () => {
                           disabled={deletingId === snap.id}
                           className="text-rose-400 hover:text-rose-300 font-semibold cursor-pointer px-2 py-1 rounded hover:bg-rose-950/40 transition"
                         >
-                          {deletingId === snap.id ? 'Đang xóa...' : '🗑️ Xóa'}
+                          {deletingId === snap.id ? 'Đang xóa...' : 'Xóa'}
                         </button>
                       </div>
                     </div>
@@ -251,7 +250,7 @@ export const StudentStoragePage: React.FC = () => {
 
             {selectedSnapshot.caption && (
               <div className="p-4 rounded-2xl bg-cyan-950/30 border border-cyan-800/40 text-xs text-cyan-200">
-                <span className="font-bold block mb-1">📝 Ghi chú của sinh viên:</span>
+                <span className="font-bold block mb-1">Ghi chú của sinh viên:</span>
                 <p className="leading-relaxed">{selectedSnapshot.caption}</p>
               </div>
             )}

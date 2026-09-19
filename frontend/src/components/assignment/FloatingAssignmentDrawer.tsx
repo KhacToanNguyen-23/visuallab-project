@@ -272,7 +272,6 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
             >
               <div className="font-bold flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
-                  <span>🎯</span>
                   <span>Thông Số Đề Bài Cá Nhân Hóa</span>
                 </span>
                 <span className="text-[10px] opacity-60 font-mono">ID: {studentId}</span>
@@ -309,7 +308,7 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
             {/* Error banner */}
             {errorMessage && (
               <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-500 font-semibold text-xs">
-                ⚠️ {errorMessage}
+                {errorMessage}
               </div>
             )}
 
@@ -317,7 +316,6 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-xs flex items-center gap-1.5">
-                  <span>🏆</span>
                   <span>Kết Quả Thực Hành Đã Thực Hiện</span>
                 </span>
                 {labResult && (
@@ -394,9 +392,9 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
                     borderColor: 'var(--border-color)',
                   }}
                 >
-                  <p className="font-bold text-amber-400 text-xs">⏳ Chưa có kết quả thực hành</p>
+                  <p className="font-bold text-amber-400 text-xs">Chưa có kết quả thực hành</p>
                   <p className="text-[11px] leading-relaxed">
-                    Bạn hãy thực hiện các thao tác đo đạc, tính sai số và bấm <strong>"🏆 Nộp Báo Cáo & Chấm Điểm"</strong> trực tiếp trên bảng thực hành ảo. Kết quả sẽ tự động hiển thị tại đây.
+                    Bạn hãy thực hiện các thao tác đo đạc, tính sai số và bấm <strong>"Nộp Báo Cáo & Chấm Điểm"</strong> trực tiếp trên bảng thực hành ảo. Kết quả sẽ tự động hiển thị tại đây.
                   </p>
                 </div>
               )}
@@ -434,15 +432,9 @@ export const FloatingAssignmentDrawer: React.FC<FloatingAssignmentDrawerProps> =
                     <span>Đang nộp bài...</span>
                   </>
                 ) : submissionResult ? (
-                  <>
-                    <span>🔄</span>
-                    <span>Cập Nhật & Xác Nhận Nộp Lại</span>
-                  </>
+                  <span>Cập Nhật & Xác Nhận Nộp Lại</span>
                 ) : (
-                  <>
-                    <span>🚀</span>
-                    <span>Xác Nhận Nộp Bài Cho Giáo Viên</span>
-                  </>
+                  <span>Xác Nhận Nộp Bài Cho Giáo Viên</span>
                 )}
               </button>
 

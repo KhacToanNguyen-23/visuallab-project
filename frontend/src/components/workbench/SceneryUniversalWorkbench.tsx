@@ -149,7 +149,7 @@ export const SceneryUniversalWorkbench: React.FC<SceneryUniversalWorkbenchProps>
 
       {placedItems.length === 0 && (
         <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center text-slate-500 gap-2">
-          <span className="text-4xl animate-bounce">👈</span>
+          <span className="text-4xl animate-bounce"></span>
           <p className="text-sm font-bold">Hãy chọn hoặc kéo thả linh kiện từ bảng dụng cụ vào bàn thí nghiệm</p>
         </div>
       )}
@@ -213,7 +213,7 @@ function createSceneryNodeForItem(
     case 'BULB': {
       const bulbGlass = new Circle(22, { fill: '#FACC15', stroke: '#FDE047', lineWidth: 2, opacity: 0.85 });
       const base = new Rectangle(-10, 22, 20, 14, { fill: '#64748B' });
-      const label = new Text('💡 12W', { fill: '#0F172A', font: 'bold 10px sans-serif' });
+      const label = new Text('12W', { fill: '#0F172A', font: 'bold 10px sans-serif' });
       label.center = new Vector2(0, 0);
       containerNode.addChild(bulbGlass);
       containerNode.addChild(base);

@@ -485,14 +485,13 @@ export const InductionWorkbench3D = forwardRef<InductionWorkbench3DHandle, Induc
 
       {/* Dragging Help Indicator */}
       <div className="absolute top-14 left-3 bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-lg px-3 py-1 text-[11px] text-slate-300 flex items-center space-x-1.5">
-        <span>🧲</span>
         <span>Kéo giữ thanh nam châm để di chuyển tự do qua cuộn dây</span>
       </div>
 
       {/* Bottom Floating Control Shortcuts */}
       <div className="absolute bottom-3 left-3 flex items-center space-x-2 z-10">
         <div className="bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-lg px-2.5 py-1 text-[11px] text-slate-400">
-          🖱️ Kéo chuột trái xoay 360° • Cuộn zoom
+          Kéo chuột trái xoay 360° • Cuộn zoom
         </div>
         <button
           onClick={() => {
@@ -507,13 +506,13 @@ export const InductionWorkbench3D = forwardRef<InductionWorkbench3DHandle, Induc
               : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-slate-200'
           }`}
         >
-          <span>🔄 Xoay Tự Động</span>
+          <span>Xoay Tự Động</span>
         </button>
         <button
           onClick={handleResetCamera}
           className="px-2.5 py-1 bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-slate-200 rounded-lg border border-slate-800 text-[11px] font-semibold transition cursor-pointer"
         >
-          🎯 Góc Mặc Định
+          Góc Mặc Định
         </button>
       </div>
     </div>

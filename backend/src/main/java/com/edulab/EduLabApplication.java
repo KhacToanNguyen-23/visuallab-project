@@ -45,7 +45,7 @@ public class EduLabApplication {
                     "LOCAL"
                 );
                 userRepository.saveAndFlush(admin);
-                System.out.println("✅ Seeded default Admin account: admin@edulab.vn / 123456");
+                System.out.println("Seeded default Admin account: admin@edulab.vn / 123456");
             }
 
             // Seed Demo Teacher Account
@@ -60,7 +60,7 @@ public class EduLabApplication {
                     "LOCAL"
                 );
                 userRepository.saveAndFlush(teacher);
-                System.out.println("✅ Seeded default Teacher account: teacher@edulab.vn / 123456");
+                System.out.println("Seeded default Teacher account: teacher@edulab.vn / 123456");
             }
 
             // Seed Demo Student Account
@@ -75,7 +75,7 @@ public class EduLabApplication {
                     "LOCAL"
                 );
                 userRepository.saveAndFlush(student);
-                System.out.println("✅ Seeded default Student account: student@edulab.vn / 123456");
+                System.out.println("Seeded default Student account: student@edulab.vn / 123456");
             }
 
             // Seed 14 Core Physics Labs SGK GDPT 2018
@@ -313,7 +313,7 @@ public class EduLabApplication {
                     )
                 );
                 labRepository.saveAllAndFlush(defaultLabs);
-                System.out.println("✅ Seeded 14 SGK GDPT 2018 physics labs into database table with dedicated routes");
+                System.out.println("Seeded 14 SGK GDPT 2018 physics labs into database table with dedicated routes");
             }
         };
     }

@@ -174,7 +174,6 @@ export const StudentLabAssignmentWorkbenchPage: React.FC = () => {
   if (error || !assignment) {
     return (
       <div className="w-screen h-screen flex flex-col items-center justify-center p-6 text-center space-y-4" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
-        <div className="text-4xl">⚠️</div>
         <h2 className="text-lg font-bold text-rose-500">Không thể mở phòng thí nghiệm</h2>
         <p className="text-xs opacity-75 max-w-md">{error || 'Không tìm thấy thông tin bài tập.'}</p>
         <button

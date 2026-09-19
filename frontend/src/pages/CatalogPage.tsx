@@ -72,7 +72,7 @@ export const CatalogPage: React.FC = () => {
 
           <div className="flex items-center gap-3">
             <button onClick={toggleTheme} className="p-2 rounded-lg border transition-colors flex items-center justify-center cursor-pointer" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
-              {theme === 'light' ? '🌙' : '☀️'}
+              {theme === 'light' ? 'Dark' : 'Light'}
             </button>
 
             {user ? (
@@ -156,7 +156,7 @@ export const CatalogPage: React.FC = () => {
           </div>
 
           <div className="w-full flex items-center px-4 h-12 rounded-xl border" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-color)' }}>
-            <span className="opacity-50 mr-3">🔍</span>
+            <span className="opacity-50 mr-3"></span>
             <input
               type="text"
               value={searchQuery}
@@ -168,7 +168,7 @@ export const CatalogPage: React.FC = () => {
 
           {filteredLabs.length === 0 ? (
             <div className="py-20 border border-dashed rounded-2xl flex flex-col items-center justify-center text-center opacity-70" style={{ borderColor: 'var(--border-color)' }}>
-              <span className="text-2xl mb-2">🔍</span>
+              <span className="text-2xl mb-2"></span>
               <span className="text-sm font-semibold mb-1">Không tìm thấy bài Lab nào phù hợp</span>
               <span className="text-xs">Vui lòng thử bỏ chọn bộ lọc hoặc nhập từ khóa tìm kiếm khác</span>
             </div>

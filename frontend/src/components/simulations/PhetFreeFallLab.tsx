@@ -19,17 +19,17 @@ interface ObjectPreset {
 }
 
 const OBJECT_PRESETS: ObjectPreset[] = [
-  { id: 'apple', name: 'Quả Táo (Newton)', emoji: '🍎', mass: 0.15, dragCoeff: 0.4, area: 0.0038, color: '#dc2626', radius: 0.035 },
-  { id: 'basketball', name: 'Quả Bóng Rổ', emoji: '🏀', mass: 0.62, dragCoeff: 0.47, area: 0.045, color: '#f97316', radius: 0.06 },
-  { id: 'steel_ball', name: 'Bi Thép SGK', emoji: '🎱', mass: 0.05, dragCoeff: 0.47, area: 0.002, color: '#e2e8f0', radius: 0.025 },
-  { id: 'feather', name: 'Cánh Lông Chim', emoji: '🪶', mass: 0.005, dragCoeff: 1.2, area: 0.012, color: '#f8fafc', radius: 0.04 },
+  { id: 'apple', name: 'Quả Táo (Newton)', emoji: '', mass: 0.15, dragCoeff: 0.4, area: 0.0038, color: '#dc2626', radius: 0.035 },
+  { id: 'basketball', name: 'Quả Bóng Rổ', emoji: '', mass: 0.62, dragCoeff: 0.47, area: 0.045, color: '#f97316', radius: 0.06 },
+  { id: 'steel_ball', name: 'Bi Thép SGK', emoji: '', mass: 0.05, dragCoeff: 0.47, area: 0.002, color: '#e2e8f0', radius: 0.025 },
+  { id: 'feather', name: 'Cánh Lông Chim', emoji: '', mass: 0.005, dragCoeff: 1.2, area: 0.012, color: '#f8fafc', radius: 0.04 },
 ];
 
 const GRAVITY_PRESETS = [
-  { label: '🌍 Trái Đất', value: 9.81, desc: '9.81 m/s²' },
-  { label: '🌕 Mặt Trăng', value: 1.62, desc: '1.62 m/s²' },
-  { label: '🔴 Sao Hỏa', value: 3.71, desc: '3.71 m/s²' },
-  { label: '🪐 Sao Mộc', value: 24.79, desc: '24.79 m/s²' },
+  { label: 'Trái Đất', value: 9.81, desc: '9.81 m/s²' },
+  { label: 'Mặt Trăng', value: 1.62, desc: '1.62 m/s²' },
+  { label: 'Sao Hỏa', value: 3.71, desc: '3.71 m/s²' },
+  { label: 'Sao Mộc', value: 24.79, desc: '24.79 m/s²' },
 ];
 
 export const PhetFreeFallLab: React.FC = () => {
@@ -392,7 +392,7 @@ export const PhetFreeFallLab: React.FC = () => {
       const dt = timeF - timeE;
       const h = gateFPos - gateEPos;
       const gCalc = (2 * h) / (dt * dt);
-      setMeasurements((prev) => [...prev, { objectName: `${selectedObj.emoji} ${selectedObj.name}`, h, dt, g: gCalc }]);
+      setMeasurements((prev) => [...prev, { objectName: selectedObj.name, h, dt, g: gCalc }]);
     }
   };
 
@@ -405,7 +405,7 @@ export const PhetFreeFallLab: React.FC = () => {
       <div className="w-[70%] h-full relative">
         <div className="absolute top-4 left-4 z-20 flex items-center gap-3 bg-slate-900/90 backdrop-blur-md p-2 rounded-2xl border border-slate-700/60 shadow-2xl">
           <span className="px-3 py-1.5 bg-indigo-600/30 text-indigo-300 font-black text-xs rounded-xl border border-indigo-500/30">
-            ⚡ PhET Engine Core + 3D PBR WebGL
+            PhET Engine Core + 3D PBR WebGL
           </span>
           <span className="text-xs text-slate-400 font-mono">Vector: ({phetPosVector.x}, {phetPosVector.y})</span>
         </div>
@@ -413,16 +413,16 @@ export const PhetFreeFallLab: React.FC = () => {
         {/* Challenge prompt */}
         <div className="absolute top-4 right-4 z-20 max-w-sm bg-slate-900/90 backdrop-blur-md p-4 rounded-2xl border border-indigo-500/30 shadow-2xl">
           <div className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">
-            💡 THÁCH THỨC VẬT LÝ
+            THÁCH THỨC VẬT LÝ
           </div>
           <p className="text-xs text-slate-200 font-medium">
-            Chọn <span className="text-amber-400 font-bold">🍎 Quả Táo</span> và <span className="text-slate-300 font-bold">🪶 Lông Chim</span>. Thử <span className="text-emerald-400 font-bold">BẬT Chân Không</span> để xem điều kỳ diệu!
+            Chọn <span className="text-amber-400 font-bold">Quả Táo</span> và <span className="text-slate-300 font-bold">Lông Chim</span>. Thử <span className="text-emerald-400 font-bold">BẬT Chân Không</span> để xem điều kỳ diệu!
           </p>
         </div>
 
         <div className="w-full h-full relative" ref={mountRef}>
           <div className="absolute bottom-4 left-4 pointer-events-none text-slate-400 text-xs bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 backdrop-blur-md">
-            💡 Giữ chuột trái để xoay 3D | Dây điện 3D tự uốn cong khi kéo cổng E, F
+            Giữ chuột trái để xoay 3D | Dây điện 3D tự uốn cong khi kéo cổng E, F
           </div>
         </div>
       </div>
@@ -441,14 +441,14 @@ export const PhetFreeFallLab: React.FC = () => {
             onClick={() => setIsScreenshotOpen(true)}
             className="px-3 py-1.5 bg-emerald-600/20 text-emerald-400 border border-emerald-500/40 rounded-lg text-xs font-bold hover:bg-emerald-600/30 transition-colors"
           >
-            📸 Lưu kho
+            Lưu kho
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
           {/* Select Object */}
           <div className="space-y-2">
-            <div className="text-xs font-black text-slate-400 uppercase tracking-wider">🍎 Chọn Vật Thể Rơi</div>
+            <div className="text-xs font-black text-slate-400 uppercase tracking-wider">Chọn Vật Thể Rơi</div>
             <div className="grid grid-cols-2 gap-2">
               {OBJECT_PRESETS.map((obj) => (
                 <button
@@ -462,7 +462,6 @@ export const PhetFreeFallLab: React.FC = () => {
                       : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700'
                     }`}
                 >
-                  <span className="text-lg">{obj.emoji}</span>
                   <div className="text-xs truncate">{obj.name}</div>
                 </button>
               ))}
@@ -473,7 +472,7 @@ export const PhetFreeFallLab: React.FC = () => {
           <div className="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-xs font-bold text-slate-200">🌬 Thí Nghiệm Chân Không</div>
+                <div className="text-xs font-bold text-slate-200">Thí Nghiệm Chân Không</div>
                 <div className="text-[10px] text-slate-500">Bật để triệt tiêu sức cản không khí</div>
               </div>
               <button
@@ -486,12 +485,12 @@ export const PhetFreeFallLab: React.FC = () => {
                     : 'bg-red-500/20 text-red-400 border border-red-500/40'
                   }`}
               >
-                {vacuumMode ? '✨ CHÂN KHÔNG (ON)' : '💨 CÓ KHÔNG KHÍ (OFF)'}
+                {vacuumMode ? 'CHÂN KHÔNG (ON)' : 'CÓ KHÔNG KHÍ (OFF)'}
               </button>
             </div>
 
             <div className="flex items-center justify-between border-t border-slate-800/80 pt-3">
-              <span className="text-xs font-bold text-slate-400">🐢 Tốc Độ Mô Phỏng</span>
+              <span className="text-xs font-bold text-slate-400">Tốc Độ Mô Phỏng</span>
               <div className="flex gap-1.5">
                 {[
                   { label: '1.0x', val: 1.0 },
@@ -515,7 +514,7 @@ export const PhetFreeFallLab: React.FC = () => {
           <div className="bg-black p-4 rounded-2xl border-2 border-slate-800 shadow-2xl">
             <div className="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                📟 ĐỒNG HỒ ĐO THỜI GIAN LED 7 ĐOẠN
+                ĐỒNG HỒ ĐO THỜI GIAN LED 7 ĐOẠN
               </span>
               <span className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-lg shadow-red-500/50 animate-pulse" />
             </div>
@@ -547,7 +546,7 @@ export const PhetFreeFallLab: React.FC = () => {
           {/* Computed g */}
           {gCalc !== null && (
             <div className="bg-emerald-950/40 p-4 rounded-2xl border border-emerald-500/30">
-              <div className="text-xs text-emerald-400 font-bold mb-1">🧮 Gia tốc tính toán được</div>
+              <div className="text-xs text-emerald-400 font-bold mb-1">Gia tốc tính toán được</div>
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-black text-emerald-400">{gCalc.toFixed(3)}</span>
                 <span className="text-xs text-emerald-500">m/s²</span>
@@ -556,7 +555,7 @@ export const PhetFreeFallLab: React.FC = () => {
                 onClick={handleRecord}
                 className="mt-3 w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-emerald-600/20"
               >
-                📋 Lưu vào Bảng Số Liệu
+                Lưu vào Bảng Số Liệu
               </button>
             </div>
           )}
@@ -564,7 +563,7 @@ export const PhetFreeFallLab: React.FC = () => {
           {/* Photogate Sliders */}
           <div className="bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80 space-y-4">
             <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              📏 Vị Trí Cổng Quang (Dây điện 3D tự uốn)
+              Vị Trí Cổng Quang (Dây điện 3D tự uốn)
             </div>
 
             <div className="space-y-2">
@@ -631,13 +630,13 @@ export const PhetFreeFallLab: React.FC = () => {
               disabled={isDropping}
               className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white py-3.5 rounded-xl font-black text-sm shadow-xl shadow-blue-500/25 active:scale-95 transition-all"
             >
-              ⚡ Thả Vật Rơi
+              Thả Vật Rơi
             </button>
             <button
               onClick={handleReset}
               className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 py-3.5 rounded-xl font-black text-sm active:scale-95 transition-all border border-slate-700"
             >
-              🔄 Làm Lại
+              Làm Lại
             </button>
           </div>
 
@@ -645,7 +644,7 @@ export const PhetFreeFallLab: React.FC = () => {
           {measurements.length > 0 && (
             <div className="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden">
               <div className="px-4 py-2.5 bg-slate-900 border-b border-slate-800 text-xs font-bold text-slate-400">
-                📊 Bảng Số Liệu Lần Đo ({measurements.length})
+                Bảng Số Liệu Lần Đo ({measurements.length})
               </div>
               <table className="w-full text-xs">
                 <thead>

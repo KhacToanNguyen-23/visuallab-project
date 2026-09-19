@@ -191,7 +191,7 @@ export const SpeedMeasurementLab: React.FC = () => {
           </div>
         </div>
         <span className="px-3 py-1 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-full text-xs font-semibold">
-          🎯 KÉO THẢ & CỔNG QUANG E-F
+          KÉO THẢ & CỔNG QUANG E-F
         </span>
       </div>
 
@@ -252,7 +252,7 @@ export const SpeedMeasurementLab: React.FC = () => {
                 disabled={isRolling}
                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-lg text-sm font-semibold transition"
               >
-                ▶ Thả Bi
+                Thả Bi
               </button>
 
               <button

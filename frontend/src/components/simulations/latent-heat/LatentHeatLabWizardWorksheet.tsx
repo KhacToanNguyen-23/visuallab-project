@@ -178,7 +178,7 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
           <div className="space-y-4">
             <div className="bg-slate-950/80 border border-emerald-500/20 rounded-xl p-4 space-y-2">
               <h3 className="text-xs font-bold uppercase font-mono tracking-wider text-emerald-400">
-                🎯 Đề Bài Yêu Cầu Thực Hành (Tối thiểu 3 lần đo với m_đá khác nhau)
+                Đề Bài Yêu Cầu Thực Hành (Tối thiểu 3 lần đo với m_đá khác nhau)
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed">
                 Học sinh điều chỉnh khối lượng nước đá theo 3 nhiệm vụ đề bài dưới đây, bấm thả đá hòa tan và ghi lại nhiệt độ cân bằng t_cb.
@@ -336,7 +336,7 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
                   onClick={handleAutoFillCalculation}
                   className="text-[10px] text-emerald-400 underline hover:text-emerald-300 cursor-pointer"
                 >
-                  ⚡ Điền tự động kết quả
+                  Điền tự động kết quả
                 </button>
               </div>
 
@@ -371,7 +371,7 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
             {/* Student Observations */}
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-200">📝 Nhận Xét Của Học Sinh Về Hiện Tượng:</span>
+                <span className="font-bold text-slate-200">Nhận Xét Của Học Sinh Về Hiện Tượng:</span>
               </div>
               <textarea
                 rows={3}
@@ -415,7 +415,7 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
                 onClick={() => setCurrentStep(1)}
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs transition cursor-pointer"
               >
-                ⬅ Quay Lại Bước 1
+                Quay Lại Bước 1
               </button>
               <button
                 onClick={() => setCurrentStep(3)}
@@ -474,7 +474,7 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
             {/* 3 GDPT 2018 Multiple Choice Questions */}
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-3">
               <h4 className="text-xs font-bold text-amber-400 uppercase font-mono">
-                📝 Trắc Nghiệm Hiểu Bài SGK GDPT 2018 (3 Câu)
+                Trắc Nghiệm Hiểu Bài SGK GDPT 2018 (3 Câu)
               </h4>
 
               {/* Q1 */}
@@ -564,7 +564,7 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
               <div className="bg-slate-950 border border-emerald-500/30 rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-200 uppercase font-mono">
-                    📋 Kiểm Tra Tiến Độ & Sẵn Sàng Nộp Bài
+                    Kiểm Tra Tiến Độ & Sẵn Sàng Nộp Bài
                   </span>
                   <span className="text-[10px] text-amber-400">Chưa nộp bài</span>
                 </div>
@@ -589,14 +589,13 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
                   disabled={computedTrials.length < 3}
                   className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-xl shadow-emerald-950/50 transition transform active:scale-98 cursor-pointer flex items-center justify-center space-x-2"
                 >
-                  <span>📝 Nộp Bài & Tính Điểm Thí Nghiệm</span>
+                  <span>Nộp Bài & Tính Điểm Thí Nghiệm</span>
                 </button>
               </div>
             ) : (
               <div className="bg-slate-950 border border-emerald-500/40 rounded-xl p-4 space-y-3 animate-fade-in">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <span className="text-base">🏆</span>
                     <h4 className="text-xs font-bold text-emerald-400 uppercase font-mono">
                       Kết Quả Chấm Điểm Thí Nghiệm
                     </h4>
@@ -644,7 +643,7 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
                       onClick={onOpenSubmissionDrawer}
                       className="w-full sm:flex-1 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-900/40 transition transform active:scale-98 cursor-pointer flex items-center justify-center space-x-2"
                     >
-                      <span>🚀 Nộp Bài Vào Bài Tập Được Giao</span>
+                      <span>Nộp Bài Vào Bài Tập Được Giao</span>
                     </button>
                   )}
                 </div>
@@ -656,7 +655,7 @@ export const LatentHeatLabWizardWorksheet: React.FC<LatentHeatLabWizardWorksheet
                 onClick={() => setCurrentStep(2)}
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs transition cursor-pointer"
               >
-                ⬅ Quay Lại Bảng Số Liệu
+                Quay Lại Bảng Số Liệu
               </button>
             </div>
           </div>

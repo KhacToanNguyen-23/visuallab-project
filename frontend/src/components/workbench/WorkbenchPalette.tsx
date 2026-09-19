@@ -8,7 +8,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'mechanics',
     name: 'Lò Xo Đàn Hồi',
     description: 'Lò xo tuân theo Định luật Hooke (k = 50 N/m)',
-    icon: '🌀',
+    icon: '',
     badge: 'Cơ học',
     color: 'border-cyan-500/40 text-cyan-400 bg-cyan-950/40',
     defaultConfig: { stiffness: 50, naturalLength: 0.4 },
@@ -18,7 +18,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'mechanics',
     name: 'Quả Nặng (Mass)',
     description: 'Quả nặng gia công m = 200g có móc treo',
-    icon: '🪨',
+    icon: '',
     badge: 'Cơ học',
     color: 'border-pink-500/40 text-pink-400 bg-pink-950/40',
     defaultConfig: { mass: 0.2 },
@@ -28,7 +28,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'mechanics',
     name: 'Dây Treo Không Co Co giãn',
     description: 'Dây mềm chiều dài L = 0.5m',
-    icon: '🧶',
+    icon: '',
     badge: 'Cơ học',
     color: 'border-amber-500/40 text-amber-400 bg-amber-950/40',
     defaultConfig: { length: 0.5 },
@@ -38,7 +38,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'mechanics',
     name: 'Giá Cố Định Trần',
     description: 'Thanh treo kim loại đính trần',
-    icon: '🧱',
+    icon: '',
     badge: 'Cơ học',
     color: 'border-slate-500/40 text-slate-300 bg-slate-900',
   },
@@ -49,7 +49,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'circuits',
     name: 'Nguồn Điện Pin DC 9V',
     description: 'Pin 1 chiều suất điện động E = 9V',
-    icon: '🔋',
+    icon: '',
     badge: 'Điện học',
     color: 'border-emerald-500/40 text-emerald-400 bg-emerald-950/40',
     defaultConfig: { voltage: 9, internalR: 0.5 },
@@ -59,7 +59,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'circuits',
     name: 'Bóng Đèn Dây Tóc',
     description: 'Bóng đèn công suất 12W phát sáng',
-    icon: '💡',
+    icon: '',
     badge: 'Điện học',
     color: 'border-yellow-500/40 text-yellow-400 bg-yellow-950/40',
     defaultConfig: { resistance: 6 },
@@ -69,7 +69,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'circuits',
     name: 'Công Tắc Dao Đóng/Mở',
     description: 'Khóa K điều khiển bật/tắt dòng điện',
-    icon: '🔌',
+    icon: '',
     badge: 'Điện học',
     color: 'border-blue-500/40 text-blue-400 bg-blue-950/40',
     defaultConfig: { isOpen: true },
@@ -79,7 +79,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'circuits',
     name: 'Điện Trở Mạch R',
     description: 'Điện trở cố định R = 10 Ohm',
-    icon: '⚡',
+    icon: '',
     badge: 'Điện học',
     color: 'border-indigo-500/40 text-indigo-400 bg-indigo-950/40',
     defaultConfig: { resistance: 10 },
@@ -89,7 +89,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'circuits',
     name: 'Dây Dẫn Điện Mềm',
     description: 'Dây đồng bọc cao su kết nối thiết bị',
-    icon: '〰️',
+    icon: '',
     badge: 'Điện học',
     color: 'border-cyan-500/40 text-cyan-300 bg-cyan-950/30',
   },
@@ -100,7 +100,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'optics',
     name: 'Đèn Phát Laser Đỏ',
     description: 'Nguồn phát chùm sáng laser bước sóng 650nm',
-    icon: '🔦',
+    icon: '',
     badge: 'Quang học',
     color: 'border-red-500/40 text-red-400 bg-red-950/40',
     defaultConfig: { wavelength: 650, isOn: true },
@@ -110,7 +110,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'optics',
     name: 'Thấu Kính Hội Tụ',
     description: 'Thấu kính mỏng hai mặt lồi (f = +15cm)',
-    icon: '🔍',
+    icon: '',
     badge: 'Quang học',
     color: 'border-sky-500/40 text-sky-400 bg-sky-950/40',
     defaultConfig: { focalLength: 15, refractiveIndex: 1.5 },
@@ -120,7 +120,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'optics',
     name: 'Thấu Kính Phân Kỳ',
     description: 'Thấu kính mỏng hai mặt lõm (f = -15cm)',
-    icon: '👓',
+    icon: '',
     badge: 'Quang học',
     color: 'border-purple-500/40 text-purple-400 bg-purple-950/40',
     defaultConfig: { focalLength: -15, refractiveIndex: 1.5 },
@@ -130,7 +130,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'optics',
     name: 'Gương Phẳng Phản Xạ',
     description: 'Bề mặt tráng bạc phản xạ toàn phần',
-    icon: '🪞',
+    icon: '',
     badge: 'Quang học',
     color: 'border-slate-400/40 text-slate-200 bg-slate-800',
   },
@@ -141,7 +141,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'tools',
     name: 'Thước Đo cm Chia Vạch',
     description: 'Thước đo mm độ dài 30cm',
-    icon: '📏',
+    icon: '',
     badge: 'Dụng cụ',
     color: 'border-amber-500/40 text-amber-300 bg-amber-950/30',
   },
@@ -150,7 +150,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'tools',
     name: 'Thước Đo Góc 360°',
     description: 'Thước đo góc tròn độ phân giải 1°',
-    icon: '📐',
+    icon: '',
     badge: 'Dụng cụ',
     color: 'border-teal-500/40 text-teal-300 bg-teal-950/30',
   },
@@ -159,7 +159,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'tools',
     name: 'Vôn Kế Đo Điện Áp',
     description: 'Đồng hồ đo hiệu điện thế (0-30V)',
-    icon: '🎛️',
+    icon: '',
     badge: 'Dụng cụ',
     color: 'border-sky-500/40 text-sky-300 bg-sky-950/30',
   },
@@ -168,7 +168,7 @@ export const PALETTE_ITEMS: PaletteItemDef[] = [
     category: 'tools',
     name: 'Ampe Kế Đo Dòng Điện',
     description: 'Đồng hồ đo cường độ dòng điện (0-5A)',
-    icon: '⏲️',
+    icon: '',
     badge: 'Dụng cụ',
     color: 'border-pink-500/40 text-pink-300 bg-pink-950/30',
   },
@@ -189,7 +189,7 @@ export const WorkbenchPalette: React.FC<WorkbenchPaletteProps> = ({ onAddItem })
       {/* Category Tabs Header */}
       <div className="p-3 bg-slate-950 border-b border-slate-800">
         <h2 className="text-xs font-black uppercase tracking-wider text-cyan-400 mb-2.5 flex items-center gap-2">
-          <span>🎒 Bộ Dụng Cụ Thí Nghiệm PhET</span>
+          <span>Bộ Dụng Cụ Thí Nghiệm PhET</span>
         </h2>
         <div className="grid grid-cols-5 gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-[10px] font-bold">
           <button
@@ -206,7 +206,7 @@ export const WorkbenchPalette: React.FC<WorkbenchPaletteProps> = ({ onAddItem })
               activeTab === 'mechanics' ? 'bg-cyan-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
             }`}
           >
-            ⚙️ Cơ
+            Cơ
           </button>
           <button
             onClick={() => setActiveTab('circuits')}
@@ -214,7 +214,7 @@ export const WorkbenchPalette: React.FC<WorkbenchPaletteProps> = ({ onAddItem })
               activeTab === 'circuits' ? 'bg-cyan-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
             }`}
           >
-            ⚡ Điện
+            Điện
           </button>
           <button
             onClick={() => setActiveTab('optics')}
@@ -222,7 +222,7 @@ export const WorkbenchPalette: React.FC<WorkbenchPaletteProps> = ({ onAddItem })
               activeTab === 'optics' ? 'bg-cyan-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
             }`}
           >
-            🔦 Quang
+            Quang
           </button>
           <button
             onClick={() => setActiveTab('tools')}
@@ -230,7 +230,7 @@ export const WorkbenchPalette: React.FC<WorkbenchPaletteProps> = ({ onAddItem })
               activeTab === 'tools' ? 'bg-cyan-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
             }`}
           >
-            📏 Đo
+            Đo
           </button>
         </div>
       </div>
@@ -264,7 +264,7 @@ export const WorkbenchPalette: React.FC<WorkbenchPaletteProps> = ({ onAddItem })
               onClick={() => onAddItem(item)}
               className="w-full py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-200 hover:text-white text-xs font-bold transition border border-slate-700 hover:border-cyan-400 shadow cursor-pointer flex items-center justify-center gap-1.5 mt-1"
             >
-              <span>➕ Thêm Vào Bàn</span>
+              <span>Thêm Vào Bàn</span>
             </button>
           </div>
         ))}

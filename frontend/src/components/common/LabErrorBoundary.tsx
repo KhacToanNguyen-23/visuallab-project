@@ -34,7 +34,6 @@ export class LabErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-slate-950 text-white p-6 font-sans">
           <div className="max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl text-center space-y-4">
             <div className="w-16 h-16 bg-red-500/10 text-red-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-red-500/20">
-              ⚠️
             </div>
             <h2 className="text-xl font-bold text-slate-100">Đã Xảy Ra Lỗi Bài Thí Nghiệm</h2>
             <p className="text-sm text-slate-400">

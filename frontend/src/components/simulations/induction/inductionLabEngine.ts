@@ -176,7 +176,7 @@ export const evaluateInductionTrials = (
   if (opScore >= 3.0) {
     feedback.push('✓ Thao tác đo đạc: Hoàn thành xuất sắc 3 nhiệm vụ đề bài theo đúng yêu cầu.');
   } else {
-    feedback.push(`⚠️ Thao tác đo đạc: Mới hoàn thành ${trials.length}/3 lần đo theo nhiệm vụ đề bài.`);
+    feedback.push(`Thao tác đo đạc: Mới hoàn thành ${trials.length}/3 lần đo theo nhiệm vụ đề bài.`);
   }
 
   // 3. Accuracy & Law Verification Score (Max 4.0)
@@ -192,10 +192,10 @@ export const evaluateInductionTrials = (
       feedback.push('✓ Định luật Faraday: Đã kiểm chứng chính xác suất điện động cảm ứng tỉ lệ với tốc độ biến thiên từ thông (|e_c2| > |e_c1|).');
     } else {
       accScore += 1.0;
-      feedback.push('⚠️ Định luật Faraday: Suất điện động khi di chuyển nhanh chưa thể hiện rõ sự tăng vượt trội so với di chuyển chậm.');
+      feedback.push('Định luật Faraday: Suất điện động khi di chuyển nhanh chưa thể hiện rõ sự tăng vượt trội so với di chuyển chậm.');
     }
   } else {
-    feedback.push('⚠️ Chưa đủ dữ liệu 2 mức tốc độ để kiểm chứng định luật Faraday.');
+    feedback.push('Chưa đủ dữ liệu 2 mức tốc độ để kiểm chứng định luật Faraday.');
   }
 
   // Verify Lenz (opposite signs when reversing pole or direction)
@@ -208,10 +208,10 @@ export const evaluateInductionTrials = (
       feedback.push('✓ Định luật Lenz: Đã kiểm chứng chính xác chiều dòng điện cảm ứng đổi chiều khi đảo cực hoặc đảo chiều chuyển động.');
     } else {
       accScore += 1.0;
-      feedback.push('⚠️ Định luật Lenz: Chiều dòng điện giữa các lần đo đảo cực/đảo chiều chưa thể hiện sự đổi dấu rõ rệt.');
+      feedback.push('Định luật Lenz: Chiều dòng điện giữa các lần đo đảo cực/đảo chiều chưa thể hiện sự đổi dấu rõ rệt.');
     }
   } else {
-    feedback.push('⚠️ Chưa đủ dữ liệu đảo cực/chiều chuyển động để kiểm chứng định luật Lenz.');
+    feedback.push('Chưa đủ dữ liệu đảo cực/chiều chuyển động để kiểm chứng định luật Lenz.');
   }
 
   // 4. Quiz Score (Max 3.0)
@@ -224,7 +224,7 @@ export const evaluateInductionTrials = (
   if (quizScore === 3.0) {
     feedback.push('✓ Trắc nghiệm củng cố: Trả lời chính xác 3/3 câu hỏi lý thuyết SGK.');
   } else {
-    feedback.push(`⚠️ Trắc nghiệm củng cố: Trả lời đúng ${(quizScore).toFixed(0)}/3 câu hỏi.`);
+    feedback.push(`Trắc nghiệm củng cố: Trả lời đúng ${(quizScore).toFixed(0)}/3 câu hỏi.`);
   }
 
   const totalScore = parseFloat(Math.min(10.0, opScore + accScore + quizScore).toFixed(1));

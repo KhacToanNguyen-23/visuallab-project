@@ -281,7 +281,7 @@ export const TeacherClassesPage: React.FC = () => {
                       title="Nhấp để xem danh sách học sinh"
                     >
                       <span>{cls.students} học sinh</span>
-                      <span className="text-[10px] opacity-60">👥</span>
+                      <span className="text-[10px] opacity-60"></span>
                     </button>
                   </td>
                   <td className="p-3.5 opacity-80">
@@ -293,7 +293,7 @@ export const TeacherClassesPage: React.FC = () => {
                       title="Nhấp để xem các bài thực hành đã giao cho lớp này"
                     >
                       <span>{cls.assignments} bài</span>
-                      <span className="text-[10px] opacity-60">📝</span>
+                      <span className="text-[10px] opacity-60"></span>
                     </button>
                   </td>
                   <td className="p-3.5 text-right pr-4 whitespace-nowrap space-x-2">

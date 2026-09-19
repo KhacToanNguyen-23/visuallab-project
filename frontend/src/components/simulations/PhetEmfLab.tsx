@@ -288,7 +288,7 @@ export const PhetEmfLab: React.FC = () => {
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-2xl border border-emerald-400 font-bold text-xs animate-bounce flex items-center gap-2">
-          <span>✨ {toastMessage}</span>
+          <span>{toastMessage}</span>
         </div>
       )}
 
@@ -302,7 +302,7 @@ export const PhetEmfLab: React.FC = () => {
             ← Về Bài Tập
           </button>
           <h1 className="text-base font-black text-amber-400 tracking-tight flex items-center gap-2">
-            <span>⚡ Thí Nghiệm Đo Suất Điện Động E & Điện Trở Trong r Của Pin</span>
+            <span>Thí Nghiệm Đo Suất Điện Động E & Điện Trở Trong r Của Pin</span>
           </h1>
         </div>
 
@@ -317,12 +317,12 @@ export const PhetEmfLab: React.FC = () => {
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              {tab === 'explore' && '🔍 Khám Phá'}
-              {tab === 'compare' && '⚖️ So Sánh'}
-              {tab === 'predict' && '💡 Dự Đoán'}
-              {tab === 'measure' && '📏 Đo Đạc'}
-              {tab === 'graph' && '📊 Đồ Thị U(I)'}
-              {tab === 'challenge' && '🏆 AI Thử Thách'}
+              {tab === 'explore' && 'Khám Phá'}
+              {tab === 'compare' && 'So Sánh'}
+              {tab === 'predict' && 'Dự Đoán'}
+              {tab === 'measure' && 'Đo Đạc'}
+              {tab === 'graph' && 'Đồ Thị U(I)'}
+              {tab === 'challenge' && 'AI Thử Thách'}
             </button>
           ))}
         </div>
@@ -351,7 +351,7 @@ export const PhetEmfLab: React.FC = () => {
                   : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
               }`}
             >
-              {switchOpen ? '🔌 Đóng Khóa K (ON)' : '🔴 Ngắt Khóa K (OFF)'}
+              {switchOpen ? 'Đóng Khóa K (ON)' : 'Ngắt Khóa K (OFF)'}
             </button>
           </div>
 
@@ -362,7 +362,7 @@ export const PhetEmfLab: React.FC = () => {
           {/* Action Bar */}
           <div className="mt-3 flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs">
             <span className="text-slate-400">
-              💡 Thay đổi điện trở biến trở R rồi bấm nút bên phải để ghi cặp số liệu (I, U) vẽ đồ thị:
+              Thay đổi điện trở biến trở R rồi bấm nút bên phải để ghi cặp số liệu (I, U) vẽ đồ thị:
             </span>
 
             <button
@@ -370,15 +370,15 @@ export const PhetEmfLab: React.FC = () => {
               disabled={switchOpen}
               className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg shadow-md transition cursor-pointer disabled:opacity-50"
             >
-              📥 Ghi Cặp Số Liệu (I, U)
+              Ghi Cặp Số Liệu (I, U)
             </button>
           </div>
         </div>
 
-        {/* Right Persistent Parameters Panel ⚙️ (4 cols) */}
+        {/* Right Persistent Parameters Panel (4 cols) */}
         <div className="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col gap-4 shadow-xl">
           <h2 className="text-xs font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-2 pb-2 border-b border-slate-800">
-            <span>⚙️ Thông Số Nguồn Pin & Mạch Điện</span>
+            <span>Thông Số Nguồn Pin & Mạch Điện</span>
           </h2>
 
           <div className="space-y-4 text-xs">
@@ -435,7 +435,7 @@ export const PhetEmfLab: React.FC = () => {
 
             {/* Realtime Graph U(I) Preview Box */}
             <div className="pt-2 border-t border-slate-800">
-              <label className="font-bold text-slate-300 block mb-1">📉 Đồ thị tuyến tính U = E - I·r:</label>
+              <label className="font-bold text-slate-300 block mb-1">Đồ thị tuyến tính U = E - I·r:</label>
               <canvas ref={graphCanvasRef} width={320} height={140} className="w-full h-[140px] rounded-lg border border-slate-800" />
             </div>
           </div>
@@ -443,7 +443,7 @@ export const PhetEmfLab: React.FC = () => {
           {/* Measurements Table Data */}
           <div className="mt-auto pt-2 border-t border-slate-800">
             <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-              📋 Bảng Cặp Số Liệu (I, U) ({records.length} điểm)
+              Bảng Cặp Số Liệu (I, U) ({records.length} điểm)
             </h3>
             <div className="max-h-36 overflow-y-auto border border-slate-800 rounded-lg">
               <table className="w-full text-left text-[11px]">

@@ -78,7 +78,6 @@ export const SpeedWorkbenchHudDock: React.FC<SpeedWorkbenchHudDockProps> = ({
           : 'bg-slate-950/80 border-amber-500/40 text-amber-200'
         }`}>
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-base">{isTaskMatched ? '🎯' : '📝'}</span>
           <div className="leading-tight">
             <div className="flex items-center gap-2">
               <span className="font-bold text-[11px] uppercase tracking-wider text-slate-100">
@@ -107,7 +106,7 @@ export const SpeedWorkbenchHudDock: React.FC<SpeedWorkbenchHudDockProps> = ({
           className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[11px] font-semibold border border-slate-700 flex items-center gap-1 cursor-pointer transition-all active:scale-95 whitespace-nowrap"
           title="Sinh đề bài ngẫu nhiên mới"
         >
-          <span>🎲 Đổi đề</span>
+          <span>Đổi đề</span>
         </button>
       </div>
 

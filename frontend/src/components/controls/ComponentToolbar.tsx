@@ -9,12 +9,12 @@ interface ComponentOption {
 }
 
 const COMPONENT_OPTIONS: ComponentOption[] = [
-  { type: 'battery', label: 'Pin (Nguồn DC)', icon: '🔋', defaultValue: 9 },
-  { type: 'resistor', label: 'Điện trở (Ω)', icon: '⚡', defaultValue: 10 },
-  { type: 'bulb', label: 'Bóng đèn', icon: '💡', defaultValue: 10 },
-  { type: 'switch', label: 'Công tắc', icon: '🔘', defaultValue: 0 },
-  { type: 'wire', label: 'Dây dẫn', icon: '〰️', defaultValue: 0 },
-  { type: 'ammeter', label: 'Ampe kế (A)', icon: '🅰️', defaultValue: 0 },
+  { type: 'battery', label: 'Pin (Nguồn DC)', icon: '', defaultValue: 9 },
+  { type: 'resistor', label: 'Điện trở (Ω)', icon: '', defaultValue: 10 },
+  { type: 'bulb', label: 'Bóng đèn', icon: '', defaultValue: 10 },
+  { type: 'switch', label: 'Công tắc', icon: '', defaultValue: 0 },
+  { type: 'wire', label: 'Dây dẫn', icon: '', defaultValue: 0 },
+  { type: 'ammeter', label: 'Ampe kế (A)', icon: '', defaultValue: 0 },
   { type: 'voltmeter', label: 'Von kế (V)', icon: 'Ⓥ', defaultValue: 0 },
 ];
 

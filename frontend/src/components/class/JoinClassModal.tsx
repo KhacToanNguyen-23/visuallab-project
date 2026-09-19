@@ -44,7 +44,7 @@ export const JoinClassModal: React.FC<JoinClassModalProps> = ({ studentId, stude
     <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 text-white shadow-2xl animate-fade-in">
         <h2 className="text-xl font-bold text-cyan-400 mb-2 flex items-center gap-2">
-          <span>🎓</span> Tham Gia Lớp Học
+          Tham Gia Lớp Học
         </h2>
         <p className="text-xs text-slate-400 mb-4">Nhập mã Class Code (6 ký tự) do giáo viên cung cấp để gia nhập lớp.</p>
 
@@ -54,7 +54,7 @@ export const JoinClassModal: React.FC<JoinClassModalProps> = ({ studentId, stude
               ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' 
               : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
           }`}>
-            ⚠️ {error}
+            {error}
           </div>
         )}
 

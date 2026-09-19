@@ -60,7 +60,7 @@ export const ClassRosterView: React.FC<ClassRosterViewProps> = ({ classId, class
         {/* Header */}
         <div className="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
           <div>
-            <h2 className="text-xl font-bold text-emerald-400">📊 Bảng Điểm & Danh Sách Học Sinh: {classNameTitle}</h2>
+            <h2 className="text-xl font-bold text-emerald-400">Bảng Điểm & Danh Sách Học Sinh: {classNameTitle}</h2>
             <p className="text-xs text-slate-400">Tổng số học sinh: {roster.length} | Bài tập đã giao: {assignments.length}</p>
           </div>
           <button
@@ -84,7 +84,7 @@ export const ClassRosterView: React.FC<ClassRosterViewProps> = ({ classId, class
                     : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white'
                 }`}
               >
-                📝 {asg.title}
+                {asg.title}
               </button>
             ))}
           </div>
@@ -144,7 +144,7 @@ export const ClassRosterView: React.FC<ClassRosterViewProps> = ({ classId, class
                               onClick={() => setSelectedSubmission(sub)}
                               className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-cyan-300 rounded-lg border border-slate-700 transition-colors"
                             >
-                              🔍 Xem chi tiết AI
+                              Xem chi tiết AI
                             </button>
                           )}
                         </td>
@@ -160,7 +160,7 @@ export const ClassRosterView: React.FC<ClassRosterViewProps> = ({ classId, class
           {selectedSubmission && (
             <div className="w-96 border-l border-slate-800 p-5 bg-slate-950 overflow-y-auto space-y-4">
               <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 className="font-bold text-emerald-400">🤖 Chi Tiết AI Chấm Bài</h3>
+                <h3 className="font-bold text-emerald-400">Chi Tiết AI Chấm Bài</h3>
                 <button onClick={() => setSelectedSubmission(null)} className="text-slate-500 hover:text-white">✕</button>
               </div>
 

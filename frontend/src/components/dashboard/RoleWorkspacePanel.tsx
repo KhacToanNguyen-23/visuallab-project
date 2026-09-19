@@ -238,7 +238,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
         ...prev
       ]);
       setNewClassName('');
-      alert(`🎉 Đã tạo lớp "${created.name}" thành công! Class Code: ${created.code}`);
+      alert(`Đã tạo lớp "${created.name}" thành công! Class Code: ${created.code}`);
     } catch (err: any) {
       alert(`Lỗi tạo lớp: ${err.message || 'Không thể kết nối đến máy chủ backend!'}`);
     }
@@ -263,7 +263,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       );
       setJoinedClasses(joinedWithCounts);
     }
-    setToastMessage(`🎉 Gia nhập lớp ${className || 'học mới'} thành công!`);
+    setToastMessage(`Gia nhập lớp ${className || 'học mới'} thành công!`);
     setTimeout(() => setToastMessage(null), 4000);
   };
 
@@ -650,7 +650,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
             className="px-4 py-2 text-xs font-bold text-white rounded-lg shadow-md transition-all hover:opacity-90 flex items-center gap-2 cursor-pointer"
             style={{ backgroundColor: 'var(--accent-primary)' }}
           >
-            <span>🚀</span> Mở Dashboard Quản Lý Lớp & Groq AI Full Screen
+            Mở Dashboard Quản Lý Lớp & Groq AI Full Screen
           </button>
         </div>
 
@@ -768,7 +768,7 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
                               className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border cursor-pointer hover:opacity-80 active:scale-95 transition-all"
                               style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)', color: 'var(--accent-primary)' }}
                             >
-                              [MÃ: {cls.code}] 📋
+                              [MÃ: {cls.code}]
                             </button>
                           </td>
                           <td className="p-3 opacity-80">{cls.students} học sinh</td>
@@ -1062,7 +1062,6 @@ export const RoleWorkspacePanel: React.FC<RoleWorkspacePanelProps> = ({ user, on
       {toastMessage && (
         <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-3.5 rounded-xl text-xs font-bold flex justify-between items-center animate-fade-in shadow-lg">
           <div className="flex items-center gap-2">
-            <span className="text-base">🎉</span>
             <span>{toastMessage}</span>
           </div>
           <button onClick={() => setToastMessage(null)} className="opacity-60 hover:opacity-100 text-sm font-bold">✕</button>

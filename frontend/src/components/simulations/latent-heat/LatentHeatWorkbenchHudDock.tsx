@@ -67,7 +67,7 @@ export const LatentHeatWorkbenchHudDock: React.FC<LatentHeatWorkbenchHudDockProp
           disabled={isMelting}
           className="px-4 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-lg shadow-amber-900/30 transition transform active:scale-95 flex items-center space-x-1.5 cursor-pointer"
         >
-          <span>{isMelting ? '⏳ Đang Hòa Tan...' : '🧊 Thả Đá & Hòa Tan'}</span>
+          <span>{isMelting ? 'Đang Hòa Tan...' : 'Thả Đá & Hòa Tan'}</span>
         </button>
 
         <button

@@ -245,7 +245,6 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
             onClick={() => setShowResultModal(true)}
             className="px-4 py-2 bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-bold hover:bg-emerald-600/30 transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-emerald-950/40"
           >
-            <span>🏆</span>
             <span>Xem Kết Quả Đánh Giá ({submission.totalScore}/100)</span>
           </button>
         )}
@@ -257,7 +256,7 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
         <div className="xl:col-span-8 bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col space-y-3">
           <div className="flex justify-between items-center bg-slate-950/80 px-3.5 py-2 rounded-xl border border-slate-800 text-xs">
             <div className="flex items-center gap-2 text-cyan-300 font-bold uppercase tracking-wider text-[11px]">
-              <span>🎲</span> Thông số đề bài cá nhân:
+              Thông số đề bài cá nhân:
             </div>
             <div className="flex items-center gap-3 font-mono font-bold text-xs">
               <span className="text-emerald-400">Chiều dài L = {length}m</span>
@@ -275,7 +274,7 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h2 className="text-base font-bold text-cyan-400 flex items-center gap-2">
-                <span>📋</span> Ghi Chép & Xác Nhận Nộp Bài
+                Ghi Chép & Xác Nhận Nộp Bài
               </h2>
               {submission && (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30">
@@ -286,13 +285,13 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
 
             {error && (
               <div className="bg-rose-500/10 border border-rose-500/30 text-rose-300 p-3 rounded-xl text-xs animate-shake">
-                ⚠️ {error}
+                {error}
               </div>
             )}
 
             {successMessage && (
               <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 p-3 rounded-xl text-xs animate-fade-in">
-                ✅ {successMessage}
+                {successMessage}
               </div>
             )}
 
@@ -300,7 +299,7 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
             {!effectiveGrade ? (
               <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 text-xs text-slate-300 space-y-3">
                 <div className="flex items-center gap-2 font-bold text-amber-400 text-xs uppercase tracking-wider">
-                  <span>⏳</span> Đang chờ kết quả thực hành
+                  Đang chờ kết quả thực hành
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   Học sinh thực hiện đo đạc và tính toán trực tiếp trên bảng thực hành bên cạnh theo các bước sau:
@@ -316,11 +315,11 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30 font-bold text-[10px]">3</span>
-                    <span>Trả lời câu hỏi trắc nghiệm và nhấn <strong>"🏆 Nộp Báo Cáo & Chấm Điểm"</strong>.</span>
+                    <span>Trả lời câu hỏi trắc nghiệm và nhấn <strong>"Nộp Báo Cáo & Chấm Điểm"</strong>.</span>
                   </div>
                 </div>
                 <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] text-slate-400 text-center">
-                  👉 Kết quả chấm điểm thực nghiệm sẽ tự động đồng bộ sang mục này để bạn xác nhận nộp bài.
+                  Kết quả chấm điểm thực nghiệm sẽ tự động đồng bộ sang mục này để bạn xác nhận nộp bài.
                 </div>
               </div>
             ) : (
@@ -393,21 +392,15 @@ export const StudentLabAssignmentView: React.FC<StudentLabAssignmentViewProps> =
                   <span>Đang gửi bài nộp...</span>
                 </>
               ) : submission ? (
-                <>
-                  <span>🔄</span>
-                  <span>Cập Nhật & Xác Nhận Nộp Lại</span>
-                </>
+                <span>Cập Nhật & Xác Nhận Nộp Lại</span>
               ) : (
-                <>
-                  <span>🚀</span>
-                  <span>Xác Nhận Nộp Bài Cho Giáo Viên</span>
-                </>
+                <span>Xác Nhận Nộp Bài Cho Giáo Viên</span>
               )}
             </button>
 
             {submission && (
               <p className="text-center text-[10px] text-slate-400">
-                ✅ Bài đã được lưu trữ trên hệ thống lúc {new Date(submission.submittedAt || Date.now()).toLocaleTimeString('vi-VN')}
+                Bài đã được lưu trữ trên hệ thống lúc {new Date(submission.submittedAt || Date.now()).toLocaleTimeString('vi-VN')}
               </p>
             )}
           </div>

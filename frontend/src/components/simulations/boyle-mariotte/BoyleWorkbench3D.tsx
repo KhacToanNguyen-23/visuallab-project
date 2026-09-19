@@ -397,7 +397,7 @@ export const BoyleWorkbench3D = forwardRef<BoyleWorkbench3DHandle, BoyleWorkbenc
 
       <div className="absolute bottom-3 left-3 flex items-center space-x-2">
         <div className="text-[10px] text-slate-400 bg-slate-950/80 backdrop-blur-sm px-2.5 py-1.5 rounded-lg border border-slate-800">
-          🖱️ Kéo chuột trái để xoay 360° • Chuột phải để di chuyển • Cuộn để zoom
+          Kéo chuột trái để xoay 360° • Chuột phải để di chuyển • Cuộn để zoom
         </div>
         <button
           onClick={() => {
@@ -408,7 +408,7 @@ export const BoyleWorkbench3D = forwardRef<BoyleWorkbench3DHandle, BoyleWorkbenc
           }}
           className="px-2.5 py-1.5 bg-slate-900/90 hover:bg-slate-800 text-sky-400 text-[10px] font-bold rounded-lg border border-sky-500/30 transition cursor-pointer"
         >
-          🔄 Xoay Tự Động
+          Xoay Tự Động
         </button>
         <button
           onClick={() => {
@@ -420,7 +420,7 @@ export const BoyleWorkbench3D = forwardRef<BoyleWorkbench3DHandle, BoyleWorkbenc
           }}
           className="px-2 py-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-300 text-[10px] rounded-lg border border-slate-700 transition cursor-pointer"
         >
-          🎯 Góc Mặc Định
+          Góc Mặc Định
         </button>
       </div>
     </div>

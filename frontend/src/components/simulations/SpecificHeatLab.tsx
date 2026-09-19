@@ -182,7 +182,7 @@ export const SpecificHeatLab: React.FC = () => {
           </div>
         </div>
         <span className="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-semibold">
-          🎛️ THAM SỐ & BÌNH NHIỆT LƯỢNG KẾ
+          THAM SỐ & BÌNH NHIỆT LƯỢNG KẾ
         </span>
       </div>
 
@@ -239,14 +239,14 @@ export const SpecificHeatLab: React.FC = () => {
                   onClick={handleStartHeating}
                   className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-semibold transition"
                 >
-                  ▶ Bật Đun
+                  Bật Đun
                 </button>
               ) : (
                 <button
                   onClick={handleStopHeating}
                   className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-sm font-semibold transition"
                 >
-                  ⏹ Tắt Đun
+                  Tắt Đun
                 </button>
               )}
 

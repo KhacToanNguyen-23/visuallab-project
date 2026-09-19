@@ -117,7 +117,6 @@ export const PhetVietnamLabWrapper: React.FC = () => {
             </p>
 
             <div className="p-3 rounded-2xl bg-cyan-950/40 border border-cyan-800/30 text-xs text-cyan-200 flex items-center gap-2">
-              <span>💡</span>
               <span><strong>Hướng dẫn:</strong> {VIETNAM_LAB_STEPS[currentStep - 1].hint}</span>
             </div>
 

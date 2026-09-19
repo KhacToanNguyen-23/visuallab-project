@@ -65,7 +65,7 @@ public class StorageController {
         String urlPreview = saved.getScreenshotUrl() != null && saved.getScreenshotUrl().length() > 60
                 ? saved.getScreenshotUrl().substring(0, 60) + "... [" + saved.getScreenshotUrl().length() + " chars]"
                 : saved.getScreenshotUrl();
-        System.out.println("📸 Saved student lab snapshot to PostgreSQL: " + saved.getId() + " | Image: " + urlPreview);
+        System.out.println("Saved student lab snapshot to PostgreSQL: " + saved.getId() + " | Image: " + urlPreview);
 
         return ResponseEntity.ok(saved);
     }
@@ -82,7 +82,7 @@ public class StorageController {
                 cloudinaryService.deleteImage(snapshot.getCloudinaryPublicId());
             }
             snapshotRepository.delete(snapshot);
-            System.out.println("🗑️ Deleted snapshot record: " + id);
+            System.out.println("Deleted snapshot record: " + id);
             return ResponseEntity.ok().<Void>build();
         }).orElse(ResponseEntity.notFound().build());
     }

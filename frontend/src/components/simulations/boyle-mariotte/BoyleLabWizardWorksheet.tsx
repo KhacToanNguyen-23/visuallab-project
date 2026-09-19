@@ -161,7 +161,7 @@ export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = (
           <div className="space-y-4">
             <div className="bg-slate-950/80 border border-sky-500/20 rounded-xl p-4 space-y-2">
               <h3 className="text-xs font-bold uppercase font-mono tracking-wider text-sky-400">
-                🎯 Đề Bài Yêu Cầu Thực Hành (Tối thiểu 3 lần đo khác nhau)
+                Đề Bài Yêu Cầu Thực Hành (Tối thiểu 3 lần đo khác nhau)
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed">
                 Học sinh cần điều chỉnh mô hình 3D xi lanh pít-tông theo đúng 3 đề bài dưới đây và bấm ghi số liệu tương ứng.
@@ -319,7 +319,7 @@ export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = (
                   onClick={handleAutoFillCalculation}
                   className="text-[10px] text-sky-400 underline hover:text-sky-300 cursor-pointer"
                 >
-                  ⚡ Điền tự động kết quả
+                  Điền tự động kết quả
                 </button>
               </div>
 
@@ -356,7 +356,7 @@ export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = (
             {/* Student Observations & Notes */}
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-200">📝 Nhận Xét Của Học Sinh Về Sự Thay Đổi:</span>
+                <span className="font-bold text-slate-200">Nhận Xét Của Học Sinh Về Sự Thay Đổi:</span>
               </div>
               <textarea
                 rows={3}
@@ -494,7 +494,7 @@ export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = (
             {/* 3 GDPT 2018 Multiple Choice Questions */}
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-3">
               <h4 className="text-xs font-bold text-amber-400 uppercase font-mono">
-                📝 Trắc Nghiệm Hiểu Bài SGK GDPT 2018 (3 Câu)
+                Trắc Nghiệm Hiểu Bài SGK GDPT 2018 (3 Câu)
               </h4>
 
               {/* Q1 */}
@@ -584,7 +584,7 @@ export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = (
               <div className="bg-slate-950 border border-sky-500/30 rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-200 uppercase font-mono">
-                    📋 Kiểm Tra Tiến Độ & Sẵn Sàng Nộp Bài
+                    Kiểm Tra Tiến Độ & Sẵn Sàng Nộp Bài
                   </span>
                   <span className="text-[10px] text-amber-400">Chưa nộp bài</span>
                 </div>
@@ -609,14 +609,14 @@ export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = (
                   disabled={computedTrials.length < 3}
                   className="w-full py-3 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-xl shadow-sky-950/50 transition transform active:scale-98 cursor-pointer flex items-center justify-center space-x-2"
                 >
-                  <span>📝 Nộp Bài & Tính Điểm Thí Nghiệm</span>
+                  <span>Nộp Bài & Tính Điểm Thí Nghiệm</span>
                 </button>
               </div>
             ) : (
               <div className="bg-slate-950 border border-emerald-500/40 rounded-xl p-4 space-y-3 animate-fade-in">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <span className="text-base">🏆</span>
+                    <span className="text-base"></span>
                     <h4 className="text-xs font-bold text-emerald-400 uppercase font-mono">
                       Kết Quả Chấm Điểm Thí Nghiệm
                     </h4>
@@ -664,7 +664,7 @@ export const BoyleLabWizardWorksheet: React.FC<BoyleLabWizardWorksheetProps> = (
                       onClick={onOpenSubmissionDrawer}
                       className="w-full sm:flex-1 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-900/40 transition transform active:scale-98 cursor-pointer flex items-center justify-center space-x-2"
                     >
-                      <span>🚀 Nộp Bài Vào Bài Tập Được Giao</span>
+                      <span>Nộp Bài Vào Bài Tập Được Giao</span>
                     </button>
                   )}
                 </div>

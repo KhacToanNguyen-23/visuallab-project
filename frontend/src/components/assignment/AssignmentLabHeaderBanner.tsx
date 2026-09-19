@@ -71,7 +71,7 @@ export const AssignmentLabHeaderBanner: React.FC<AssignmentLabHeaderBannerProps>
 
       {/* Center: Student Personal Parameters Chips (Visible on md+) */}
       <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-lg border text-xs" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
-        <span className="text-[11px] font-bold opacity-70">🎯 Đề bài cá nhân:</span>
+        <span className="text-[11px] font-bold opacity-70">Đề bài cá nhân:</span>
         {Object.keys(studentParams).length > 0 ? (
           <div className="flex items-center gap-2.5 font-mono text-[11px] font-bold">
             {Object.entries(studentParams).map(([k, v]) => (
@@ -88,7 +88,7 @@ export const AssignmentLabHeaderBanner: React.FC<AssignmentLabHeaderBannerProps>
       {/* Right: Deadline Badge & Open Drawer Button */}
       <div className="flex items-center gap-2.5 shrink-0">
         <div className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold border ${deadline.bgBadgeClass}`}>
-          <span>⏳ {deadline.formattedDateTime}</span>
+          <span>{deadline.formattedDateTime}</span>
           <span className="text-[10px] font-sans opacity-90">({deadline.timeRemainingText})</span>
         </div>
 
@@ -99,7 +99,6 @@ export const AssignmentLabHeaderBanner: React.FC<AssignmentLabHeaderBannerProps>
           }`}
           style={{ backgroundColor: 'var(--accent-primary)' }}
         >
-          <span>📝</span>
           <span>Ghi Chép & Nộp Bài</span>
         </button>
       </div>

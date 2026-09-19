@@ -234,7 +234,7 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
       <div className="border-b border-slate-800 pb-2.5 space-y-2">
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
-            <span className="text-cyan-400">📋</span> Báo Cáo Thực Hành Đo Tốc Độ
+            Báo Cáo Thực Hành Đo Tốc Độ
           </h3>
           <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/30">
             {mode === 'AVERAGE_SPEED' ? 'Tốc độ trung bình' : 'Tốc độ tức thời'}
@@ -420,13 +420,13 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
             {/* Visual Math Formula Card */}
             <div className="bg-slate-950/80 border border-cyan-500/30 rounded-xl p-3 space-y-1.5 text-xs font-mono">
               <div className="text-cyan-300 font-bold text-[11px] uppercase flex items-center justify-between">
-                <span>📖 Công Thức SGK Trang 29:</span>
+                <span>Công Thức SGK Trang 29:</span>
                 <button
                   onClick={handleAutoComputeHelper}
                   className="text-[10px] text-cyan-400 underline hover:text-cyan-200 cursor-pointer"
                   title="Hỗ trợ tính tự động để tham khảo"
                 >
-                  ⚡ Tính nhanh mẫu
+                  Tính nhanh mẫu
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-300 pt-1">
@@ -586,7 +586,7 @@ export const SpeedLabWizardWorksheet: React.FC<SpeedLabWizardWorksheetProps> = (
               onClick={handleGradeSubmission}
               className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition-all active:scale-98 cursor-pointer"
             >
-              <span>🏆 Nộp Báo Cáo & Chấm Điểm</span>
+              <span>Nộp Báo Cáo & Chấm Điểm</span>
             </button>
 
             {gradeResult && (

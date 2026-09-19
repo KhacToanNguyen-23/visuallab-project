@@ -36,7 +36,7 @@ export const SimCard: React.FC<SimCardProps> = ({ sim }) => {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-900 via-slate-900 to-indigo-950">
-              <span className="text-4xl opacity-50">🔬</span>
+              <span className="text-4xl opacity-50"></span>
             </div>
           )}
           

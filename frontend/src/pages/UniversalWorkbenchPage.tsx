@@ -90,7 +90,7 @@ export const UniversalWorkbenchPage: React.FC = () => {
       };
       image.src = blobURL;
     } else {
-      showToast('📸 Vui lòng đợi mô phỏng sẵn sàng để chụp ảnh');
+      showToast('Vui lòng đợi mô phỏng sẵn sàng để chụp ảnh');
     }
   };
 
@@ -99,7 +99,7 @@ export const UniversalWorkbenchPage: React.FC = () => {
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-cyan-600 text-white px-4 py-2.5 rounded-xl shadow-2xl border border-cyan-400 font-bold text-xs animate-bounce flex items-center gap-2">
-          <span>✨ {toastMessage}</span>
+          <span>{toastMessage}</span>
         </div>
       )}
 
@@ -113,7 +113,7 @@ export const UniversalWorkbenchPage: React.FC = () => {
             ← Về Bảng Bài Tập
           </button>
           <h1 className="text-base font-black text-cyan-400 tracking-tight flex items-center gap-2">
-            <span>🌀 Bàn Thí Nghiệm Vật Lý Tự Do (Universal Physics Sandbox)</span>
+            <span>Bàn Thí Nghiệm Vật Lý Tự Do (Universal Physics Sandbox)</span>
           </h1>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-700/60">
             PhET SceneryStack 60 FPS
@@ -125,14 +125,14 @@ export const UniversalWorkbenchPage: React.FC = () => {
             onClick={handleClearAll}
             className="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:bg-red-950 hover:border-red-600/60 text-slate-300 hover:text-red-300 text-xs font-bold transition cursor-pointer flex items-center gap-1"
           >
-            <span>🧹 Xóa Hết ({placedItems.length})</span>
+            <span>Xóa Hết ({placedItems.length})</span>
           </button>
 
           <button
             onClick={handleCaptureScreenshot}
             className="px-3.5 py-1.5 rounded-lg bg-cyan-950 border border-cyan-600/60 text-cyan-300 hover:text-white text-xs font-extrabold transition shadow-md cursor-pointer flex items-center gap-1.5"
           >
-            <span>📸 Chụp Ảnh & Lưu Kho</span>
+            <span>Chụp Ảnh & Lưu Kho</span>
           </button>
         </div>
       </div>

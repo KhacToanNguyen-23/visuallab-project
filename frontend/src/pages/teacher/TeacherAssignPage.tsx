@@ -383,9 +383,9 @@ export const TeacherAssignPage: React.FC = () => {
               }}
             >
               {[
-                { title: '📘 KHỐI LỚP 10 (Cơ học & Động lực học)', filter: 'LỚP 10' },
-                { title: '📗 KHỐI LỚP 11 (Dao động, Sóng, Điện & Quang)', filter: 'LỚP 11' },
-                { title: '📙 KHỐI LỚP 12 (Vật lý Nhiệt & Cảm ứng từ)', filter: 'LỚP 12' },
+                { title: 'KHỐI LỚP 10 (Cơ học & Động lực học)', filter: 'LỚP 10' },
+                { title: 'KHỐI LỚP 11 (Dao động, Sóng, Điện & Quang)', filter: 'LỚP 11' },
+                { title: 'KHỐI LỚP 12 (Vật lý Nhiệt & Cảm ứng từ)', filter: 'LỚP 12' },
               ].map(group => (
                 <div key={group.filter} className="space-y-1">
                   <div
@@ -434,7 +434,6 @@ export const TeacherAssignPage: React.FC = () => {
 
           {isLabAlreadyAssigned(selectedLab) && (
             <div className="p-3 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-semibold flex items-center gap-2 mt-2">
-              <span>⚠️</span>
               <span>Bài thực hành này đã được giao cho lớp học này rồi. Vui lòng chọn bài khác!</span>
             </div>
           )}

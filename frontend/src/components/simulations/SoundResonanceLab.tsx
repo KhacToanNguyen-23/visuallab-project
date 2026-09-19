@@ -831,7 +831,7 @@ export const SoundResonanceLab: React.FC = () => {
             onClick={handleCaptureScreenshot}
             className="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded-lg text-xs font-semibold transition shadow-sm"
           >
-            <span>📷 Chụp Ảnh Báo Cáo</span>
+            <span>Chụp Ảnh Báo Cáo</span>
           </button>
           <div className="px-3 py-1 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded-full text-xs font-semibold flex items-center space-x-1.5">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
@@ -880,7 +880,7 @@ export const SoundResonanceLab: React.FC = () => {
                     {/* Camera Presets & Focus Section */}
                     <div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
-                        📐 Góc Nhìn & Zoom Cận Cảnh
+                        Góc Nhìn & Zoom Cận Cảnh
                       </span>
                       <div className="grid grid-cols-2 gap-1.5">
                         <button
@@ -893,7 +893,7 @@ export const SoundResonanceLab: React.FC = () => {
                               : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
                           }`}
                         >
-                          <span>📐 Toàn Cảnh</span>
+                          <span>Toàn Cảnh</span>
                         </button>
                         <button
                           onClick={() => {
@@ -902,7 +902,7 @@ export const SoundResonanceLab: React.FC = () => {
                           className="p-1.5 rounded text-[10px] font-medium bg-amber-500/15 text-amber-400 hover:bg-amber-500/25 border border-amber-500/30 transition text-left flex items-center space-x-1"
                           title="Zoom sát vào mực nước và vạch chia mm"
                         >
-                          <span>🔍 Mực Nước</span>
+                          <span>Mực Nước</span>
                         </button>
                         <button
                           onClick={() => {
@@ -911,7 +911,7 @@ export const SoundResonanceLab: React.FC = () => {
                           className="p-1.5 rounded text-[10px] font-medium bg-cyan-500/15 text-cyan-400 hover:bg-cyan-500/25 border border-cyan-500/30 transition text-left flex items-center space-x-1"
                           title="Zoom sát vào loa phát âm"
                         >
-                          <span>🔊 Miệng Loa</span>
+                          <span>Miệng Loa</span>
                         </button>
                         <button
                           onClick={() => {
@@ -920,7 +920,7 @@ export const SoundResonanceLab: React.FC = () => {
                           className="p-1.5 rounded text-[10px] font-medium bg-purple-500/15 text-purple-400 hover:bg-purple-500/25 border border-purple-500/30 transition text-left flex items-center space-x-1"
                           title="Zoom sát vào máy phát tần số"
                         >
-                          <span>📻 Máy Phát</span>
+                          <span>Máy Phát</span>
                         </button>
                       </div>
                     </div>
@@ -928,7 +928,7 @@ export const SoundResonanceLab: React.FC = () => {
                     {/* Standing Wave Visualizer Mode */}
                     <div className="pt-2 border-t border-slate-800">
                       <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
-                        🌊 Hiển Thị Sóng Dừng
+                        Hiển Thị Sóng Dừng
                       </span>
                       <div className="grid grid-cols-3 gap-1">
                         <button
@@ -990,7 +990,7 @@ export const SoundResonanceLab: React.FC = () => {
 
             {/* Bottom-Center: 3D Camera Instruction Pill */}
             <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 bg-slate-950/70 border border-slate-800 rounded-full px-3 py-1 text-[10px] text-slate-400 backdrop-blur-sm pointer-events-none">
-              🖱️ Giữ chuột trái xoay 360° • Chuột phải di chuyển • Lăn chuột phóng to/thu nhỏ
+              Giữ chuột trái xoay 360° • Chuột phải di chuyển • Lăn chuột phóng to/thu nhỏ
             </div>
           </div>
 
@@ -1007,7 +1007,7 @@ export const SoundResonanceLab: React.FC = () => {
                       : 'bg-emerald-600 hover:bg-emerald-500 text-white'
                   }`}
                 >
-                  <span>{isPlayingAudio ? '⏹ Dừng Máy Phát Âm' : '▶ Bật Máy Phát Âm'}</span>
+                  <span>{isPlayingAudio ? 'Dừng Máy Phát Âm' : 'Bật Máy Phát Âm'}</span>
                 </button>
 
                 {/* Preset Frequencies */}
@@ -1105,13 +1105,13 @@ export const SoundResonanceLab: React.FC = () => {
                       onClick={() => setWaterLevel(parseFloat(l1Theo.toFixed(1)))}
                       className="px-1.5 py-0.5 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 rounded text-[10px] font-semibold"
                     >
-                      🎯 L1 ({l1Theo.toFixed(1)}cm)
+                      L1 ({l1Theo.toFixed(1)}cm)
                     </button>
                     <button
                       onClick={() => setWaterLevel(parseFloat(l2Theo.toFixed(1)))}
                       className="px-1.5 py-0.5 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-500/30 rounded text-[10px] font-semibold"
                     >
-                      🎯 L2 ({l2Theo.toFixed(1)}cm)
+                      L2 ({l2Theo.toFixed(1)}cm)
                     </button>
                   </div>
                 </div>
@@ -1161,14 +1161,14 @@ export const SoundResonanceLab: React.FC = () => {
                   onClick={handleMarkL1}
                   className="px-3 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 rounded-lg text-xs font-bold transition flex items-center space-x-1"
                 >
-                  <span>📍 Đánh Dấu L1 ({markedL1 !== null ? `${markedL1}cm` : 'Chưa ghi'})</span>
+                  <span>Đánh Dấu L1 ({markedL1 !== null ? `${markedL1}cm` : 'Chưa ghi'})</span>
                 </button>
 
                 <button
                   onClick={handleMarkL2}
                   className="px-3 py-1.5 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-500/40 rounded-lg text-xs font-bold transition flex items-center space-x-1"
                 >
-                  <span>📍 Đánh Dấu L2 ({markedL2 !== null ? `${markedL2}cm` : 'Chưa ghi'})</span>
+                  <span>Đánh Dấu L2 ({markedL2 !== null ? `${markedL2}cm` : 'Chưa ghi'})</span>
                 </button>
 
                 {(markedL1 !== null || markedL2 !== null) && (
@@ -1186,7 +1186,7 @@ export const SoundResonanceLab: React.FC = () => {
                 disabled={markedL1 === null || markedL2 === null}
                 className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:opacity-40 text-white rounded-lg text-xs font-bold transition shadow-md flex items-center space-x-1.5"
               >
-                <span>➕ Lưu Kết Quả Đo (L2 - L1)</span>
+                <span>Lưu Kết Quả Đo (L2 - L1)</span>
               </button>
             </div>
           </div>
@@ -1197,7 +1197,7 @@ export const SoundResonanceLab: React.FC = () => {
           {/* Real-Time Calculation Card */}
           <div className="bg-slate-900 border border-cyan-500/30 rounded-xl p-4 shadow-lg space-y-3">
             <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center space-x-1.5">
-              <span>📐 Tính Toán Tốc Độ Truyền Âm Thực Nghiệm</span>
+              <span>Tính Toán Tốc Độ Truyền Âm Thực Nghiệm</span>
             </h3>
 
             {markedL1 !== null && markedL2 !== null ? (
@@ -1251,7 +1251,7 @@ export const SoundResonanceLab: React.FC = () => {
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-bold text-slate-200 flex items-center space-x-2">
-                <span>📋 Bảng Kết Quả Đo Tốc Độ Truyền Âm</span>
+                <span>Bảng Kết Quả Đo Tốc Độ Truyền Âm</span>
               </h3>
               <div className="flex items-center space-x-2">
                 <span className="px-2 py-0.5 bg-slate-800 rounded text-xs text-slate-400 font-mono">
@@ -1270,7 +1270,7 @@ export const SoundResonanceLab: React.FC = () => {
 
             {trials.length === 0 ? (
               <div className="text-center py-6 text-slate-500 text-xs border border-dashed border-slate-800 rounded-lg">
-                Chưa có dữ liệu. Sau khi đánh dấu L1 và L2, bấm <strong className="text-cyan-400">"➕ Lưu Kết Quả Đo"</strong>.
+                Chưa có dữ liệu. Sau khi đánh dấu L1 và L2, bấm <strong className="text-cyan-400">"Lưu Kết Quả Đo"</strong>.
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -1314,7 +1314,7 @@ export const SoundResonanceLab: React.FC = () => {
           {/* SGK Physics Theory Card */}
           <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 text-xs text-slate-300 space-y-2.5">
             <h4 className="font-bold text-cyan-400 flex items-center space-x-1.5">
-              <span>💡 Cơ Sở Lý Thuyết (SGK Vật Lý 11 - Bài 5)</span>
+              <span>Cơ Sở Lý Thuyết (SGK Vật Lý 11 - Bài 5)</span>
             </h4>
             <p className="leading-relaxed text-slate-400">
               Sóng âm phát từ loa tới mặt nước bị phản xạ, hai sóng tới và phản xạ giao thoa tạo thành{' '}

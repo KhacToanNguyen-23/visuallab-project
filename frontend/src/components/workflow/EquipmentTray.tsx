@@ -27,7 +27,7 @@ export const EquipmentTray: React.FC<Props> = ({
       setWarningMessage(null);
     } else {
       if (!item.isCorrect) {
-        setWarningMessage(`⚠️ Cảnh báo: Dụng cụ "${item.name}" không cần thiết cho bài thực hành này!`);
+        setWarningMessage(`Cảnh báo: Dụng cụ "${item.name}" không cần thiết cho bài thực hành này!`);
         setTimeout(() => setWarningMessage(null), 3500);
       }
       setSelectedIds(prev => [...prev, item.id]);
@@ -41,7 +41,7 @@ export const EquipmentTray: React.FC<Props> = ({
     if (isAllCorrectSelected) {
       onCompleteEquipmentSelection(selectedIds);
     } else {
-      setWarningMessage('⚠️ Bạn chưa chọn đủ các dụng cụ cần thiết theo hướng dẫn SGK!');
+      setWarningMessage('Bạn chưa chọn đủ các dụng cụ cần thiết theo hướng dẫn SGK!');
       setTimeout(() => setWarningMessage(null), 3500);
     }
   };

@@ -287,7 +287,7 @@ export const ClassRosterDrawer: React.FC<ClassRosterDrawerProps> = ({
                   : 'border-transparent opacity-70 hover:opacity-100 hover:bg-slate-500/5'
               }`}
             >
-              <span>👥 Danh Sách Học Sinh</span>
+              <span>Danh Sách Học Sinh</span>
               <span
                 className="text-[10px] px-1.5 py-0.2 rounded-full font-bold"
                 style={{
@@ -311,7 +311,7 @@ export const ClassRosterDrawer: React.FC<ClassRosterDrawerProps> = ({
                   : 'border-transparent opacity-70 hover:opacity-100 hover:bg-slate-500/5'
               }`}
             >
-              <span>📝 Bài Thực Hành Đã Giao</span>
+              <span>Bài Thực Hành Đã Giao</span>
               <span
                 className="text-[10px] px-1.5 py-0.2 rounded-full font-bold"
                 style={{
@@ -383,7 +383,6 @@ export const ClassRosterDrawer: React.FC<ClassRosterDrawerProps> = ({
               filteredRoster.length === 0 ? (
                 <div className="text-center py-16 px-4 space-y-3">
                   <div className="w-12 h-12 rounded-full bg-slate-500/10 flex items-center justify-center mx-auto text-xl">
-                    👥
                   </div>
                   <div>
                     <p className="text-xs font-bold" style={{ color: 'var(--text-main)' }}>
@@ -455,7 +454,6 @@ export const ClassRosterDrawer: React.FC<ClassRosterDrawerProps> = ({
               filteredAssignments.length === 0 ? (
                 <div className="text-center py-16 px-4 space-y-3">
                   <div className="w-12 h-12 rounded-full bg-slate-500/10 flex items-center justify-center mx-auto text-xl">
-                    📝
                   </div>
                   <div>
                     <p className="text-xs font-bold" style={{ color: 'var(--text-main)' }}>
@@ -580,7 +578,7 @@ export const ClassRosterDrawer: React.FC<ClassRosterDrawerProps> = ({
                             style={{ backgroundColor: 'var(--accent-primary)' }}
                             title="Mở và trải nghiệm mô phỏng phòng thí nghiệm"
                           >
-                            <span>🧪 Mở Thí Nghiệm</span>
+                            <span>Mở Thí Nghiệm</span>
                           </button>
 
                           <button
@@ -595,7 +593,7 @@ export const ClassRosterDrawer: React.FC<ClassRosterDrawerProps> = ({
                               backgroundColor: 'var(--bg-panel)',
                             }}
                           >
-                            <span>📊 Xem Sổ Điểm →</span>
+                            <span>Xem Sổ Điểm →</span>
                           </button>
                         </div>
 
@@ -705,7 +703,7 @@ export const ClassRosterDrawer: React.FC<ClassRosterDrawerProps> = ({
                 borderColor: 'var(--border-color)',
               }}
             >
-              ⚠️ Lưu ý: Sau khi xóa, học sinh trong lớp sẽ không thể nộp báo cáo thực hành cho bài này nữa.
+              Lưu ý: Sau khi xóa, học sinh trong lớp sẽ không thể nộp báo cáo thực hành cho bài này nữa.
             </div>
 
             <div className="flex items-center justify-end gap-2.5 pt-2">

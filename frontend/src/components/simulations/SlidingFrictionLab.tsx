@@ -39,7 +39,7 @@ const SURFACE_PRESETS: SurfacePreset[] = [
     color: '#854d0e',
     roughness: 0.7,
     metalness: 0.05,
-    icon: '🌲',
+    icon: '',
     description: 'Bề mặt gỗ bào nhẵn tiêu chuẩn SGK (μ = 0.25)',
     microStructure: {
       title: 'Mấp mô sợi xenluloza (Gỗ)',
@@ -56,7 +56,7 @@ const SURFACE_PRESETS: SurfacePreset[] = [
     color: '#38bdf8',
     roughness: 0.1,
     metalness: 0.1,
-    icon: '🪟',
+    icon: '',
     description: 'Bề mặt kính quang học siêu trơn (μ = 0.15)',
     microStructure: {
       title: 'Mạng tinh thể phẳng (Kính)',
@@ -73,7 +73,7 @@ const SURFACE_PRESETS: SurfacePreset[] = [
     color: '#94a3b8',
     roughness: 0.35,
     metalness: 0.8,
-    icon: '🛡️',
+    icon: '',
     description: 'Máng nhôm định hình xước mờ (μ = 0.35)',
     microStructure: {
       title: 'Vệt xước định hình kim loại (Nhôm)',
@@ -90,7 +90,7 @@ const SURFACE_PRESETS: SurfacePreset[] = [
     color: '#334155',
     roughness: 0.95,
     metalness: 0.0,
-    icon: '⬛',
+    icon: '',
     description: 'Bề mặt phủ lớp đệm cao su ma sát cao (μ = 0.60)',
     microStructure: {
       title: 'Mạng polymer đàn hồi (Cao su)',
@@ -923,14 +923,14 @@ export const SlidingFrictionLab: React.FC = () => {
             }`}
             title="Bật/Tắt âm thanh ma sát thực tế"
           >
-            <span>{soundEnabled ? '🔊 Âm Thanh Ma Sát: BẬT' : '🔇 Âm Thanh: TẮT'}</span>
+            <span>{soundEnabled ? 'Âm Thanh Ma Sát: BẬT' : 'Âm Thanh: TẮT'}</span>
           </button>
 
           <button
             onClick={handleCaptureScreenshot}
             className="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded-lg text-xs font-semibold transition shadow-sm"
           >
-            <span>📷 Chụp Ảnh Báo Cáo</span>
+            <span>Chụp Ảnh Báo Cáo</span>
           </button>
 
           <div className="px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full text-xs font-semibold flex items-center space-x-1.5">
@@ -960,7 +960,7 @@ export const SlidingFrictionLab: React.FC = () => {
                       : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
-                  📐 Phối Cảnh 3D
+                  Phối Cảnh 3D
                 </button>
                 <button
                   onClick={() => setCameraPreset('side')}
@@ -970,7 +970,7 @@ export const SlidingFrictionLab: React.FC = () => {
                       : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
-                  👁️ Nhìn Ngang
+                  Nhìn Ngang
                 </button>
                 <button
                   onClick={() => setCameraPreset('top')}
@@ -980,7 +980,7 @@ export const SlidingFrictionLab: React.FC = () => {
                       : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
-                  ⬇️ Từ Trên Xuống
+                  Từ Trên Xuống
                 </button>
               </div>
 
@@ -1048,14 +1048,14 @@ export const SlidingFrictionLab: React.FC = () => {
                   }`}
                 ></span>
                 <span className={isPulling ? 'text-amber-400 font-bold' : 'text-slate-400'}>
-                  {isPulling ? '⚡ Đang phát nhiệt ma sát' : 'Trạng thái tĩnh'}
+                  {isPulling ? 'Đang phát nhiệt ma sát' : 'Trạng thái tĩnh'}
                 </span>
               </div>
             </div>
 
             {/* Bottom-Center: 3D Camera Instruction Pill */}
             <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 bg-slate-950/70 border border-slate-800 rounded-full px-3 py-1 text-[10px] text-slate-400 backdrop-blur-sm pointer-events-none">
-              🖱️ Giữ chuột trái xoay 360° • Chuột phải kéo bàn • Lăn chuột phóng to/thu nhỏ
+              Giữ chuột trái xoay 360° • Chuột phải kéo bàn • Lăn chuột phóng to/thu nhỏ
             </div>
           </div>
 
@@ -1084,7 +1084,6 @@ export const SlidingFrictionLab: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-center space-x-1.5">
-                        <span className="text-base">{surface.icon}</span>
                         <span className="text-xs font-semibold leading-tight">{surface.name}</span>
                       </div>
                       <div className="mt-1 text-[10px] font-mono text-amber-400">
@@ -1131,7 +1130,7 @@ export const SlidingFrictionLab: React.FC = () => {
                   disabled={isPulling}
                   className="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 disabled:opacity-50 text-white rounded-lg text-xs font-bold transition shadow-lg flex items-center space-x-1.5 active:scale-95"
                 >
-                  <span>{isPulling ? '⏳ Đang kéo & phát nhiệt...' : '▶ Kéo Khối Gỗ'}</span>
+                  <span>{isPulling ? 'Đang kéo & phát nhiệt...' : 'Kéo Khối Gỗ'}</span>
                 </button>
 
                 <button
@@ -1161,7 +1160,7 @@ export const SlidingFrictionLab: React.FC = () => {
           <div className="bg-slate-900 border border-amber-500/30 rounded-xl p-4 shadow-lg relative overflow-hidden">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center space-x-1.5">
-                <span>🔬 Kính Hiển Vi: Bản Chất Ma Sát Vi Mô</span>
+                <span>Kính Hiển Vi: Bản Chất Ma Sát Vi Mô</span>
               </h3>
               <button
                 onClick={() => setShowMicroView(!showMicroView)}
@@ -1176,7 +1175,7 @@ export const SlidingFrictionLab: React.FC = () => {
                 {/* Microscopic Canvas Diagram */}
                 <div className="bg-slate-950 rounded-lg p-2.5 border border-slate-800 relative">
                   <div className="text-[10px] text-slate-400 flex justify-between font-mono mb-1">
-                    <span>Mặt Đáy Khối Gỗ (Chuyển động ➡)</span>
+                    <span>Mặt Đáy Khối Gỗ (Chuyển động)</span>
                     <span className="text-amber-400 font-bold">{selectedSurface.microStructure.title}</span>
                   </div>
 
@@ -1250,7 +1249,7 @@ export const SlidingFrictionLab: React.FC = () => {
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-bold text-slate-200 flex items-center space-x-2">
-                <span>📋 Bảng Thu Thập Số Liệu Thí Nghiệm</span>
+                <span>Bảng Thu Thập Số Liệu Thí Nghiệm</span>
               </h3>
               <div className="flex items-center space-x-2">
                 <span className="px-2 py-0.5 bg-slate-800 rounded text-xs text-slate-400 font-mono">
@@ -1269,7 +1268,7 @@ export const SlidingFrictionLab: React.FC = () => {
 
             {measurements.length === 0 ? (
               <div className="text-center py-6 text-slate-500 text-xs border border-dashed border-slate-800 rounded-lg">
-                Chưa có dữ liệu. Hãy bấm <strong className="text-amber-400">"▶ Kéo Khối Gỗ"</strong> sau đó bấm{' '}
+                Chưa có dữ liệu. Hãy bấm <strong className="text-amber-400">"Kéo Khối Gỗ"</strong> sau đó bấm{' '}
                 <strong className="text-indigo-400">"+ Ghi Số Liệu"</strong> để lưu lần đo.
               </div>
             ) : (
@@ -1303,7 +1302,7 @@ export const SlidingFrictionLab: React.FC = () => {
           {/* SGK Physics Theory Card */}
           <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 text-xs text-slate-300 space-y-2">
             <h4 className="font-bold text-amber-400 flex items-center space-x-1.5">
-              <span>💡 Cơ Sở Lý Thuyết (SGK Vật Lý 10 - Bài 21)</span>
+              <span>Cơ Sở Lý Thuyết (SGK Vật Lý 10 - Bài 21)</span>
             </h4>
             <p className="leading-relaxed text-slate-400">
               Độ lớn của lực ma sát trượt <strong className="text-slate-200">F_ms</strong> tỉ lệ thuận với độ lớn của áp lực{' '}

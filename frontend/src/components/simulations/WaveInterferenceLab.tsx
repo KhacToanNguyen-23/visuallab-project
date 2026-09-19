@@ -749,7 +749,7 @@ export const WaveInterferenceLab: React.FC = () => {
               activeTab === 'bench' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
             }`}
           >
-            🔬 Băng Quang Học 3D
+            Băng Quang Học 3D
           </button>
           <button
             onClick={() => setActiveTab('worksheet')}
@@ -757,7 +757,7 @@ export const WaveInterferenceLab: React.FC = () => {
               activeTab === 'worksheet' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
             }`}
           >
-            📋 Bảng Số Liệu
+            Bảng Số Liệu
             {trials.length > 0 && (
               <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500 text-slate-950 font-bold">
                 {trials.length}
@@ -770,7 +770,7 @@ export const WaveInterferenceLab: React.FC = () => {
               activeTab === 'quiz' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
             }`}
           >
-            📝 Bài Thu Hoạch Quiz
+            Bài Thu Hoạch Quiz
           </button>
         </div>
 
@@ -781,7 +781,6 @@ export const WaveInterferenceLab: React.FC = () => {
             className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-md"
             title="Đổi sang đề bài thí nghiệm mới với các giá trị λ, a, D ngẫu nhiên"
           >
-            <span>🎲</span>
             <span>Đổi Đề Bài Mới</span>
           </button>
           <button
@@ -793,7 +792,6 @@ export const WaveInterferenceLab: React.FC = () => {
             }`}
             title="Đóng / Mở Thanh Đề Bài & Hướng Dẫn"
           >
-            <span>📌</span>
             <span>{isProblemStatementOpen ? 'Ẩn Đề Bài' : 'Xem Đề Bài'}</span>
           </button>
           <button
@@ -815,7 +813,7 @@ export const WaveInterferenceLab: React.FC = () => {
             <div className="space-y-1.5 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-extrabold uppercase tracking-wider">
-                  🎯 Yêu Cầu Đề Bài #{targetReq.id}
+                  Yêu Cầu Đề Bài #{targetReq.id}
                 </span>
                 <span className="text-xs font-extrabold text-white">
                   {targetReq.laserName} — Hãy điều chỉnh thanh trượt đúng với đề bài:
@@ -823,17 +821,17 @@ export const WaveInterferenceLab: React.FC = () => {
                 <span className={`text-[10px] font-mono px-2 py-0.5 rounded border transition-colors ${
                   isAMatched ? 'bg-emerald-950 text-emerald-300 border-emerald-500/50 font-bold' : 'bg-rose-950/80 text-rose-300 border-rose-500/40 animate-pulse'
                 }`}>
-                  {isAMatched ? `✓ a = ${slitSeparation.toFixed(2)} mm` : `⚠️ Cần đặt a = ${targetReq.targetA.toFixed(2)} mm (hiện tại: ${slitSeparation.toFixed(2)})`}
+                  {isAMatched ? `✓ a = ${slitSeparation.toFixed(2)} mm` : `Cần đặt a = ${targetReq.targetA.toFixed(2)} mm (hiện tại: ${slitSeparation.toFixed(2)})`}
                 </span>
                 <span className={`text-[10px] font-mono px-2 py-0.5 rounded border transition-colors ${
                   isDMatched ? 'bg-emerald-950 text-emerald-300 border-emerald-500/50 font-bold' : 'bg-rose-950/80 text-rose-300 border-rose-500/40 animate-pulse'
                 }`}>
-                  {isDMatched ? `✓ D = ${screenDistance.toFixed(2)} m` : `⚠️ Cần đặt D = ${targetReq.targetD.toFixed(2)} m (hiện tại: ${screenDistance.toFixed(2)})`}
+                  {isDMatched ? `✓ D = ${screenDistance.toFixed(2)} m` : `Cần đặt D = ${targetReq.targetD.toFixed(2)} m (hiện tại: ${screenDistance.toFixed(2)})`}
                 </span>
                 <span className={`text-[10px] font-mono px-2 py-0.5 rounded border transition-colors ${
                   isLambdaMatched ? 'bg-emerald-950 text-emerald-300 border-emerald-500/50 font-bold' : 'bg-rose-950/80 text-rose-300 border-rose-500/40 animate-pulse'
                 }`}>
-                  {isLambdaMatched ? `✓ λ = ${wavelength} nm` : `⚠️ Cần chọn λ = ${targetReq.targetWavelength} nm (hiện tại: ${wavelength})`}
+                  {isLambdaMatched ? `✓ λ = ${wavelength} nm` : `Cần chọn λ = ${targetReq.targetWavelength} nm (hiện tại: ${wavelength})`}
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-300">
@@ -862,7 +860,6 @@ export const WaveInterferenceLab: React.FC = () => {
                   className="px-2.5 py-1 text-[11px] font-bold text-amber-300 bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 rounded-lg transition flex items-center gap-1 cursor-pointer"
                   title="Tự động gán đúng các thông số của đề bài"
                 >
-                  <span>⚡</span>
                   <span>Căn Chỉnh Nhanh</span>
                 </button>
               )}
@@ -871,7 +868,6 @@ export const WaveInterferenceLab: React.FC = () => {
                 className="px-3 py-1 text-[11px] font-bold text-white bg-purple-600 hover:bg-purple-500 rounded-lg shadow-xs transition flex items-center gap-1 cursor-pointer"
                 title="Đổi sang đề bài thí nghiệm mới ngẫu nhiên"
               >
-                <span>🎲</span>
                 <span>Đổi Đề Mới</span>
               </button>
               <button
@@ -934,7 +930,6 @@ export const WaveInterferenceLab: React.FC = () => {
               <div className="absolute bottom-4 left-4 z-20 w-80 bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-slate-800 shadow-2xl space-y-3 pointer-events-auto animate-fadeIn">
                 <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">🔍</span>
                     <span className="text-xs font-extrabold text-white">Thị Kính Đo Vi Trắc (10×)</span>
                   </div>
                   <button
@@ -1020,7 +1015,7 @@ export const WaveInterferenceLab: React.FC = () => {
                     onClick={() => setCrosshairPos((p) => Number(Math.min(6, p + 0.05).toFixed(2)))}
                     className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono cursor-pointer"
                   >
-                    +0.05mm ▶
+                    +0.05mm
                   </button>
                 </div>
 
@@ -1069,7 +1064,7 @@ export const WaveInterferenceLab: React.FC = () => {
                       onClick={handleRecordTrial}
                       className="w-full mt-2 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-xs transition shadow-md cursor-pointer"
                     >
-                      💾 Lưu Vào Bảng Số Liệu
+                      Lưu Vào Bảng Số Liệu
                     </button>
                   </div>
                 )}
@@ -1083,7 +1078,6 @@ export const WaveInterferenceLab: React.FC = () => {
               <div className="absolute bottom-4 right-4 z-20 w-80 bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-slate-800 shadow-2xl space-y-2 pointer-events-auto animate-fadeIn">
                 <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">📊</span>
                     <span className="text-xs font-extrabold text-white">
                       Đồ Thị Cường Độ Sáng I(x) = I₀cos²(πax/λD)
                     </span>
@@ -1157,7 +1151,6 @@ export const WaveInterferenceLab: React.FC = () => {
                   onClick={handleRandomizeProblem}
                   className="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-extrabold rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>🎲</span>
                   <span>Đổi Đề Bài Mới (Random Thông Số)</span>
                 </button>
 
@@ -1194,7 +1187,7 @@ export const WaveInterferenceLab: React.FC = () => {
                           : 'bg-slate-800/60 border-slate-700 text-slate-400'
                       }`}
                     >
-                      🌈 Ánh Sáng Trắng
+                      Ánh Sáng Trắng
                     </button>
                   </div>
                 </div>

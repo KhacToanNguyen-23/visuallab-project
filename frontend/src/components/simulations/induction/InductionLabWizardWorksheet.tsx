@@ -131,7 +131,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
       <div className="bg-slate-950/80 px-5 py-3 border-b border-slate-800 flex items-center justify-between shrink-0">
         <div>
           <h2 className="text-sm font-bold text-slate-100 flex items-center space-x-2">
-            <span>📋 Báo Cáo Thí Nghiệm Cảm Ứng Điện Từ</span>
+            <span>Báo Cáo Thí Nghiệm Cảm Ứng Điện Từ</span>
             <span className="px-2 py-0.5 bg-sky-500/20 text-sky-400 border border-sky-500/30 rounded text-[10px] font-mono">
               SGK Vật lý 12
             </span>
@@ -173,7 +173,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
           <div className="space-y-3">
             <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
               <div className="text-xs font-bold text-slate-200 mb-1 flex items-center justify-between">
-                <span>🎯 3 Nhiệm Vụ Khảo Sát Định Luật</span>
+                <span>3 Nhiệm Vụ Khảo Sát Định Luật</span>
                 <span className="text-[11px] text-sky-400 font-mono">
                   Đã ghi: {trials.length}/3 lần đo
                 </span>
@@ -229,7 +229,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
                           : 'bg-sky-600 hover:bg-sky-500 text-white shadow-md'
                       }`}
                     >
-                      <span>{m.isCompleted ? '↺ Đo Lại Lần Này' : '⚡ Thực Hiện & Ghi'}</span>
+                      <span>{m.isCompleted ? '↺ Đo Lại Lần Này' : 'Thực Hiện & Ghi'}</span>
                     </button>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
             <div className="bg-slate-950 rounded-xl border border-slate-800 p-3 space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-200">
-                  📊 Bảng Số Liệu Suất Điện Động & Dòng Cảm Ứng
+                  Bảng Số Liệu Suất Điện Động & Dòng Cảm Ứng
                 </span>
                 {trials.length > 0 && (
                   <button
@@ -327,7 +327,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
             {/* Law Verifications Status Card */}
             <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-2">
               <span className="text-xs font-bold text-slate-300 block">
-                ⚖️ Kiểm Chứng Định Luật Vật Lý
+                Kiểm Chứng Định Luật Vật Lý
               </span>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
                 <div className={`p-2.5 rounded-lg border flex items-center space-x-2 ${
@@ -359,7 +359,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
             {/* Observation Notes & Suggestions Chips */}
             <div className="bg-slate-950 rounded-xl border border-slate-800 p-3 space-y-2">
               <label className="text-xs font-bold text-slate-200 block">
-                ✍️ Nhận Xét & Kết Luận Thực Nghiệm
+                Nhận Xét & Kết Luận Thực Nghiệm
               </label>
               <textarea
                 value={studentObservation}
@@ -371,7 +371,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
 
               <div className="space-y-1 pt-1">
                 <span className="text-[10px] font-semibold text-slate-400 block">
-                  💡 Gợi ý nhận xét nhanh (nhấn để thêm):
+                  Gợi ý nhận xét nhanh (nhấn để thêm):
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {observationChips.map((chip, idx) => (
@@ -404,7 +404,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
             {/* Quiz Questions */}
             <div className="bg-slate-950 rounded-xl border border-slate-800 p-3.5 space-y-3">
               <span className="text-xs font-bold text-slate-200 block border-b border-slate-800 pb-2">
-                📝 Trắc Nghiệm Củng Cố Kiến Thức (SGK GDPT 2018)
+                Trắc Nghiệm Củng Cố Kiến Thức (SGK GDPT 2018)
               </span>
 
               {/* Q1 */}
@@ -537,7 +537,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                       : 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
                   }`}>
-                    {gradingResultState.isPass ? '✓ ĐẠT YÊU CẦU' : '⚠️ CẦN BỔ SUNG'}
+                    {gradingResultState.isPass ? '✓ ĐẠT YÊU CẦU' : 'CẦN BỔ SUNG'}
                   </span>
                 </div>
 
@@ -578,7 +578,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
                       onClick={onOpenSubmissionDrawer}
                       className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-emerald-600/25 flex items-center justify-center space-x-1.5 cursor-pointer"
                     >
-                      <span>🚀 Nộp Bài Vào Bài Tập Được Giao</span>
+                      <span>Nộp Bài Vào Bài Tập Được Giao</span>
                     </button>
                   )}
                 </div>
@@ -593,7 +593,7 @@ export const InductionLabWizardWorksheet: React.FC<InductionLabWizardWorksheetPr
                   disabled={trials.length === 0}
                   className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-emerald-600/25 flex items-center justify-center space-x-2 cursor-pointer"
                 >
-                  <span>📝 Nộp Bài & Tính Điểm Thí Nghiệm</span>
+                  <span>Nộp Bài & Tính Điểm Thí Nghiệm</span>
                 </button>
               </div>
             )}

@@ -69,7 +69,7 @@ export const InductionWorkbenchHudDock: React.FC<InductionWorkbenchHudDockProps>
             }`}>
               CỰC {pole === 'N-S' ? 'BẮC (N)' : 'NAM (S)'}
             </span>
-            <span className="text-slate-400">🔄 Đổi Cực</span>
+            <span className="text-slate-400">Đổi Cực</span>
           </button>
         </div>
 
@@ -98,7 +98,7 @@ export const InductionWorkbenchHudDock: React.FC<InductionWorkbenchHudDockProps>
           className="px-3 py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center space-x-1"
           title="Đưa nam châm vào với vận tốc chậm 0.5 m/s"
         >
-          <span>▶ Đưa Vào Chậm</span>
+          <span>Đưa Vào Chậm</span>
         </button>
 
         <button
@@ -107,7 +107,7 @@ export const InductionWorkbenchHudDock: React.FC<InductionWorkbenchHudDockProps>
           className="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white rounded-xl text-xs font-semibold transition cursor-pointer flex items-center space-x-1 shadow-md shadow-indigo-600/20"
           title="Đưa nam châm vào với vận tốc nhanh 1.5 m/s"
         >
-          <span>⏩ Đưa Vào Nhanh</span>
+          <span>Đưa Vào Nhanh</span>
         </button>
 
         <button

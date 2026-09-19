@@ -239,7 +239,7 @@ export const TeacherLabsPage: React.FC = () => {
           className="px-4 py-2.5 rounded-lg text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90 cursor-pointer shrink-0 inline-flex items-center gap-2"
           style={{ backgroundColor: 'var(--accent-primary)' }}
         >
-          <span>➕</span>
+          <span></span>
           <span>Giao Bài Cho Lớp Ngay</span>
         </button>
       </div>
@@ -397,7 +397,7 @@ export const TeacherLabsPage: React.FC = () => {
                   backgroundColor: 'var(--bg-main)',
                 }}
               >
-                <span>➕ Giao Bài</span>
+                <span>Giao Bài</span>
               </button>
             </div>
           </div>
@@ -407,7 +407,6 @@ export const TeacherLabsPage: React.FC = () => {
       {filteredLabs.length === 0 && (
         <div className="text-center py-16 px-4 space-y-3">
           <div className="w-12 h-12 rounded-full bg-slate-500/10 flex items-center justify-center mx-auto text-xl">
-            🔍
           </div>
           <p className="text-xs font-bold" style={{ color: 'var(--text-main)' }}>
             Không tìm thấy bài thí nghiệm phù hợp với bộ lọc

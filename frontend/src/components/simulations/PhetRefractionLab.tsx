@@ -297,7 +297,7 @@ export const PhetRefractionLab: React.FC = () => {
                     : 'bg-slate-950 text-slate-400 border-slate-800'
                 }`}
               >
-                {laserOn ? '🔴 Đèn Laser PhET: Đang Bật' : '⚪ Đèn Laser PhET: Đang Tắt'}
+                {laserOn ? 'Đèn Laser PhET: Đang Bật' : 'Đèn Laser PhET: Đang Tắt'}
               </button>
 
               <button
@@ -308,7 +308,7 @@ export const PhetRefractionLab: React.FC = () => {
                     : 'bg-slate-950 text-slate-400 border-slate-800'
                 }`}
               >
-                📏 Thước Đo Góc PhET
+                Thước Đo Góc PhET
               </button>
             </div>
 
@@ -380,7 +380,7 @@ export const PhetRefractionLab: React.FC = () => {
           {/* Student Report Worksheet */}
           <div className="bg-[#0A0E17] border border-cyan-500/30 rounded-3xl p-5 shadow-2xl flex flex-col gap-4">
             <h3 className="text-sm font-extrabold text-white uppercase tracking-wider flex items-center justify-between border-b border-slate-800 pb-3">
-              <span>📋 Phiếu Báo Cáo Khúc Xạ Ánh Sáng</span>
+              <span>Phiếu Báo Cáo Khúc Xạ Ánh Sáng</span>
               <span className="text-[10px] font-bold text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded-full">
                 GDPT 2018
               </span>
@@ -458,7 +458,7 @@ export const PhetRefractionLab: React.FC = () => {
                 }`}
               >
                 <div className="flex items-center justify-between font-bold">
-                  <span>{scoreResult.pass ? '🎉 ĐẠT CHUẨN BÀI THỰC HÀNH' : '❌ SAI SỐ CHIẾT SUẤT CÓ LỖI'}</span>
+                  <span>{scoreResult.pass ? 'ĐẠT CHUẨN BÀI THỰC HÀNH' : 'SAI SỐ CHIẾT SUẤT CÓ LỖI'}</span>
                   <span className="text-xs px-2.5 py-0.5 rounded-full bg-black/40 border border-current">
                     {scoreResult.score} / 10 ĐIỂM
                   </span>

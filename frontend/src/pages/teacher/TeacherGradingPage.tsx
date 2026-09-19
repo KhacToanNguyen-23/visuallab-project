@@ -173,7 +173,7 @@ export const TeacherGradingPage: React.FC = () => {
         {/* Class Dropdown Selector */}
         <div className="flex items-center gap-2 min-w-[220px]">
           <label className="text-xs font-bold opacity-75 shrink-0 flex items-center gap-1.5" style={{ color: 'var(--text-main)' }}>
-            <span>🏫</span>
+            <span></span>
             <span>Lớp học:</span>
           </label>
           <select
@@ -202,7 +202,7 @@ export const TeacherGradingPage: React.FC = () => {
 
         {/* Search Input */}
         <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-color)' }}>
-          <span className="text-xs opacity-60">🔍</span>
+          <span className="text-xs opacity-60"></span>
           <input
             type="text"
             value={searchQuery}

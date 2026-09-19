@@ -699,7 +699,7 @@ export const SpeedWorkbench3D = forwardRef<SpeedWorkbench3DHandle, SpeedWorkbenc
           )}
         </div>
         <span className="font-mono text-slate-400 hidden sm:inline">
-          🖱️ Kéo chuột xoay 360° • Cuộn để phóng to/thu nhỏ
+          Kéo chuột xoay 360° • Cuộn để phóng to/thu nhỏ
         </span>
       </div>
     </div>

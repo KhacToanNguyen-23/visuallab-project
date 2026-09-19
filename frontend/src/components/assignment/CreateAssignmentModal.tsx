@@ -59,12 +59,12 @@ export const CreateAssignmentModal: React.FC<CreateAssignmentModalProps> = ({ cl
     <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 text-white shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold text-cyan-400 mb-4 flex items-center gap-2">
-          <span>🧪</span> Tạo Bài Tập Lab Cá Nhân Hóa
+          Tạo Bài Tập Lab Cá Nhân Hóa
         </h2>
 
         {error && (
           <div className="mb-4 bg-rose-500/10 border border-rose-500/30 text-rose-300 p-3 rounded-lg text-sm">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
@@ -111,7 +111,7 @@ export const CreateAssignmentModal: React.FC<CreateAssignmentModalProps> = ({ cl
 
           <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
             <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-wider">
-              🎲 Miền biến thiên tham số ngẫu nhiên (Cho mỗi Học Sinh)
+              Miền biến thiên tham số ngẫu nhiên (Cho mỗi Học Sinh)
             </h3>
 
             <div className="grid grid-cols-2 gap-3 text-sm">

@@ -70,7 +70,7 @@ export const BoyleWorkbenchHudDock: React.FC<BoyleWorkbenchHudDockProps> = ({
           title="Nén pít-tông 5 cm³"
           className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 hover:text-white rounded-xl text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5"
         >
-          <span>⬇️ Nén (-5 cm³)</span>
+          <span>Nén (-5 cm³)</span>
         </button>
 
         <button

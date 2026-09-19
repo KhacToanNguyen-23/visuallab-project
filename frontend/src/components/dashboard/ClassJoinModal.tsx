@@ -48,7 +48,7 @@ export const ClassJoinModal: React.FC<ClassJoinModalProps> = ({ isOpen, onClose,
     } catch (err: any) {
       if (err.isDuplicate) {
         setIsDuplicate(true);
-        setError('⚠️ Bạn đã tham gia lớp học này từ trước!');
+        setError('Bạn đã tham gia lớp học này từ trước!');
       } else {
         setError(err.message || 'Mã lớp không tồn tại trên hệ thống!');
       }

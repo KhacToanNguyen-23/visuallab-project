@@ -75,7 +75,7 @@ export const ScreenshotCaptureModal: React.FC<ScreenshotCaptureModalProps> = ({
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2">
-            <span className="text-xl">📸</span>
+            <span className="text-xl"></span>
             <div>
               <h3 className="font-extrabold text-base text-white">Lưu Kết Quả Thí Nghiệm Vào Kho</h3>
               <p className="text-xs text-slate-400">{labTitle}</p>
@@ -119,7 +119,7 @@ export const ScreenshotCaptureModal: React.FC<ScreenshotCaptureModalProps> = ({
 
             {error && (
               <div className="text-xs font-semibold text-rose-400 bg-rose-950/40 p-2.5 rounded-xl border border-rose-800/40">
-                ⚠️ {error}
+                {error}
               </div>
             )}
 
@@ -147,7 +147,7 @@ export const ScreenshotCaptureModal: React.FC<ScreenshotCaptureModalProps> = ({
                   </>
                 ) : (
                   <>
-                    <span>☁️ Lưu Vào Kho Cá Nhân</span>
+                    <span>Lưu Vào Kho Cá Nhân</span>
                   </>
                 )}
               </button>

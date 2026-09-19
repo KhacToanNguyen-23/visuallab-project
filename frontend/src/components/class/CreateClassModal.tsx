@@ -36,12 +36,12 @@ export const CreateClassModal: React.FC<CreateClassModalProps> = ({ teacherId, t
     <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 text-white shadow-2xl animate-fade-in">
         <h2 className="text-xl font-bold text-emerald-400 mb-4 flex items-center gap-2">
-          <span>🏫</span> Tạo Lớp Học Mới
+          Tạo Lớp Học Mới
         </h2>
 
         {error && (
           <div className="mb-4 bg-rose-500/10 border border-rose-500/30 text-rose-300 p-3 rounded-lg text-sm">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 

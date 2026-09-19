@@ -185,7 +185,7 @@ export const MomentumCollisionLab: React.FC = () => {
           </div>
         </div>
         <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-full text-xs font-semibold">
-          🎛️ THAM SỐ & ĐỆM KHÔNG KHÍ
+          THAM SỐ & ĐỆM KHÔNG KHÍ
         </span>
       </div>
 
@@ -257,7 +257,7 @@ export const MomentumCollisionLab: React.FC = () => {
                 disabled={isColliding}
                 className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white rounded-lg text-sm font-semibold transition"
               >
-                ▶ Bắn Xe
+                Bắn Xe
               </button>
 
               <button
