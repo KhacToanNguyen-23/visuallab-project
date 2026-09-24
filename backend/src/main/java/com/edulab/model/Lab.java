@@ -28,6 +28,10 @@ public class Lab {
     private String tags;    // "GDPT 2018,PhET,Canvas"
     private String status;  // "PUBLISHED", "DRAFT", "ARCHIVED"
     private String createdBy;
+    
+    @Column(columnDefinition = "TEXT")
+    private String ecsStateJson;
+    
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -169,5 +173,13 @@ public class Lab {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getEcsStateJson() {
+        return ecsStateJson;
+    }
+
+    public void setEcsStateJson(String ecsStateJson) {
+        this.ecsStateJson = ecsStateJson;
     }
 }

@@ -1,3 +1,7 @@
+---
+trigger: manual
+---
+
 # Quy Chuẩn Phát Triển Bài Thí Nghiệm EduLab (PhET SceneryStack Standard)
 
 **MỤC ĐÍCH:**

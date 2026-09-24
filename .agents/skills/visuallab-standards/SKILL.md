@@ -76,9 +76,49 @@ $$\text{Total Score} = \text{Operation (30\%)} + \text{Accuracy/Error (40\%)} + 
 
 ---
 
-## 4. 🏗️ Code Architecture Rules
+## 4. 🏛️ Chuẩn Thiết Kế Hướng Đối Tượng & Data-Driven Physics (Không Hardcode)
+
+- **CẤM TUYỆT ĐỐI HARDCODE THUỘC TÍNH VẬT LÝ & VẬT THỂ**:
+  - Không fix cứng hằng số vật lý ($m, k, R, \mathcal{E}, \mu, n, c$) trong thân code/component.
+  - Mọi thuộc tính vật lý phải định nghĩa qua Schema Descriptor (`IPhysicsParamDescriptor`: `id`, `name`, `unit`, `min`, `max`, `step`, `defaultValue`, `value`) và nạp động qua `IInstrumentConfig` hoặc Database JSONB.
+  - Khởi tạo dụng cụ động qua `InstrumentFactory.create(toolId, config)`.
+- Mọi dụng cụ thí nghiệm phải kế thừa từ interface gốc `ILabInstrument` (chứa `id`, `toolId`, `name`, `category`, `config`, `position`, `render()`, `update(dt)`, `onDragStart()`, `onDrag()`, `onDragEnd()`, `serialize()`, `deserialize()`, `dispose()`).
+- Phân nhóm chuyên ngành qua các sub-interfaces:
+  - `ICircuitInstrument`: Quản lý `terminals`, điện trở trong, độ giảm thế, cường độ dòng điện, hàm `calculateCircuitState()`.
+  - `IMechanicalInstrument`: Quản lý khối lượng `mass`, vận tốc `velocity`, gia tốc `acceleration`, các vectơ lực `forces[]`.
+  - `IOpticalInstrument`: Quản lý chiết suất `refractiveIndex`, tiêu cự `focalLength`, hàm dò tia `traceRay()`.
+  - `IThermalInstrument`: Quản lý nhiệt dung riêng `specificHeat`, nhiệt độ `temperature`, công suất trao đổi nhiệt.
+  - `IAcousticInstrument`: Quản lý tần số $f$, biên độ $A$, hàm phát sóng `generateWave()`.
+
+---
+
+## 5. ⚛️ Quy Tắc Thuật Toán & Kiến Trúc PhET (PhET Simulation Standard)
+
+- **Tách biệt Model - View**:
+  - Model chỉ hoạt động trên đơn vị chuẩn SI ($m, kg, s, A, V, N, J$). Tuyệt đối không dùng pixel trong Model.
+  - View sử dụng `ModelViewTransform2D` để ánh xạ giữa tọa độ vật lý và pixel màn hình.
+- **Tích phân Số học Cố định Bước Nhảy**:
+  - Chuyển động và dao động sử dụng thuật toán **Semi-implicit Euler** hoặc **Velocity Verlet** với `dt` cố định ($\le 0.033\text{s}$) để chống xuyên thấu và trôi năng lượng.
+- **Reactive State**: Sử dụng `Property` / `DerivedProperty` từ `scenerystack/axon` để View tự động phản ứng khi Model thay đổi.
+
+---
+
+## 6. 📦 Chuẩn Quản Lý State Với Zustand & Lưu Trữ JSONB
+
+- **3 Store Zustand Độc Lập**:
+  1. `useWorkbenchStore`: Quản lý danh sách dụng cụ, vị trí, snap lưới, dây nối.
+  2. `useSimulationStore`: Quản lý vòng lặp mô phỏng, Play/Pause, `timeScale`, dữ liệu đo trực tiếp.
+  3. `useGradingStore`: Quản lý bảng số liệu các lần đo ($N \ge 3$), tính sai số và chấm điểm.
+- **Cột JSONB Persistence (`lab_sessions.state_data`)**:
+  - Phải có `"schemaVersion": "1.0"`.
+  - Ánh xạ qua Jackson DTO có validation ở Backend Spring Boot (`@Type(JsonType.class)`).
+
+---
+
+## 7. 🏗️ Code Architecture & Memory Safety Rules
 
 - **Code Splitting**: Always wrap lab engine components with `React.lazy()` and `LabErrorBoundary` in `src/main.tsx`.
 - **API Configuration**: Always import `API_BASE_URL` from `src/config/api.ts`. Never hardcode `http://localhost:8080`.
 - **Role Security**: Wrap all `/admin/*`, `/teacher/*`, and `/student/*` routes with `ProtectedRoute` supplying explicit `allowedRoles`.
-- **Clean Unmount**: Every 3D/Canvas/WebAudio lab component MUST clean up animation frames, event listeners, and audio contexts on component unmount.
+- **Clean Unmount**: Every 3D/Canvas/WebAudio lab component MUST clean up animation frames, event listeners, and audio contexts on component unmount via `dispose()`.
+

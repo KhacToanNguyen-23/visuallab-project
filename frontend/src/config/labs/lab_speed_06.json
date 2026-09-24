@@ -1,0 +1,27 @@
+{
+  "id": "lab_speed_06",
+  "title": "Bài 6: Đo Tốc Độ Vật Chuyển Động",
+  "allowedTools": [
+    "STEEL_BALL",
+    "INCLINED_TRACK",
+    "PHOTOGATE_SENSOR",
+    "DIGITAL_TIMER"
+  ],
+  "steps": [
+    {
+      "id": "step_1",
+      "instruction": "Kéo Máng nghiêng (INCLINED_TRACK) vào màn hình làm việc.",
+      "requiredEntities": ["INCLINED_TRACK"]
+    },
+    {
+      "id": "step_2",
+      "instruction": "Lắp đặt 2 Cổng quang điện (PHOTOGATE_SENSOR) lên máng nghiêng và kết nối với Đồng hồ số (DIGITAL_TIMER).",
+      "requiredEntities": ["INCLINED_TRACK", "PHOTOGATE_SENSOR", "DIGITAL_TIMER"]
+    },
+    {
+      "id": "step_3",
+      "instruction": "Thả Bi thép (STEEL_BALL) lăn từ đỉnh máng qua 2 cổng quang. Ghi nhận thời gian và nộp bài.",
+      "requiredEntities": ["INCLINED_TRACK", "PHOTOGATE_SENSOR", "DIGITAL_TIMER", "STEEL_BALL"]
+    }
+  ]
+}

@@ -28,7 +28,8 @@ public class StorageController {
             String imageBase64,
             String caption,
             String difficulty,
-            Double score
+            Double score,
+            String ecsStateJson
     ) {}
 
     @PostMapping("/upload")
@@ -60,6 +61,7 @@ public class StorageController {
                 difficulty,
                 request.score()
         );
+        snapshot.setEcsStateJson(request.ecsStateJson());
 
         StudentLabSnapshot saved = snapshotRepository.save(snapshot);
         String urlPreview = saved.getScreenshotUrl() != null && saved.getScreenshotUrl().length() > 60

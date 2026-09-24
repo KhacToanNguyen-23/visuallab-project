@@ -1,6 +1,4 @@
-import type { ComponentData } from '../engine/physics/CircuitSolver';
-
-export function encodeStateToURL(components: ComponentData[]): string {
+export function encodeStateToURL(components: any[]): string {
   try {
     const compactData = components.map(c => ({
       id: c.id,
@@ -25,7 +23,7 @@ export function encodeStateToURL(components: ComponentData[]): string {
   }
 }
 
-export function decodeStateFromURL(): ComponentData[] | null {
+export function decodeStateFromURL(): any[] | null {
   try {
     const url = new URL(window.location.href);
     const base64 = url.searchParams.get('simState');

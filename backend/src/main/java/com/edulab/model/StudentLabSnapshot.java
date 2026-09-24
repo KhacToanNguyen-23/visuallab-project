@@ -27,6 +27,10 @@ public class StudentLabSnapshot {
 
     private String difficulty; // "EASY", "MEDIUM", "HARD"
     private Double score;
+    
+    @Column(columnDefinition = "TEXT")
+    private String ecsStateJson;
+    
     private LocalDateTime createdAt;
 
     public StudentLabSnapshot() {}
@@ -122,5 +126,13 @@ public class StudentLabSnapshot {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getEcsStateJson() {
+        return ecsStateJson;
+    }
+
+    public void setEcsStateJson(String ecsStateJson) {
+        this.ecsStateJson = ecsStateJson;
     }
 }

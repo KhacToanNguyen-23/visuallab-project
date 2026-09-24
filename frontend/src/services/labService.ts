@@ -216,19 +216,6 @@ export const DEFAULT_PUBLIC_LABS: PublicLabItem[] = [
     thumbnail: 'https://images.unsplash.com/photo-1555664424-778a1e5e1b48?w=500&auto=format&fit=crop&q=60',
     route: '/lab/induction',
   },
-  {
-    id: 'workbench-universal',
-    title: 'Bàn Thí Nghiệm Tự Do (Universal Physics Sandbox)',
-    subject: 'Vật lý',
-    domain: 'Cơ - Điện - Quang',
-    grade: 'Lớp 10 - 12',
-    difficulty: 'HARD',
-    chapter: 'Sandbox Sáng Tạo',
-    description: 'Tự do chọn và ghép nối các linh kiện PhET SceneryStack thuộc 3 môn Cơ - Điện - Quang.',
-    tags: ['Sandbox', 'PhET', 'Sáng tạo'],
-    thumbnail: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&auto=format&fit=crop&q=60',
-    route: '/workbench/universal',
-  },
 ];
 
 export const labService = {
@@ -261,36 +248,32 @@ export const labService = {
     }
   },
 
-  // Lấy toàn bộ lab cho trang Thư Viện (Catalog)
+  // Lấy toàn bộ lab cho trang Thư Viện (Catalog) - Strict DB only
   getAllLabs: async (_filters?: any): Promise<PublicLabItem[]> => {
     try {
       const response = await fetch(`${API_URL}/labs`);
       if (response.ok) {
         const data = await response.json();
         if (Array.isArray(data) && data.length > 0) {
-          const apiLabs = data.map((item: any) => ({
+          return data.map((item: any) => ({
             id: item.id,
             title: item.title,
             subject: item.subject || 'Vật lý',
-            domain: item.domain,
-            grade: item.grade,
+            domain: item.domain, // Chủ đề (Chapter)
+            grade: item.grade,   // Lớp
             difficulty: item.difficulty,
-            chapter: item.chapter || 'Vật Lý GDPT 2018',
+            chapter: item.chapter,
             description: item.description,
             tags: item.tags ? (typeof item.tags === 'string' ? item.tags.split(',') : item.tags) : [],
             thumbnail: item.thumbnailUrl || 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=500&auto=format&fit=crop&q=60',
             route: getLabRoute(item.id, item.title, item.route),
           }));
-
-          const apiLabIds = new Set(apiLabs.map((l: any) => l.id));
-          const missingDefaults = DEFAULT_PUBLIC_LABS.filter(d => !apiLabIds.has(d.id));
-          return [...apiLabs, ...missingDefaults];
         }
       }
-      return DEFAULT_PUBLIC_LABS;
+      return []; // KHÔNG DÙNG MOCK DATA, trả về rỗng nếu DB không có
     } catch (error) {
-      console.warn('Backend API unavailable, using default public labs:', error);
-      return DEFAULT_PUBLIC_LABS;
+      console.warn('Backend API unavailable:', error);
+      return []; // KHÔNG DÙNG MOCK DATA
     }
   },
 };

@@ -50,4 +50,13 @@ public class LabController {
         Lab saved = labRepository.save(lab);
         return ResponseEntity.ok(saved);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLab(@PathVariable String id) {
+        if (labRepository.existsById(id)) {
+            labRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

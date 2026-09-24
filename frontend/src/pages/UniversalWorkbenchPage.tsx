@@ -1,165 +1,138 @@
-import React, { useState, useCallback } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { WorkbenchPalette } from '../components/workbench/WorkbenchPalette';
-import { SceneryUniversalWorkbench } from '../components/workbench/SceneryUniversalWorkbench';
-import type { PaletteItemDef, PlacedItem } from '../components/workbench/types';
-import { ScreenshotCaptureModal } from '../components/common/ScreenshotCaptureModal';
+import { AnimatedPanZoomListener } from 'scenerystack/scenery';
+import { SceneryCanvas } from '../components/scenerystack/SceneryCanvas.tsx';
+import { UniversalSandboxScene } from '../engine/scenerystack/labs/UniversalSandboxScene.ts';
+import { SceneryRenderer } from '../engine/scenerystack/SceneryRenderer.ts';
+import { WorkbenchPalette, type DeviceType } from '../components/workbench/WorkbenchPalette.tsx';
 
 export const UniversalWorkbenchPage: React.FC = () => {
   const navigate = useNavigate();
-  const [placedItems, setPlacedItems] = useState<PlacedItem[]>([]);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const sceneRef = useRef<UniversalSandboxScene | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  // Screenshot Storage Modal State
-  const [isScreenshotModalOpen, setIsScreenshotModalOpen] = useState<boolean>(false);
-  const [screenshotBase64, setScreenshotBase64] = useState<string>('');
+  const handleRendererReady = React.useCallback((renderer: SceneryRenderer) => {
+    const scene = new UniversalSandboxScene();
+    sceneRef.current = scene;
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 2500);
+    renderer.getRootNode().addChild(scene.rootNode);
+
+    const panZoomListener = new AnimatedPanZoomListener(renderer.getRootNode());
+    renderer.getDisplay().addInputListener(panZoomListener);
+
+    renderer.addUpdateListener((dt) => {
+      scene.step(dt);
+    });
+  }, []);
+
+  const handleSpawnDevice = (type: DeviceType) => {
+    if (sceneRef.current) {
+      sceneRef.current.spawnDevice(type);
+    }
   };
 
-  const handleAddItem = (itemDef: PaletteItemDef) => {
-    const newItem: PlacedItem = {
-      id: `item-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      type: itemDef.type,
-      name: itemDef.name,
-      icon: itemDef.icon,
-      category: itemDef.category,
-      x: 350 + (placedItems.length % 5) * 40,
-      y: 200 + (placedItems.length % 4) * 40,
-      config: itemDef.defaultConfig ? { ...itemDef.defaultConfig } : {},
-    };
-
-    setPlacedItems(prev => [...prev, newItem]);
-    showToast(`Đã thêm ${itemDef.icon} ${itemDef.name} vào bàn thí nghiệm`);
+  const handleTogglePlay = () => {
+    if (sceneRef.current) {
+      if (isPlaying) {
+        sceneRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        sceneRef.current.play();
+        setIsPlaying(true);
+      }
+    }
   };
 
-  const handleAddItemAtPos = useCallback((itemDef: PaletteItemDef, x: number, y: number) => {
-    const newItem: PlacedItem = {
-      id: `item-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      type: itemDef.type,
-      name: itemDef.name,
-      icon: itemDef.icon,
-      category: itemDef.category,
-      x,
-      y,
-      config: itemDef.defaultConfig ? { ...itemDef.defaultConfig } : {},
-    };
-
-    setPlacedItems(prev => [...prev, newItem]);
-    showToast(`Đã thả ${itemDef.icon} ${itemDef.name} vào bàn thí nghiệm`);
-  }, []);
-
-  const handleRemoveItem = useCallback((id: string) => {
-    setPlacedItems(prev => prev.filter(item => item.id !== id));
-    showToast('Đã xóa linh kiện khỏi bàn thí nghiệm');
-  }, []);
-
-  const handleUpdateItemPosition = useCallback((id: string, x: number, y: number) => {
-    setPlacedItems(prev =>
-      prev.map(item => (item.id === id ? { ...item, x, y } : item))
-    );
-  }, []);
+  const handleReset = () => {
+    if (sceneRef.current) {
+      sceneRef.current.reset();
+      setIsPlaying(false);
+    }
+  };
 
   const handleClearAll = () => {
-    if (placedItems.length === 0) return;
-    setPlacedItems([]);
-    showToast('Đã dọn dẹp sạch bàn thí nghiệm');
-  };
-
-  const handleCaptureScreenshot = () => {
-    const svgElement = document.querySelector('div[ref] svg') || document.querySelector('svg');
-    if (svgElement) {
-      const svgData = new XMLSerializer().serializeToString(svgElement);
-      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-      const URL = window.URL || window.webkitURL || window;
-      const blobURL = URL.createObjectURL(svgBlob);
-      const image = new Image();
-      image.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = 900;
-        canvas.height = 600;
-        const context = canvas.getContext('2d');
-        if (context) {
-          context.drawImage(image, 0, 0);
-          const png = canvas.toDataURL('image/png');
-          setScreenshotBase64(png);
-          setIsScreenshotModalOpen(true);
-        }
-      };
-      image.src = blobURL;
-    } else {
-      showToast('Vui lòng đợi mô phỏng sẵn sàng để chụp ảnh');
+    if (sceneRef.current) {
+      sceneRef.current.clearAll();
+      setIsPlaying(false);
     }
   };
 
   return (
-    <div className="w-full h-screen bg-slate-950 text-white font-sans flex flex-col select-none overflow-hidden">
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-cyan-600 text-white px-4 py-2.5 rounded-xl shadow-2xl border border-cyan-400 font-bold text-xs animate-bounce flex items-center gap-2">
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
-      {/* Top Header Navigation & Action Bar */}
-      <div className="bg-slate-900 border-b border-slate-800 px-6 py-3 flex justify-between items-center z-10">
+    <div className="h-screen w-screen flex flex-col bg-slate-100 overflow-hidden select-none">
+      {/* Top Navigation Bar */}
+      <header className="h-14 bg-white border-b border-slate-200 px-6 flex items-center justify-between shadow-xs flex-shrink-0 z-30 pointer-events-auto">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/student')}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 text-xs font-bold transition cursor-pointer"
+            type="button"
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              navigate('/thu-vien');
+            }}
+            className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
+            title="Về Thư Viện"
           >
-            ← Về Bảng Bài Tập
+            ←
           </button>
-          <h1 className="text-base font-black text-cyan-400 tracking-tight flex items-center gap-2">
-            <span>Bàn Thí Nghiệm Vật Lý Tự Do (Universal Physics Sandbox)</span>
-          </h1>
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-700/60">
-            PhET SceneryStack 60 FPS
-          </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 text-[10px] font-bold bg-indigo-50 text-indigo-700 rounded-md border border-indigo-200">
+                Universal Sandbox 2.0
+              </span>
+              <span className="text-xs text-slate-400">SceneryStack ECS Engine</span>
+            </div>
+            <h1 className="text-sm font-bold text-slate-900 leading-tight">
+              Bàn Thí Nghiệm Vật Lý Tự Do (Universal Physics Workbench)
+            </h1>
+          </div>
         </div>
 
+        {/* Global Simulation Control Bar */}
         <div className="flex items-center gap-2">
           <button
-            onClick={handleClearAll}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:bg-red-950 hover:border-red-600/60 text-slate-300 hover:text-red-300 text-xs font-bold transition cursor-pointer flex items-center gap-1"
+            type="button"
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              handleTogglePlay();
+            }}
+            className={`px-4 py-2 rounded-lg text-xs font-bold text-white shadow-sm transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+              isPlaying ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'
+            }`}
           >
-            <span>Xóa Hết ({placedItems.length})</span>
+            {isPlaying ? '⏸️ Tạm Dừng' : '▶️ Chạy Mô Phỏng'}
           </button>
 
           <button
-            onClick={handleCaptureScreenshot}
-            className="px-3.5 py-1.5 rounded-lg bg-cyan-950 border border-cyan-600/60 text-cyan-300 hover:text-white text-xs font-extrabold transition shadow-md cursor-pointer flex items-center gap-1.5"
+            type="button"
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              handleReset();
+            }}
+            className="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer active:scale-95"
           >
-            <span>Chụp Ảnh & Lưu Kho</span>
+            Đặt Lại
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* Main Sandbox Workspace Layout */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Component Tool Palette */}
-        <WorkbenchPalette onAddItem={handleAddItem} />
-
-        {/* Right SceneryStack Canvas Sandbox Workbench */}
-        <SceneryUniversalWorkbench
-          placedItems={placedItems}
-          onRemoveItem={handleRemoveItem}
-          onUpdateItemPosition={handleUpdateItemPosition}
-          onAddItemAtPos={handleAddItemAtPos}
+      {/* Main Workspace Layout */}
+      <div className="flex-1 flex min-h-0 relative">
+        {/* Left Sidebar: Component Palette */}
+        <WorkbenchPalette
+          onSpawnDevice={handleSpawnDevice}
+          onClearAll={handleClearAll}
+          onResetScene={handleReset}
         />
-      </div>
 
-      {/* Screenshot Capture & Storage Modal */}
-      <ScreenshotCaptureModal
-        isOpen={isScreenshotModalOpen}
-        onClose={() => setIsScreenshotModalOpen(false)}
-        imageBase64={screenshotBase64}
-        labId="workbench-universal"
-        labTitle="Bàn Thí Nghiệm Vật Lý Tự Do Universal Sandbox"
-        difficulty="HARD"
-      />
+        {/* Center: Infinite Canvas */}
+        <main className="flex-1 relative bg-white">
+          <SceneryCanvas onRendererReady={handleRendererReady} />
+
+          {/* Canvas Floating Instructions */}
+          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-2 rounded-lg border border-slate-200 shadow-sm text-xs text-slate-600 pointer-events-none z-10 flex items-center gap-2">
+            <span>💡 <b>Kéo thả linh kiện</b> lại gần nhau để <b>Tự Động Bắt Dính (Snapping)</b></span>
+          </div>
+        </main>
+      </div>
     </div>
   );
 };

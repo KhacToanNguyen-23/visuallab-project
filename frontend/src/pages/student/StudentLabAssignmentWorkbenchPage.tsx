@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { assignmentService } from '../../services/assignmentService';
@@ -7,33 +7,8 @@ import type { Assignment, StudentAssignmentInstance, AssignmentSubmission } from
 import { AssignmentLabHeaderBanner } from '../../components/assignment/AssignmentLabHeaderBanner';
 import { FloatingAssignmentDrawer } from '../../components/assignment/FloatingAssignmentDrawer';
 import { LabErrorBoundary } from '../../components/common/LabErrorBoundary';
-import { getLabRoute } from '../../utils/labRoutes';
+import { CurriculumLabPage } from '../CurriculumLabPage';
 
-// Lazy load Simulation Engine Components
-const PhetPendulumLab = lazy(() => import('../../components/simulations/PhetPendulumLab').then(m => ({ default: m.PhetPendulumLab })));
-const PhetSpringLab = lazy(() => import('../../components/simulations/PhetSpringLab').then(m => ({ default: m.PhetSpringLab })));
-const PhetEmfLab = lazy(() => import('../../components/simulations/PhetEmfLab').then(m => ({ default: m.PhetEmfLab })));
-const PhetRefractionLab = lazy(() => import('../../components/simulations/PhetRefractionLab').then(m => ({ default: m.PhetRefractionLab })));
-const PhetFreeFallLab = lazy(() => import('../../components/simulations/PhetFreeFallLab').then(m => ({ default: m.PhetFreeFallLab })));
-const PhetVietnamLabWrapper = lazy(() => import('../../components/simulations/PhetVietnamLabWrapper').then(m => ({ default: m.PhetVietnamLabWrapper })));
-const WaveInterferenceLab = lazy(() => import('../../components/simulations/WaveInterferenceLab').then(m => ({ default: m.WaveInterferenceLab })));
-const SoundResonanceLab = lazy(() => import('../../components/simulations/SoundResonanceLab').then(m => ({ default: m.SoundResonanceLab })));
-const SpeedMeasurementLab = lazy(() => import('../../components/simulations/speed-measurement/SpeedMeasurementLab').then(m => ({ default: m.SpeedMeasurementLab })));
-const SlidingFrictionLab = lazy(() => import('../../components/simulations/SlidingFrictionLab').then(m => ({ default: m.SlidingFrictionLab })));
-const MomentumCollisionLab = lazy(() => import('../../components/simulations/MomentumCollisionLab').then(m => ({ default: m.MomentumCollisionLab })));
-const SpecificHeatLab = lazy(() => import('../../components/simulations/SpecificHeatLab').then(m => ({ default: m.SpecificHeatLab })));
-const LatentHeatLab = lazy(() => import('../../components/simulations/LatentHeatLab').then(m => ({ default: m.LatentHeatLab })));
-const BoyleMariotteLab = lazy(() => import('../../components/simulations/BoyleMariotteLab').then(m => ({ default: m.BoyleMariotteLab })));
-const InductionLab = lazy(() => import('../../components/simulations/InductionLab').then(m => ({ default: m.InductionLab })));
-const UniversalWorkbenchPage = lazy(() => import('../UniversalWorkbenchPage').then(m => ({ default: m.UniversalWorkbenchPage })));
-const DcCircuitLab = lazy(() => import('../../App'));
-
-const LoadingLabSpinner = () => (
-  <div className="w-full h-full flex flex-col items-center justify-center p-12 space-y-3">
-    <div className="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-    <p className="text-xs font-semibold text-slate-400">Đang khởi tạo phòng thí nghiệm ảo...</p>
-  </div>
-);
 
 export const StudentLabAssignmentWorkbenchPage: React.FC = () => {
   const { assignmentId } = useParams<{ assignmentId: string }>();
@@ -120,46 +95,7 @@ export const StudentLabAssignmentWorkbenchPage: React.FC = () => {
 
   const renderSimulationComponent = () => {
     if (!assignment) return null;
-
-    const route = getLabRoute(assignment.labType, assignment.title);
-
-    switch (route) {
-      case '/lab/speed-measurement':
-        return <SpeedMeasurementLab />;
-      case '/lab/free-fall':
-        return <PhetFreeFallLab />;
-      case '/lab/sliding-friction':
-        return <SlidingFrictionLab />;
-      case '/lab/momentum-collision':
-        return <MomentumCollisionLab />;
-      case '/lab/spring-mass':
-        return <PhetSpringLab />;
-      case '/lab/simple-pendulum':
-        return <PhetPendulumLab />;
-      case '/lab/sound-resonance':
-        return <SoundResonanceLab />;
-      case '/lab/emf-internal-r':
-        return <PhetEmfLab />;
-      case '/lab/refraction':
-        return <PhetRefractionLab />;
-      case '/lab/wave-interference':
-        return <WaveInterferenceLab />;
-      case '/lab/specific-heat':
-        return <SpecificHeatLab />;
-      case '/lab/latent-heat':
-        return <LatentHeatLab />;
-      case '/lab/boyle-mariotte':
-        return <BoyleMariotteLab />;
-      case '/lab/induction':
-        return <InductionLab />;
-      case '/lab/ohm-vietnam':
-        return <PhetVietnamLabWrapper />;
-      case '/workbench/universal':
-        return <UniversalWorkbenchPage />;
-      case '/lab/dc-circuit':
-      default:
-        return <DcCircuitLab />;
-    }
+    return <CurriculumLabPage />;
   };
 
   if (loading) {
@@ -209,9 +145,7 @@ export const StudentLabAssignmentWorkbenchPage: React.FC = () => {
       {/* Full-Screen Lab Workbench Simulation Engine */}
       <main className="flex-1 w-full relative min-h-[calc(100vh-3.5rem)] overflow-y-auto">
         <LabErrorBoundary>
-          <Suspense fallback={<LoadingLabSpinner />}>
-            {renderSimulationComponent()}
-          </Suspense>
+          {renderSimulationComponent()}
         </LabErrorBoundary>
       </main>
 

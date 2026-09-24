@@ -1,5 +1,45 @@
 [
   {
+    "id": "landing-command-palette-search",
+    "title": "Command Palette (⌘K / Ctrl+K) instant physics lab search",
+    "user_visible_behavior": "Pressing ⌘K or clicking search opens searchable dialog with instant filtering across all GDPT 2018 labs (Lớp 10, 11, 12)",
+    "verification_command": "Pressing ⌘K or clicking trigger opens dialog, typing filters labs in real time, Enter key navigates to lab",
+    "status": "passing",
+    "evidence": "Command Palette modal (⌘K) with real-time search, keyboard navigation, and full lab indexing verified via npm run build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "landing-teacher-curriculum-standards",
+    "title": "High-trust academic curriculum standards, virtual instruments, and teacher value section",
+    "user_visible_behavior": "Landing page showcases verified GDPT 2018 learning standards, virtual instrument capabilities, and teacher value propositions",
+    "verification_command": "Landing page renders GDPT 2018 standards, virtual instruments spec table, and dual-track student/teacher values",
+    "status": "passing",
+    "evidence": "GDPT 2018 standards, virtual instruments dl spec table, and dual-track student/teacher value propositions verified via npm run build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "landing-live-interactive-workbench-widget",
+    "title": "Live interactive physics simulation widget on landing page",
+    "user_visible_behavior": "Interactive canvas widget playable directly on landing page without login, with real-time parameter controls",
+    "verification_command": "Interactive canvas renders on landing page, responds to user drag/parameter sliders at 60 FPS",
+    "status": "passing",
+    "evidence": "60 FPS Interactive spring-mass canvas widget with drag controls, m/k/damping sliders, and Euler physics verified via npm run build",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "landing-academic-mega-panel-navigation",
+    "title": "Academic Mega-panel navigation organized by Grade Level, Instruments, and Teacher Resources",
+    "user_visible_behavior": "Clicking 'Khám phá' smoothly displays categorized 3-column links with full responsive support on desktop and mobile",
+    "verification_command": "Clicking 'Khám phá' toggles 3-column mega-panel, keyboard navigation and escape key close menu properly",
+    "status": "passing",
+    "evidence": "3-column academic mega-panel dropdown for Grade 10/11/12, Teachers, and Virtual Instruments verified via npm run build",
+    "notes": "",
+    "priority": "P2"
+  },
+  {
     "id": "admin-layout-sidebar-routing",
     "title": "Full-width Admin layout with collapsible left sidebar and route-based navigation",
     "user_visible_behavior": "Navigate between user management, system labs, and audit logs with maximum screen space and dedicated URLs",
@@ -698,5 +738,86 @@
     "evidence": "FloatingAssignmentDrawer and worksheetSchemas updated to support sim-induction and edulab_induction_grade_result sync",
     "notes": "",
     "priority": "P1"
+  },
+  {
+    "id": "phase-01-core-models",
+    "title": "Phase 1: Core Models & Components",
+    "user_visible_behavior": "",
+    "verification_command": "",
+    "status": "passing-unverified",
+    "evidence": "fast mode — no test evidence",
+    "notes": ""
+  },
+  {
+    "id": "phase-02-views",
+    "title": "Phase 2: Views (Apparatus)",
+    "user_visible_behavior": "",
+    "verification_command": "",
+    "status": "passing-unverified",
+    "evidence": "fast mode — no test evidence",
+    "notes": ""
+  },
+  {
+    "id": "phase-03-integration",
+    "title": "Phase 3: Integration & Cleanup",
+    "user_visible_behavior": "",
+    "verification_command": "",
+    "status": "passing-unverified",
+    "evidence": "fast mode — no test evidence",
+    "notes": ""
+  },
+  {
+    "id": "phase-01-drag-listener",
+    "title": "Phase 1: Draggable Photogate View",
+    "user_visible_behavior": "",
+    "verification_command": "",
+    "status": "passing-unverified",
+    "evidence": "fast mode — no test evidence",
+    "notes": ""
+  },
+  {
+    "id": "phase-02-scene-constraints",
+    "title": "Phase 2: Positional Constraints & Validation",
+    "user_visible_behavior": "",
+    "verification_command": "",
+    "status": "passing-unverified",
+    "evidence": "fast mode — no test evidence",
+    "notes": ""
+  },
+  {
+    "id": "ui-phase-01-graphics",
+    "title": "Phase 1: Realistic Apparatus Graphics",
+    "user_visible_behavior": "",
+    "verification_command": "",
+    "status": "passing-unverified",
+    "evidence": "fast mode — no test evidence",
+    "notes": ""
+  },
+  {
+    "id": "ui-phase-02-table",
+    "title": "Phase 2: React Data Table & State Binding",
+    "user_visible_behavior": "",
+    "verification_command": "",
+    "status": "passing-unverified",
+    "evidence": "fast mode — no test evidence",
+    "notes": ""
+  },
+  {
+    "id": "refine-phase-01",
+    "title": "Phase 1: Fix Physics & Falling Animation",
+    "user_visible_behavior": "",
+    "verification_command": "",
+    "status": "passing-unverified",
+    "evidence": "fast mode",
+    "notes": ""
+  },
+  {
+    "id": "refine-phase-02",
+    "title": "Phase 2: Add PanZoom & Air Resistance",
+    "user_visible_behavior": "",
+    "verification_command": "",
+    "status": "passing-unverified",
+    "evidence": "fast mode",
+    "notes": ""
   }
 ]

@@ -1,274 +1,394 @@
 import React, { useState } from 'react';
-import type { ComponentCategory, PaletteItemDef } from './types';
 
-export const PALETTE_ITEMS: PaletteItemDef[] = [
-  // Mechanics
+export type DeviceType =
+  | 'STAND'
+  | 'INCLINED_PLANE'
+  | 'SPRING'
+  | 'WEIGHT'
+  | 'PHOTOGATE'
+  | 'CART'
+  | 'BALL'
+  | 'FRICTION_BLOCK'
+  | 'SPRING_BALANCE'
+  | 'AIR_TRACK'
+  | 'PENDULUM'
+  | 'POWER_SUPPLY'
+  | 'VOLTMETER'
+  | 'AMMETER'
+  | 'GALVANOMETER'
+  | 'RHEOSTAT'
+  | 'SWITCH'
+  | 'MAGNET'
+  | 'INDUCTION_COIL'
+  | 'LASER'
+  | 'YOUNG_SLIT'
+  | 'FRINGE_SCREEN'
+  | 'REFRACTOR'
+  | 'RESONANCE_TUBE'
+  | 'CALORIMETER'
+  | 'GAS_PISTON'
+  | 'PRESSURE_GAUGE'
+  | 'ELECTROMAGNET'
+  | 'FRICTION_TABLE'
+  | 'DIGITAL_TIMER';
+
+export interface PaletteItem {
+  type: DeviceType;
+  name: string;
+  category: 'MECHANICS' | 'CIRCUITS' | 'OPTICS' | 'THERMAL' | 'SENSORS' | 'LOADS';
+  icon: string;
+  description: string;
+}
+
+const PALETTE_ITEMS: PaletteItem[] = [
+  // CƠ HỌC
+  {
+    type: 'STAND',
+    name: 'Giá Đỡ Thí Nghiệm',
+    category: 'MECHANICS',
+    icon: '🏗️',
+    description: 'Cột trụ thẳng đứng có tay đòn treo lò xo và thước đo mm',
+  },
+  {
+    type: 'INCLINED_PLANE',
+    name: 'Máng Nghiêng Định Hướng',
+    category: 'MECHANICS',
+    icon: '📐',
+    description: 'Máng ray hợp kim nhôm chỉnh được góc dốc và chiều cao',
+  },
+  {
+    type: 'AIR_TRACK',
+    name: 'Máng Đệm Khí Phẳng',
+    category: 'MECHANICS',
+    icon: '🛝',
+    description: 'Máng nhôm đệm khí không ma sát kèm thước đo va chạm',
+  },
+  {
+    type: 'FRICTION_BLOCK',
+    name: 'Khối Gỗ Thí Nghiệm',
+    category: 'LOADS',
+    icon: '🪵',
+    description: 'Khối gỗ có móc kéo lực kế và bề mặt gia tải quả cân',
+  },
+  {
+    type: 'SPRING_BALANCE',
+    name: 'Lực Kế Lò Xo',
+    category: 'SENSORS',
+    icon: '📏',
+    description: 'Lực kế 0-5N hiển thị vạch Newton và kim chỉ lực kéo',
+  },
+  {
+    type: 'PENDULUM',
+    name: 'Con Lắc Đơn',
+    category: 'LOADS',
+    icon: '⏱️',
+    description: 'Dây treo điều chỉnh độ dài và quả cầu kim loại dao động',
+  },
   {
     type: 'SPRING',
-    category: 'mechanics',
-    name: 'Lò Xo Đàn Hồi',
-    description: 'Lò xo tuân theo Định luật Hooke (k = 50 N/m)',
-    icon: '',
-    badge: 'Cơ học',
-    color: 'border-cyan-500/40 text-cyan-400 bg-cyan-950/40',
-    defaultConfig: { stiffness: 50, naturalLength: 0.4 },
+    name: 'Lò Xo Xoắn Đàn Hồi',
+    category: 'LOADS',
+    icon: '➰',
+    description: 'Lò xo đàn hồi đo độ cứng k và dao động điều hòa',
   },
   {
-    type: 'MASS_BOB',
-    category: 'mechanics',
-    name: 'Quả Nặng (Mass)',
-    description: 'Quả nặng gia công m = 200g có móc treo',
-    icon: '',
-    badge: 'Cơ học',
-    color: 'border-pink-500/40 text-pink-400 bg-pink-950/40',
-    defaultConfig: { mass: 0.2 },
+    type: 'WEIGHT',
+    name: 'Quả Cân 50g',
+    category: 'LOADS',
+    icon: '⚖️',
+    description: 'Quả nặng có móc xâu chuỗi nhiều quả nối tiếp',
   },
   {
-    type: 'STRING',
-    category: 'mechanics',
-    name: 'Dây Treo Không Co Co giãn',
-    description: 'Dây mềm chiều dài L = 0.5m',
-    icon: '',
-    badge: 'Cơ học',
-    color: 'border-amber-500/40 text-amber-400 bg-amber-950/40',
-    defaultConfig: { length: 0.5 },
+    type: 'PHOTOGATE',
+    name: 'Cổng Quang Điện',
+    category: 'SENSORS',
+    icon: '⏱️',
+    description: 'Cảm biến hồng ngoại bắt dính vào cột giá hoặc máng nghiêng',
   },
   {
-    type: 'CEILING_MOUNT',
-    category: 'mechanics',
-    name: 'Giá Cố Định Trần',
-    description: 'Thanh treo kim loại đính trần',
-    icon: '',
-    badge: 'Cơ học',
-    color: 'border-slate-500/40 text-slate-300 bg-slate-900',
+    type: 'CART',
+    name: 'Xe Trượt Có Cờ Chắn',
+    category: 'MECHANICS',
+    icon: '🚗',
+    description: 'Xe lăn 4 bánh gắn cờ chắn sáng 10mm trượt trên máng',
+  },
+  {
+    type: 'BALL',
+    name: 'Viên Bi Thép',
+    category: 'LOADS',
+    icon: '⚪',
+    description: 'Bi thép tròn rơi tự do hoặc lăn trong lòng máng',
   },
 
-  // Circuits
+  // MẠCH ĐIỆN & TỪ TRƯỜNG
   {
-    type: 'BATTERY',
-    category: 'circuits',
-    name: 'Nguồn Điện Pin DC 9V',
-    description: 'Pin 1 chiều suất điện động E = 9V',
-    icon: '',
-    badge: 'Điện học',
-    color: 'border-emerald-500/40 text-emerald-400 bg-emerald-950/40',
-    defaultConfig: { voltage: 9, internalR: 0.5 },
-  },
-  {
-    type: 'BULB',
-    category: 'circuits',
-    name: 'Bóng Đèn Dây Tóc',
-    description: 'Bóng đèn công suất 12W phát sáng',
-    icon: '',
-    badge: 'Điện học',
-    color: 'border-yellow-500/40 text-yellow-400 bg-yellow-950/40',
-    defaultConfig: { resistance: 6 },
-  },
-  {
-    type: 'SWITCH',
-    category: 'circuits',
-    name: 'Công Tắc Dao Đóng/Mở',
-    description: 'Khóa K điều khiển bật/tắt dòng điện',
-    icon: '',
-    badge: 'Điện học',
-    color: 'border-blue-500/40 text-blue-400 bg-blue-950/40',
-    defaultConfig: { isOpen: true },
-  },
-  {
-    type: 'RESISTOR',
-    category: 'circuits',
-    name: 'Điện Trở Mạch R',
-    description: 'Điện trở cố định R = 10 Ohm',
-    icon: '',
-    badge: 'Điện học',
-    color: 'border-indigo-500/40 text-indigo-400 bg-indigo-950/40',
-    defaultConfig: { resistance: 10 },
-  },
-  {
-    type: 'WIRE',
-    category: 'circuits',
-    name: 'Dây Dẫn Điện Mềm',
-    description: 'Dây đồng bọc cao su kết nối thiết bị',
-    icon: '',
-    badge: 'Điện học',
-    color: 'border-cyan-500/40 text-cyan-300 bg-cyan-950/30',
-  },
-
-  // Optics
-  {
-    type: 'LASER',
-    category: 'optics',
-    name: 'Đèn Phát Laser Đỏ',
-    description: 'Nguồn phát chùm sáng laser bước sóng 650nm',
-    icon: '',
-    badge: 'Quang học',
-    color: 'border-red-500/40 text-red-400 bg-red-950/40',
-    defaultConfig: { wavelength: 650, isOn: true },
-  },
-  {
-    type: 'CONVEX_LENS',
-    category: 'optics',
-    name: 'Thấu Kính Hội Tụ',
-    description: 'Thấu kính mỏng hai mặt lồi (f = +15cm)',
-    icon: '',
-    badge: 'Quang học',
-    color: 'border-sky-500/40 text-sky-400 bg-sky-950/40',
-    defaultConfig: { focalLength: 15, refractiveIndex: 1.5 },
-  },
-  {
-    type: 'CONCAVE_LENS',
-    category: 'optics',
-    name: 'Thấu Kính Phân Kỳ',
-    description: 'Thấu kính mỏng hai mặt lõm (f = -15cm)',
-    icon: '',
-    badge: 'Quang học',
-    color: 'border-purple-500/40 text-purple-400 bg-purple-950/40',
-    defaultConfig: { focalLength: -15, refractiveIndex: 1.5 },
-  },
-  {
-    type: 'MIRROR',
-    category: 'optics',
-    name: 'Gương Phẳng Phản Xạ',
-    description: 'Bề mặt tráng bạc phản xạ toàn phần',
-    icon: '',
-    badge: 'Quang học',
-    color: 'border-slate-400/40 text-slate-200 bg-slate-800',
-  },
-
-  // Tools
-  {
-    type: 'RULER',
-    category: 'tools',
-    name: 'Thước Đo cm Chia Vạch',
-    description: 'Thước đo mm độ dài 30cm',
-    icon: '',
-    badge: 'Dụng cụ',
-    color: 'border-amber-500/40 text-amber-300 bg-amber-950/30',
-  },
-  {
-    type: 'PROTRACTOR',
-    category: 'tools',
-    name: 'Thước Đo Góc 360°',
-    description: 'Thước đo góc tròn độ phân giải 1°',
-    icon: '',
-    badge: 'Dụng cụ',
-    color: 'border-teal-500/40 text-teal-300 bg-teal-950/30',
+    type: 'POWER_SUPPLY',
+    name: 'Nguồn Pin DC 1.5V',
+    category: 'CIRCUITS',
+    icon: '🔋',
+    description: 'Nguồn pin điện hóa 1.5V DC có cực dương (+) và cực âm (-)',
   },
   {
     type: 'VOLTMETER',
-    category: 'tools',
-    name: 'Vôn Kế Đo Điện Áp',
-    description: 'Đồng hồ đo hiệu điện thế (0-30V)',
-    icon: '',
-    badge: 'Dụng cụ',
-    color: 'border-sky-500/40 text-sky-300 bg-sky-950/30',
+    name: 'Vôn Kế DC',
+    category: 'CIRCUITS',
+    icon: '📟',
+    description: 'Đo hiệu điện thế U giữa 2 điểm mạch (0 - 3V)',
   },
   {
     type: 'AMMETER',
-    category: 'tools',
-    name: 'Ampe Kế Đo Dòng Điện',
-    description: 'Đồng hồ đo cường độ dòng điện (0-5A)',
-    icon: '',
-    badge: 'Dụng cụ',
-    color: 'border-pink-500/40 text-pink-300 bg-pink-950/30',
+    name: 'Ampe Kế DC',
+    category: 'CIRCUITS',
+    icon: '📟',
+    description: 'Đo cường độ dòng điện I nối tiếp trong mạch (0 - 500mA)',
+  },
+  {
+    type: 'GALVANOMETER',
+    name: 'Điện Kế G',
+    category: 'CIRCUITS',
+    icon: '🧭',
+    description: 'Phát hiện dòng điện cảm ứng nhỏ và xác định chiều dòng điện',
+  },
+  {
+    type: 'RHEOSTAT',
+    name: 'Biến Trở Con Chạy',
+    category: 'CIRCUITS',
+    icon: '🎚️',
+    description: 'Thay đổi điện trở mạch 0 - 100Ω bằng cần gạt',
+  },
+  {
+    type: 'SWITCH',
+    name: 'Khóa K (Công Tắc)',
+    category: 'CIRCUITS',
+    icon: '🔘',
+    description: 'Đóng/ngắt mạch điện an toàn',
+  },
+  {
+    type: 'MAGNET',
+    name: 'Nam Châm Vĩnh Cửu',
+    category: 'CIRCUITS',
+    icon: '🧲',
+    description: 'Thanh nam châm 2 cực Bắc (N) và Nam (S)',
+  },
+  {
+    type: 'INDUCTION_COIL',
+    name: 'Cuộn Dây Cảm Ứng',
+    category: 'CIRCUITS',
+    icon: '🌀',
+    description: 'Cuộn dây đồng 500 vòng sinh suất điện động cảm ứng',
+  },
+
+  // QUANG HỌC & SÓNG
+  {
+    type: 'LASER',
+    name: 'Nguồn Phát Laser RGB',
+    category: 'OPTICS',
+    icon: '🔦',
+    description: 'Nguồn laser chọn bước sóng 380 - 750nm (Đỏ, Lục, Lam)',
+  },
+  {
+    type: 'YOUNG_SLIT',
+    name: 'Khe Kép Y-âng',
+    category: 'OPTICS',
+    icon: '🚪',
+    description: 'Bản 2 khe hẹp song song a = 0.1 - 1.0mm giao thoa',
+  },
+  {
+    type: 'FRINGE_SCREEN',
+    name: 'Màn Hứng Vân & Thước Kẹp',
+    category: 'OPTICS',
+    icon: '🖥️',
+    description: 'Màn hứng vân giao thoa kèm vạch đo vi sai khoảng vân i',
+  },
+  {
+    type: 'REFRACTOR',
+    name: 'Bán Trụ Thủy Tinh Khúc Xạ',
+    category: 'OPTICS',
+    icon: '🔮',
+    description: 'Khối bán trụ chiết suất n = 1.5 trên đĩa chia độ 360°',
+  },
+  {
+    type: 'RESONANCE_TUBE',
+    name: 'Ống Cộng Hưởng Sóng Âm',
+    category: 'OPTICS',
+    icon: '🧪',
+    description: 'Ống thủy tinh chứa nước dâng hạ để đo bước sóng âm',
+  },
+
+  // NHIỆT HỌC & KHÍ
+  {
+    type: 'CALORIMETER',
+    name: 'Bình Nhiệt Lượng Kế',
+    category: 'THERMAL',
+    icon: '🫙',
+    description: 'Bình xốp 2 vỏ cách nhiệt kèm dây nung điện trở',
+  },
+  {
+    type: 'GAS_PISTON',
+    name: 'Xy-Lanh Nén Khí Pít-tông',
+    category: 'THERMAL',
+    icon: '💉',
+    description: 'Xy-lanh nén khí đẳng nhiệt 100cm³ kiểm chứng pV = const',
+  },
+  {
+    type: 'PRESSURE_GAUGE',
+    name: 'Áp Kế Đo Áp Suất',
+    category: 'THERMAL',
+    icon: '⏱️',
+    description: 'Đồng hồ áp kế cơ hiển thị thang đo 0 - 3 bar',
+  },
+  {
+    type: 'ELECTROMAGNET',
+    name: 'Nam Châm Điện Kẹp Cột',
+    category: 'CIRCUITS',
+    icon: '⚡',
+    description: 'Nam châm điện kèm công tắc nhả bi và cọc đấu dây nguồn',
+  },
+  {
+    type: 'FRICTION_TABLE',
+    name: 'Bàn Trượt Đa Bề Mặt',
+    category: 'MECHANICS',
+    icon: '🛹',
+    description: 'Bàn trượt 3 bề mặt (Gỗ, Mica, Cao su) đo hệ số ma sát',
+  },
+  {
+    type: 'DIGITAL_TIMER',
+    name: 'Đồng Hồ Đo Hiện Số',
+    category: 'SENSORS',
+    icon: '📟',
+    description: 'Đồng hồ điện tử 3 ngõ vào A/B/Nam châm độ chia 0.001s',
   },
 ];
 
 interface WorkbenchPaletteProps {
-  onAddItem: (itemDef: PaletteItemDef) => void;
+  onSpawnDevice: (type: DeviceType) => void;
+  onClearAll: () => void;
+  onResetScene: () => void;
 }
 
-export const WorkbenchPalette: React.FC<WorkbenchPaletteProps> = ({ onAddItem }) => {
-  const [activeTab, setActiveTab] = useState<ComponentCategory | 'all'>('all');
+export const WorkbenchPalette: React.FC<WorkbenchPaletteProps> = ({
+  onSpawnDevice,
+  onClearAll,
+  onResetScene,
+}) => {
+  const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredItems =
-    activeTab === 'all' ? PALETTE_ITEMS : PALETTE_ITEMS.filter(item => item.category === activeTab);
+  const filteredItems = PALETTE_ITEMS.filter((item) => {
+    const matchesCategory = selectedCategory === 'ALL' || item.category === selectedCategory;
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
-    <div className="w-80 h-full bg-slate-900 border-r border-slate-800 flex flex-col select-none overflow-hidden shadow-2xl">
-      {/* Category Tabs Header */}
-      <div className="p-3 bg-slate-950 border-b border-slate-800">
-        <h2 className="text-xs font-black uppercase tracking-wider text-cyan-400 mb-2.5 flex items-center gap-2">
-          <span>Bộ Dụng Cụ Thí Nghiệm PhET</span>
-        </h2>
-        <div className="grid grid-cols-5 gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-[10px] font-bold">
+    <aside
+      onPointerDown={(e) => e.stopPropagation()}
+      className="w-72 h-full flex flex-col bg-white border-r border-slate-200 select-none shadow-sm z-20"
+    >
+      {/* Palette Header */}
+      <div className="p-4 border-b border-slate-200 flex justify-between items-center">
+        <div>
+          <h2 className="font-extrabold text-sm text-slate-800 tracking-tight">Hộp Dụng Cụ (Palette)</h2>
+          <p className="text-[11px] text-slate-500">Bấm để thêm linh kiện ra bàn</p>
+        </div>
+        <div className="flex gap-1">
           <button
-            onClick={() => setActiveTab('all')}
-            className={`py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === 'all' ? 'bg-cyan-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
-            }`}
+            type="button"
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResetScene();
+            }}
+            title="Đặt lại vị trí"
+            className="p-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg border border-slate-200 cursor-pointer"
           >
-            Tất Cả
+            🔄
           </button>
           <button
-            onClick={() => setActiveTab('mechanics')}
-            className={`py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === 'mechanics' ? 'bg-cyan-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
-            }`}
+            type="button"
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onClearAll();
+            }}
+            title="Xóa sạch bàn làm việc"
+            className="p-1.5 text-xs text-rose-600 hover:bg-rose-50 rounded-lg border border-rose-200 cursor-pointer"
           >
-            Cơ
-          </button>
-          <button
-            onClick={() => setActiveTab('circuits')}
-            className={`py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === 'circuits' ? 'bg-cyan-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Điện
-          </button>
-          <button
-            onClick={() => setActiveTab('optics')}
-            className={`py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === 'optics' ? 'bg-cyan-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Quang
-          </button>
-          <button
-            onClick={() => setActiveTab('tools')}
-            className={`py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === 'tools' ? 'bg-cyan-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Đo
+            🗑️
           </button>
         </div>
       </div>
 
-      {/* Palette Items Grid Scroll List */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-2.5 custom-scrollbar">
-        {filteredItems.map(item => (
-          <div
-            key={item.type}
-            draggable={true}
-            onDragStart={(e) => {
-              e.dataTransfer.setData('application/json', JSON.stringify(item));
+      {/* Category Tabs */}
+      <div className="flex p-2 gap-1 border-b border-slate-100 bg-slate-50 text-[11px] font-bold overflow-x-auto">
+        {[
+          { id: 'ALL', label: 'Tất Cả' },
+          { id: 'MECHANICS', label: 'Cơ Học' },
+          { id: 'CIRCUITS', label: 'Điện Từ' },
+          { id: 'OPTICS', label: 'Quang Sóng' },
+          { id: 'THERMAL', label: 'Nhiệt Khí' },
+          { id: 'LOADS', label: 'Vật Thể' },
+          { id: 'SENSORS', label: 'Cảm Biến' },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              setSelectedCategory(tab.id);
             }}
-            className={`p-3 rounded-xl border transition shadow-md hover:border-cyan-400/60 flex flex-col justify-between gap-2 bg-slate-950/70 hover:bg-slate-800/80 group cursor-grab active:cursor-grabbing`}
+            className={`flex-1 py-1.5 px-1.5 rounded-md transition-colors cursor-pointer text-center whitespace-nowrap ${
+              selectedCategory === tab.id
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'text-slate-600 hover:bg-slate-200/60'
+            }`}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2.5">
-                <span className="text-2xl group-hover:scale-110 transition-transform">{item.icon}</span>
-                <div>
-                  <h3 className="text-xs font-extrabold text-white tracking-tight">{item.name}</h3>
-                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border inline-block mt-0.5 ${item.color}`}>
-                    {item.badge}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-[10px] text-slate-400 leading-snug">{item.description}</p>
-
-            <button
-              onClick={() => onAddItem(item)}
-              className="w-full py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-200 hover:text-white text-xs font-bold transition border border-slate-700 hover:border-cyan-400 shadow cursor-pointer flex items-center justify-center gap-1.5 mt-1"
-            >
-              <span>Thêm Vào Bàn</span>
-            </button>
-          </div>
+            {tab.label}
+          </button>
         ))}
       </div>
-    </div>
+
+      {/* Search Bar */}
+      <div className="p-2 border-b border-slate-100">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="🔍 Tìm linh kiện..."
+          className="w-full px-3 py-1.5 text-xs bg-slate-100 border border-slate-200 rounded-lg outline-none focus:border-blue-500"
+        />
+      </div>
+
+      {/* Items List */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-2">
+        {filteredItems.map((item) => (
+          <div
+            key={item.type}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onSpawnDevice(item.type);
+            }}
+            className="group flex items-start gap-3 p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-[0.98]"
+          >
+            <div className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-xl shadow-2xs group-hover:scale-105 transition-transform flex-shrink-0">
+              {item.icon}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="text-xs font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                {item.name}
+              </h4>
+              <p className="text-[10px] text-slate-500 line-clamp-2 mt-0.5 leading-relaxed">
+                {item.description}
+              </p>
+            </div>
+          </div>
+        ))}
+        {filteredItems.length === 0 && (
+          <div className="p-6 text-center text-xs text-slate-400 italic">
+            Không tìm thấy linh kiện phù hợp
+          </div>
+        )}
+      </div>
+    </aside>
   );
 };

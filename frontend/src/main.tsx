@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -11,7 +11,6 @@ import { LandingPage } from './pages/LandingPage';
 import { CatalogPage } from './pages/CatalogPage';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
-import { SRSWorkflowPage } from './pages/SRSWorkflowPage';
 import { AdminLayout } from './layouts/AdminLayout';
 import { AdminOverviewPage } from './pages/admin/AdminOverviewPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
@@ -27,27 +26,9 @@ import { StudentClassesPage } from './pages/student/StudentClassesPage';
 import { StudentAssignmentsPage } from './pages/student/StudentAssignmentsPage';
 import { StudentHistoryPage } from './pages/student/StudentHistoryPage';
 import { StudentStoragePage } from './pages/student/StudentStoragePage';
-import { StudentLabAssignmentWorkbenchPage } from './pages/student/StudentLabAssignmentWorkbenchPage';
-import { UniversalWorkbenchPage } from './pages/UniversalWorkbenchPage';
+import { CurriculumLabPage } from './pages/CurriculumLabPage.tsx';
+import { UniversalWorkbenchPage } from './pages/UniversalWorkbenchPage.tsx';
 
-// Simulation Engine Components (Lazy Loaded for Bundle Optimization)
-const PhetPendulumLab = lazy(() => import('./components/simulations/PhetPendulumLab').then(m => ({ default: m.PhetPendulumLab })));
-const PhetSpringLab = lazy(() => import('./components/simulations/PhetSpringLab').then(m => ({ default: m.PhetSpringLab })));
-const PhetEmfLab = lazy(() => import('./components/simulations/PhetEmfLab').then(m => ({ default: m.PhetEmfLab })));
-const PhetRefractionLab = lazy(() => import('./components/simulations/PhetRefractionLab').then(m => ({ default: m.PhetRefractionLab })));
-const PhetFreeFallLab = lazy(() => import('./components/simulations/PhetFreeFallLab').then(m => ({ default: m.PhetFreeFallLab })));
-const PhetVietnamLabWrapper = lazy(() => import('./components/simulations/PhetVietnamLabWrapper').then(m => ({ default: m.PhetVietnamLabWrapper })));
-const WaveInterferenceLab = lazy(() => import('./components/simulations/WaveInterferenceLab').then(m => ({ default: m.WaveInterferenceLab })));
-const SoundResonanceLab = lazy(() => import('./components/simulations/SoundResonanceLab').then(m => ({ default: m.SoundResonanceLab })));
-const SpeedMeasurementLab = lazy(() => import('./components/simulations/speed-measurement/SpeedMeasurementLab').then(m => ({ default: m.SpeedMeasurementLab })));
-const SlidingFrictionLab = lazy(() => import('./components/simulations/SlidingFrictionLab').then(m => ({ default: m.SlidingFrictionLab })));
-const MomentumCollisionLab = lazy(() => import('./components/simulations/MomentumCollisionLab').then(m => ({ default: m.MomentumCollisionLab })));
-const SpecificHeatLab = lazy(() => import('./components/simulations/SpecificHeatLab').then(m => ({ default: m.SpecificHeatLab })));
-const LatentHeatLab = lazy(() => import('./components/simulations/LatentHeatLab').then(m => ({ default: m.LatentHeatLab })));
-const BoyleMariotteLab = lazy(() => import('./components/simulations/BoyleMariotteLab').then(m => ({ default: m.BoyleMariotteLab })));
-const InductionLab = lazy(() => import('./components/simulations/InductionLab').then(m => ({ default: m.InductionLab })));
-
-import App from './App.tsx';
 import './index.css';
 
 // Real Google OAuth Client ID provided by user
@@ -71,9 +52,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/thu-vien" element={<CatalogPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                {/* 
                 <Route path="/test-spring" element={<LabErrorBoundary><PhetSpringLab /></LabErrorBoundary>} />
                 <Route path="/test-emf" element={<LabErrorBoundary><PhetEmfLab /></LabErrorBoundary>} />
                 <Route path="/test-pendulum" element={<LabErrorBoundary><PhetPendulumLab /></LabErrorBoundary>} />
+                */}
                 <Route
                   path="/dashboard"
                   element={
@@ -130,44 +113,32 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                   <Route path="storage" element={<StudentStoragePage />} />
                 </Route>
 
-                {/* Student Full Lab Workbench Route */}
-                <Route
-                  path="/student/assignment/:assignmentId/lab"
-                  element={
-                    <ProtectedRoute allowedRoles={['STUDENT']}>
-                      <LabErrorBoundary>
-                        <StudentLabAssignmentWorkbenchPage />
-                      </LabErrorBoundary>
-                    </ProtectedRoute>
-                  }
-                />
+                {/* Dual-Mode & Workbench Labs */}
+                <Route path="/lab/sandbox" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/guided" element={<Navigate to="/thu-vien" replace />} />
+                <Route path="/lab/grade10/hooke" element={<Navigate to="/lab/curriculum/sim-spring-mass" replace />} />
+                <Route path="/workbench" element={<UniversalWorkbenchPage />} />
+                <Route path="/workbench/universal" element={<UniversalWorkbenchPage />} />
 
-                {/* Universal Workbench Route */}
-                <Route path="/workbench" element={<LabErrorBoundary><UniversalWorkbenchPage /></LabErrorBoundary>} />
-                <Route path="/workbench/universal" element={<LabErrorBoundary><UniversalWorkbenchPage /></LabErrorBoundary>} />
+                {/* Dynamic Curriculum Scenario Route */}
+                <Route path="/lab/curriculum/:labId" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
 
-                {/* Individual Simulation Lab Engine Routes */}
-                <Route path="/lab/speed-measurement" element={<LabErrorBoundary><SpeedMeasurementLab /></LabErrorBoundary>} />
-                <Route path="/lab/free-fall" element={<LabErrorBoundary><PhetFreeFallLab /></LabErrorBoundary>} />
-                <Route path="/lab/sliding-friction" element={<LabErrorBoundary><SlidingFrictionLab /></LabErrorBoundary>} />
-                <Route path="/lab/momentum-collision" element={<LabErrorBoundary><MomentumCollisionLab /></LabErrorBoundary>} />
-                <Route path="/lab/spring-mass" element={<LabErrorBoundary><PhetSpringLab /></LabErrorBoundary>} />
-                <Route path="/lab/simple-pendulum" element={<LabErrorBoundary><PhetPendulumLab /></LabErrorBoundary>} />
-                <Route path="/lab/sound-resonance" element={<LabErrorBoundary><SoundResonanceLab /></LabErrorBoundary>} />
-                <Route path="/lab/emf-internal-r" element={<LabErrorBoundary><PhetEmfLab /></LabErrorBoundary>} />
-                <Route path="/lab/refraction" element={<LabErrorBoundary><PhetRefractionLab /></LabErrorBoundary>} />
-                <Route path="/lab/wave-interference" element={<LabErrorBoundary><WaveInterferenceLab /></LabErrorBoundary>} />
-                <Route path="/lab/specific-heat" element={<LabErrorBoundary><SpecificHeatLab /></LabErrorBoundary>} />
-                <Route path="/lab/latent-heat" element={<LabErrorBoundary><LatentHeatLab /></LabErrorBoundary>} />
-                <Route path="/lab/boyle-mariotte" element={<LabErrorBoundary><BoyleMariotteLab /></LabErrorBoundary>} />
-                <Route path="/lab/induction" element={<LabErrorBoundary><InductionLab /></LabErrorBoundary>} />
-                <Route path="/lab/dc-circuit" element={<LabErrorBoundary><App /></LabErrorBoundary>} />
-                <Route path="/lab/ohm-vietnam" element={<LabErrorBoundary><PhetVietnamLabWrapper /></LabErrorBoundary>} />
-                <Route path="/test-sound" element={<LabErrorBoundary><SoundResonanceLab /></LabErrorBoundary>} />
-
-                {/* Backward compatibility routes */}
-                <Route path="/simulation" element={<LabErrorBoundary><App /></LabErrorBoundary>} />
-                <Route path="/srs-lab" element={<SRSWorkflowPage />} />
+                {/* Individual & Legacy Simulation Routes (Directly mapped to 2.5D Workbench) */}
+                <Route path="/lab/dc-circuit" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/speed-measurement" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/free-fall" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/sliding-friction" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/momentum-collision" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/spring-mass" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/simple-pendulum" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/sound-resonance" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/emf-internal-r" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/refraction" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/wave-interference" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/specific-heat" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/latent-heat" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/boyle-mariotte" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
+                <Route path="/lab/induction" element={<LabErrorBoundary><CurriculumLabPage /></LabErrorBoundary>} />
 
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
